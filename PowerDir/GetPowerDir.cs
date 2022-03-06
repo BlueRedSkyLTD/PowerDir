@@ -4,41 +4,64 @@ using System.Management.Automation.Host;
 
 namespace PowerDir
 {
-    [Cmdlet(VerbsCommon.Get,"PowerDir")]
+    [Cmdlet(VerbsCommon.Get,"PowerDir", SupportsPaging = true)]
     public class GetPowerDir : PSCmdlet
     {
-        [Parameter(Position = 0)]
-        public Object? InputObject { get; set; }
+        [Parameter(
+            Position = 0,
+            HelpMessage = "Path to search. Accepting wildcards"
+        )]
+        [SupportsWildcards()]
+
+        public string path { get; set; } = "*";
+        [Parameter]
+        public SwitchParameter Pagination { get { return pagination; } set { pagination = value; } }
+        bool pagination;
         
         private ConsoleColor fg;
         private ConsoleColor bg;
 
-        private IEnumerable<string>? dirs;
-        private IEnumerable<string>? files;
+        private List<string> dirs = new List<string>();
+        private List<string> files = new List<string>();
 
         private bool supportColor = true;
+
+        private const string basePath = "./";
+        private EnumerationOptions enumerationOptions = new EnumerationOptions();
 
         private void setFgColor(ConsoleColor fg)
         {
             if (!supportColor) return;
             Host.UI.RawUI.ForegroundColor = fg;
         }
+
+        private void populateDirsAndFiles()
+        {
+            
+        }
         protected override void BeginProcessing()
         {
-            this.WriteDebug($"Host.Name = {Host.Name}");
-            this.WriteObject("here");
+            WriteDebug($"Host.Name = {Host.Name}");
             try
             {
-                this.fg = Host.UI.RawUI.ForegroundColor;
-                this.bg = Host.UI.RawUI.BackgroundColor;
+                fg = Host.UI.RawUI.ForegroundColor;
+                bg = Host.UI.RawUI.BackgroundColor;
             } catch (HostException ex)
             {
-                this.supportColor = false;
-                this.WriteError(ex.ErrorRecord);
+                supportColor = false;
+                WriteError(ex.ErrorRecord);
             }
 
-            this.dirs = Directory.EnumerateDirectories("./");
-            this.files = Directory.EnumerateFiles("./");
+            enumerationOptions.ReturnSpecialDirectories = true;
+            dirs = Directory.EnumerateDirectories(basePath, path, enumerationOptions).ToList();
+            files = Directory.EnumerateFiles(basePath, path, enumerationOptions).ToList();
+
+            if (pagination)
+            {
+                WriteDebug("paginated results");
+               
+                WriteDebug(PagingParameters.ToString());
+            }
          
             base.BeginProcessing();
         }
@@ -46,18 +69,16 @@ namespace PowerDir
         protected override void ProcessRecord()
         {
             setFgColor(ConsoleColor.Blue);
-            this.WriteObject(dirs, true);
+            WriteObject(dirs, true);
 
             setFgColor(ConsoleColor.Gray);
-            this.WriteObject(files, true);
+            WriteObject(files, true);
 
             base.ProcessRecord();
         }
 
         protected override void EndProcessing()
         {
-            
-            
             base.EndProcessing();
         }
     }
