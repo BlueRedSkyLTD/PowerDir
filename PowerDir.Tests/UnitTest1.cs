@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Management.Automation;
 using System.Collections.Generic;
+using System.Management.Automation;
 
 
 namespace PowerDir.Tests
@@ -37,5 +37,5 @@ namespace PowerDir.Tests
             }
         }
     }
-    
+
 }

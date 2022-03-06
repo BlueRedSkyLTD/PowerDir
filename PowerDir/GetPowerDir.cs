@@ -4,7 +4,7 @@ using System.Management.Automation.Host;
 
 namespace PowerDir
 {
-    [Cmdlet(VerbsCommon.Get,"PowerDir", SupportsPaging = true)]
+    [Cmdlet(VerbsCommon.Get, "PowerDir", SupportsPaging = true)]
     public class GetPowerDir : PSCmdlet
     {
         [Parameter(
@@ -12,12 +12,11 @@ namespace PowerDir
             HelpMessage = "Path to search. Accepting wildcards"
         )]
         [SupportsWildcards()]
-
         public string path { get; set; } = "*";
         [Parameter]
         public SwitchParameter Pagination { get { return pagination; } set { pagination = value; } }
         bool pagination;
-        
+
         private ConsoleColor fg;
         private ConsoleColor bg;
 
@@ -35,10 +34,6 @@ namespace PowerDir
             Host.UI.RawUI.ForegroundColor = fg;
         }
 
-        private void populateDirsAndFiles()
-        {
-            
-        }
         protected override void BeginProcessing()
         {
             WriteDebug($"Host.Name = {Host.Name}");
@@ -46,7 +41,8 @@ namespace PowerDir
             {
                 fg = Host.UI.RawUI.ForegroundColor;
                 bg = Host.UI.RawUI.BackgroundColor;
-            } catch (HostException ex)
+            }
+            catch (HostException ex)
             {
                 supportColor = false;
                 WriteError(ex.ErrorRecord);
@@ -59,10 +55,10 @@ namespace PowerDir
             if (pagination)
             {
                 WriteDebug("paginated results");
-               
+
                 WriteDebug(PagingParameters.ToString());
             }
-         
+
             base.BeginProcessing();
         }
 
