@@ -7,9 +7,10 @@ Console.WriteLine("Hello, World!");
 
 PowerShell ps = PowerShell.Create();
 ps.AddCommand(new CmdletInfo("Get-PowerDir", typeof(GetPowerDir)))
-    .AddParameter("pag")
     .AddParameter("Debug");
 var out1 = ps.Invoke();
+
+ps.Commands.Clear();
 
 foreach (object o in out1)
 {

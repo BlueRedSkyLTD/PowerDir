@@ -26,7 +26,6 @@ namespace PowerDir
         /// <summary>
         /// <para type="description">Globbing path search (default: *).</para>
         /// </summary>
-
         [Parameter(
             Position = 0,
             HelpMessage = "Path to search. Accepting wildcards (default: *)"
@@ -60,84 +59,35 @@ namespace PowerDir
         [Alias("l")]
         public int Level { get; set; } = int.MaxValue;
 
+        public enum DisplayOptions
+        {
+            Object = 0,
+            List = 1,
+            Wide = 2,
+            // aliases
+            o = 0,
+            l = 1,
+            w = 2
+        }
+
+        [Parameter(
+            HelpMessage = "Display type (default: Object)"
+        )]
+        [Alias("d")]
+        public DisplayOptions Display { get; set; } = DisplayOptions.Object;
+
         private ConsoleColor fg;
         private ConsoleColor bg;
 
         private List<string> dirs = new List<string>();
         private List<string> files = new List<string>();
 
-        private List<GetPowerDirInfo> results = new List<GetPowerDirInfo>();
+        private HashSet<GetPowerDirInfo> results = new HashSet<GetPowerDirInfo>();
 
         private bool _supportColor = true;
 
-        private const string basePath = "./";
+        private string basePath = "./";
         private EnumerationOptions enumerationOptions = new EnumerationOptions();
-
-        // TODO: Mapping colors
-        // directory blue
-        // file gray
-        // link cyan
-        // exe gree
-        // system dark gray
-        enum ColorTheme
-        {
-            DIRECTORY = ConsoleColor.Blue,
-            FILE = ConsoleColor.Gray,
-            EXE = ConsoleColor.Green,
-            LINK = ConsoleColor.Cyan,
-            HIDDEN_DIR = ConsoleColor.DarkBlue,
-            HIDDEN_FILE = ConsoleColor.DarkGray,
-            SYSTEM_DIR = ConsoleColor.DarkRed,
-            SYSTEM_FILE = ConsoleColor.Red
-        }
-
-        private void setFgColor(GetPowerDirInfo info)
-        {
-            if(info.Link)
-            {
-                setFgColor(ColorTheme.LINK);
-            }
-            else if(info.Hidden)
-            {
-                setFgColor(info.Directory ? ColorTheme.HIDDEN_DIR : ColorTheme.HIDDEN_FILE);
-            }
-            else if (info.System)
-            {
-                setFgColor(info.Directory ? ColorTheme.SYSTEM_DIR : ColorTheme.SYSTEM_FILE);
-            }
-            else if(info.Directory)
-            {
-                setFgColor(ColorTheme.DIRECTORY);
-            }
-            else if(info.Extension.ToUpper().EndsWith(".EXE"))
-            {
-                // EXE
-                setFgColor(ColorTheme.EXE);
-            }
-            else
-            {
-                // FILE
-                setFgColor(ColorTheme.FILE);
-            }
-        }
-        private void setFgColor(DirectoryInfo dirInfo)
-        {
-            // LINK
-            if (dirInfo.LinkTarget != null)
-            {
-                setFgColor(ColorTheme.LINK);
-            }
-            else if (dirInfo.Attributes.HasFlag(FileAttributes.Hidden))
-            {
-                // HIDDEN
-                setFgColor(ColorTheme.HIDDEN_DIR);
-            }
-            // DIRECTORY
-            else
-            {
-                setFgColor(ColorTheme.DIRECTORY);
-            }
-        }
 
         // TODO: display attributes
 
@@ -147,10 +97,6 @@ namespace PowerDir
 
         // TODO: get-power-dir attributes, datetime, size, etc..
 
-        private void setFgColor(ColorTheme ct)
-        {
-            setFgColor((ConsoleColor)ct);
-        }
         private void setFgColor(ConsoleColor fg)
         {
             if (!_supportColor) return;
@@ -159,6 +105,8 @@ namespace PowerDir
 
         protected override void BeginProcessing()
         {
+            basePath = this.SessionState.Path.CurrentFileSystemLocation.Path;
+            WriteDebug($"basePath = {basePath}");
             WriteDebug($"Host.Name = {Host.Name}");
             try
             {
@@ -176,7 +124,7 @@ namespace PowerDir
 
             enumerationOptions.RecurseSubdirectories = _recursive;
             enumerationOptions.MaxRecursionDepth = Level;
-            enumerationOptions.ReturnSpecialDirectories = true;
+            //enumerationOptions.ReturnSpecialDirectories = true;
             enumerationOptions.IgnoreInaccessible = false;
             enumerationOptions.AttributesToSkip = 0;
             
@@ -188,52 +136,101 @@ namespace PowerDir
                 WriteDebug(PagingParameters.ToString());
             }
 
-            base.BeginProcessing();
-        }
-
-        protected override void ProcessRecord()
-        {
-            setFgColor(ConsoleColor.Blue);
-            WriteObject(dirs, true);
-
-            setFgColor(ConsoleColor.Gray);
-            WriteObject(files, true);
-
-            WriteObject(" ------- ");
-            setFgColor(ConsoleColor.White);
-            foreach(string dir in dirs)
+            foreach (string dir in dirs)
             {
                 var dirInfo = new DirectoryInfo(dir);
-
-                //dirInfo.Attributes.
-                //dirInfo.CreationTime
-                //dirInfo.GetAccessControl
-                //dirInfo.LastAccessTime
-                //dirInfo.LastWriteTime
-
-                //setFgColor(dirInfo);
-                //WriteObject(dirInfo.Name);
-
                 results.Add(new GetPowerDirInfo(dirInfo));
             }
 
-            foreach(string file in files)
+            foreach (string file in files)
             {
                 var fileInfo = new FileInfo(file);
                 results.Add(new GetPowerDirInfo(fileInfo));
             }
 
-            base.ProcessRecord();
+            base.BeginProcessing();
+        }
+
+        private void displayObject()
+        {
+            WriteObject(results, true);
+        }
+
+        private void displayList()
+        {
+            foreach (var r in results)
+            {
+                setFgColor(PowerDirTheme.getFgColor(r));
+                WriteObject(r.Name);
+            }
+        }
+
+        private void displayWide()
+        {
+            int width = Host.UI.RawUI.WindowSize.Width;
+            
+            int num_columns = 4;
+            int col_size = width / num_columns;
+            // col_size = 40;
+            // num_columns = width / col_size;
+
+            WriteDebug($"width = {width} --- col_size = {col_size} --- num_columns = {num_columns}");
+
+            int c = 0;
+            foreach (var r in results)
+            {
+                int w = c * col_size;
+                int cc = w + col_size;
+                setFgColor(PowerDirTheme.getFgColor(r));
+                // TODO: if c == 3 and r.Name > col_size, should start a new line.
+                Host.UI.Write(r.Name);
+                w += r.Name.Length;
+
+                if (w < cc)
+                    Host.UI.Write(new string(' ', (cc - w)));
+                else
+                {
+                    // TODO if it wrote in over 2 columns?
+                    int rest = w - cc;
+                    while(rest > col_size)
+                    {
+                        //Coordinates coord = Host.UI.RawUI.CursorPosition;
+                        //coord.X += col_size;
+                        //Host.UI.RawUI.CursorPosition = coord;
+
+                        Host.UI.Write(new string(' ', col_size));
+                        rest -= col_size;
+                        c++;
+                    }
+
+                    // w>=cc => w-cc >= 0 (number of chars over column end)
+                    Host.UI.Write(new string(' ', col_size - rest));
+                    // skip 1 column;
+                    c++;
+                }
+
+                c++;
+                if (c >= num_columns)
+                {
+                    Host.UI.WriteLine();
+                    c = 0;
+                }
+            }
         }
 
         protected override void EndProcessing()
         {
-            //WriteObject(results, true);
-
-            foreach(var r in results)
+            switch (Display)
             {
-                setFgColor(r);
-                WriteObject(r.Name);
+                case DisplayOptions.Object:
+                    displayObject();
+                    break;
+                case DisplayOptions.List:
+                    displayList();
+                    break;
+                case DisplayOptions.Wide:
+                    displayWide();
+                    break;
             }
 
             base.EndProcessing();
