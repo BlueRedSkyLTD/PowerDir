@@ -97,10 +97,14 @@ namespace PowerDir
 
         // TODO: get-power-dir attributes, datetime, size, etc..
 
-        private void setFgColor(ConsoleColor fg)
+
+        private PowerDirTheme theme;
+
+        private void setColor(PowerDirTheme.ColorThemeItem color)
         {
             if (!_supportColor) return;
-            Host.UI.RawUI.ForegroundColor = fg;
+            Host.UI.RawUI.ForegroundColor = color.Fg;
+            Host.UI.RawUI.BackgroundColor = color.Bg;
         }
 
         protected override void BeginProcessing()
@@ -148,6 +152,10 @@ namespace PowerDir
                 results.Add(new GetPowerDirInfo(fileInfo));
             }
 
+            // Loading Color Theme (only default one at the moment)
+            // TODO: load color theme from env variable or setting file
+            this.theme = new PowerDirTheme(this.fg, this.bg);
+
             base.BeginProcessing();
         }
 
@@ -160,7 +168,7 @@ namespace PowerDir
         {
             foreach (var r in results)
             {
-                setFgColor(PowerDirTheme.getFgColor(r));
+                setColor(theme.getColor(r));
                 WriteObject(r.Name);
             }
         }
@@ -181,11 +189,11 @@ namespace PowerDir
             {
                 int w = c * col_size;
                 int cc = w + col_size;
-                setFgColor(PowerDirTheme.getFgColor(r));
+                setColor(theme.getColor(r));
                 // TODO: if c == 3 and r.Name > col_size, should start a new line.
                 Host.UI.Write(r.Name);
                 w += r.Name.Length;
-
+                setColor(theme.getOriginalColor());
                 if (w < cc)
                     Host.UI.Write(new string(' ', (cc - w)));
                 else

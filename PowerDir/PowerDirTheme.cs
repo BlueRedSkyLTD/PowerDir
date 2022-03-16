@@ -8,47 +8,90 @@ namespace PowerDir
 {
     internal class PowerDirTheme
     {
+        
         /// <summary>
         /// Mapping colors
         /// </summary>
-        enum ColorTheme
+        enum KeyColorTheme
         {
-            DIRECTORY = ConsoleColor.Blue,
-            FILE = ConsoleColor.Gray,
-            EXE = ConsoleColor.Green,
-            LINK = ConsoleColor.Cyan,
-            HIDDEN_DIR = ConsoleColor.DarkBlue,
-            HIDDEN_FILE = ConsoleColor.DarkGray,
-            SYSTEM_DIR = ConsoleColor.DarkRed,
-            SYSTEM_FILE = ConsoleColor.Red
+            DIRECTORY = 0,
+            FILE,
+            EXE,
+            LINK,
+            HIDDEN_DIR,
+            HIDDEN_FILE,
+            SYSTEM_DIR,
+            SYSTEM_FILE,
+            ORIGINAL,
         }
 
-        public static ConsoleColor getFgColor(GetPowerDirInfo info)
+        public struct ColorThemeItem
+        {
+            public ConsoleColor Fg { get; }
+            public ConsoleColor Bg { get; }
+            internal ColorThemeItem(ConsoleColor fg, ConsoleColor bg)
+            {
+                this.Fg = fg;
+                this.Bg = bg;
+            }
+        }
+
+        Dictionary<KeyColorTheme, ColorThemeItem> colorTheme = new Dictionary<KeyColorTheme, ColorThemeItem>()
+        {
+            {KeyColorTheme.DIRECTORY, new ColorThemeItem(ConsoleColor.Blue, ConsoleColor.Black)},
+            {KeyColorTheme.FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.Black)},
+            {KeyColorTheme.EXE, new ColorThemeItem(ConsoleColor.Green, ConsoleColor.Black)},
+            {KeyColorTheme.LINK, new ColorThemeItem(ConsoleColor.Cyan, ConsoleColor.Black)},
+            {KeyColorTheme.HIDDEN_DIR, new ColorThemeItem(ConsoleColor.White, ConsoleColor.DarkMagenta)},
+            {KeyColorTheme.HIDDEN_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkMagenta)},
+            {KeyColorTheme.SYSTEM_DIR, new ColorThemeItem(ConsoleColor.White, ConsoleColor.DarkRed)},
+            {KeyColorTheme.SYSTEM_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkRed)},
+        };
+
+        public PowerDirTheme(ColorThemeItem original_color)
+        {
+            colorTheme.Add(KeyColorTheme.ORIGINAL, original_color);
+        }
+
+        public PowerDirTheme(ConsoleColor fg, ConsoleColor bg)
+        {
+            colorTheme.Add(KeyColorTheme.ORIGINAL, new ColorThemeItem(fg, bg));
+        }
+
+        public ColorThemeItem getOriginalColor()
+        {
+            return colorTheme[KeyColorTheme.ORIGINAL];
+        }
+        public ColorThemeItem getColor(GetPowerDirInfo info)
         {
             if (info.Link)
             {
-                return (ConsoleColor) ColorTheme.LINK;
+                return colorTheme[KeyColorTheme.LINK];
             }
             else if (info.Hidden)
             {
-                return (ConsoleColor) (info.Directory ? ColorTheme.HIDDEN_DIR : ColorTheme.HIDDEN_FILE);
+                return info.Directory ?
+                    colorTheme[KeyColorTheme.HIDDEN_DIR] :
+                    colorTheme[KeyColorTheme.HIDDEN_FILE];
             }
             else if (info.System)
             {
-                return (ConsoleColor) (info.Directory ? ColorTheme.SYSTEM_DIR : ColorTheme.SYSTEM_FILE);
+                return info.Directory ?
+                    colorTheme[KeyColorTheme.SYSTEM_DIR] :
+                    colorTheme[KeyColorTheme.SYSTEM_FILE];
             }
             else if (info.Directory)
             {
-                return (ConsoleColor) (ColorTheme.DIRECTORY);
+                return colorTheme[KeyColorTheme.DIRECTORY];
             }
             else if (info.Extension.ToUpper().EndsWith(".EXE"))
             {
-                return (ConsoleColor) (ColorTheme.EXE);
+                return colorTheme[KeyColorTheme.EXE];
             }
             else
             {
                 // generic FILE
-                return (ConsoleColor) (ColorTheme.FILE);
+                return colorTheme[KeyColorTheme.FILE];
             }
         }
     }
