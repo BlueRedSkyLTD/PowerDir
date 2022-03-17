@@ -22,6 +22,8 @@ namespace PowerDir
             HIDDEN_FILE,
             SYSTEM_DIR,
             SYSTEM_FILE,
+            READONLY_DIR,
+            READONLY_FILE,
             ORIGINAL,
         }
 
@@ -44,8 +46,10 @@ namespace PowerDir
             {KeyColorTheme.LINK, new ColorThemeItem(ConsoleColor.Cyan, ConsoleColor.Black)},
             {KeyColorTheme.HIDDEN_DIR, new ColorThemeItem(ConsoleColor.White, ConsoleColor.DarkMagenta)},
             {KeyColorTheme.HIDDEN_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkMagenta)},
-            {KeyColorTheme.SYSTEM_DIR, new ColorThemeItem(ConsoleColor.White, ConsoleColor.DarkRed)},
-            {KeyColorTheme.SYSTEM_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkRed)},
+            {KeyColorTheme.SYSTEM_DIR, new ColorThemeItem(ConsoleColor.White, ConsoleColor.DarkYellow)},
+            {KeyColorTheme.SYSTEM_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkYellow)},
+            {KeyColorTheme.READONLY_DIR, new ColorThemeItem(ConsoleColor.White, ConsoleColor.DarkRed)},
+            {KeyColorTheme.READONLY_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkRed)},
         };
 
         public PowerDirTheme(ColorThemeItem original_color)
@@ -79,6 +83,12 @@ namespace PowerDir
                 return info.Directory ?
                     colorTheme[KeyColorTheme.SYSTEM_DIR] :
                     colorTheme[KeyColorTheme.SYSTEM_FILE];
+            }
+            else if (info.ReadOnly)
+            {
+                return info.Directory ?
+                    colorTheme[KeyColorTheme.READONLY_DIR] :
+                    colorTheme[KeyColorTheme.READONLY_FILE];
             }
             else if (info.Directory)
             {

@@ -1,5 +1,6 @@
 ﻿using System.Management.Automation;
 using System.Management.Automation.Host;
+using System.Text;
 
 
 namespace PowerDir
@@ -63,11 +64,13 @@ namespace PowerDir
         {
             Object = 0,
             List = 1,
-            Wide = 2,
+            ListDetails = 2,
+            Wide = 3,
             // aliases
             o = 0,
             l = 1,
-            w = 2
+            ld = 2,
+            w = 3
         }
 
         [Parameter(
@@ -98,7 +101,7 @@ namespace PowerDir
         // TODO: get-power-dir attributes, datetime, size, etc..
 
 
-        private PowerDirTheme theme;
+        private PowerDirTheme theme = new PowerDirTheme(ConsoleColor.Gray, ConsoleColor.Black);
 
         private void setColor(PowerDirTheme.ColorThemeItem color)
         {
@@ -116,6 +119,9 @@ namespace PowerDir
             {
                 fg = Host.UI.RawUI.ForegroundColor;
                 bg = Host.UI.RawUI.BackgroundColor;
+                // Loading Color Theme (only default one at the moment)
+                // TODO: load color theme from env variable or setting file
+                this.theme = new PowerDirTheme(this.fg, this.bg);
             }
             catch (HostException ex)
             {
@@ -152,10 +158,6 @@ namespace PowerDir
                 results.Add(new GetPowerDirInfo(fileInfo));
             }
 
-            // Loading Color Theme (only default one at the moment)
-            // TODO: load color theme from env variable or setting file
-            this.theme = new PowerDirTheme(this.fg, this.bg);
-
             base.BeginProcessing();
         }
 
@@ -171,6 +173,27 @@ namespace PowerDir
                 setColor(theme.getColor(r));
                 WriteObject(r.Name);
             }
+        }
+
+        private void displayListDetails()
+        {
+            foreach(var r in results)
+            {
+                StringBuilder sb = new StringBuilder("  -", 120);
+                // Attributes
+                sb.Append(r.Directory ? 'd' : '-').Append(r.Link ? 'l' : '-')
+                    .Append(r.Hidden ? 'h' : '-').Append(r.ReadOnly ? 'r' : '-')
+                    .Append(r.System ? 's' : '-').Append('-');
+                // File/Dir Name
+                sb.Append("   ");
+                sb.Append(r.Name);
+                sb.Append(' ');
+                // File Size
+                sb.Append(r.normalizeSize());
+
+                WriteObject(sb.ToString());
+            }
+
         }
 
         private void displayWide()
@@ -235,6 +258,9 @@ namespace PowerDir
                     break;
                 case DisplayOptions.List:
                     displayList();
+                    break;
+                case DisplayOptions.ListDetails:
+                    displayListDetails();
                     break;
                 case DisplayOptions.Wide:
                     displayWide();
