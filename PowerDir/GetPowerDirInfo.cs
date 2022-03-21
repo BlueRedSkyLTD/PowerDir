@@ -57,6 +57,9 @@ namespace PowerDir
 
         public string normalizeSize()
         {
+            if (Directory)
+                return "-";
+
             string[] suffixes = { "", "K", "M", "G", "T", "P" };
             int exp = 0;
             decimal _size = (decimal) size; // double could not contain a long (int64)

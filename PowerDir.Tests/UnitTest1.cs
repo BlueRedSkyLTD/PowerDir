@@ -1,14 +1,14 @@
+using Microsoft.PowerShell.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
 namespace PowerDir.Tests
 {
     // https://stackoverflow.com/questions/10260597/invoking-powershell-script-with-arguments-from-c-sharp
-
     // https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/creating-an-initialsessionstate?view=powershell-7.2
-
     // https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/windows-powershell-host-quickstart?view=powershell-7.2
 
     [TestClass]
@@ -32,16 +32,22 @@ namespace PowerDir.Tests
                 .Create()
                 .AddCommand(new CmdletInfo("Get-PowerDir", typeof(GetPowerDir)));
         }
-
-        private void execute(PowerShell ps)
+        private void displayOutput(Collection<PSObject> res)
         {
-            var res = ps.Invoke();
             foreach (var item in res)
             {
                 TestContext.WriteLine(item.ToString());
             }
 
-            ps.Commands.Clear();
+        }
+        private void execute(PowerShell ps)
+        {
+            displayOutput(ps.Invoke());
+        }
+
+        private void execute(Pipeline pipeline)
+        {
+            displayOutput(pipeline.Invoke());
         }
 
         [TestMethod]
@@ -65,19 +71,8 @@ namespace PowerDir.Tests
         [TestMethod]
         public void TestWideInvoke()
         {
-            //execute(createCmdLet().AddParameter("d", "w"));
-            // create Powershell runspace
-            Runspace runspace = RunspaceFactory.CreateRunspace();
-            runspace.Open();
-
-            // create a pipeline and feed it the script text
-            Pipeline pipeline = runspace.CreatePipeline();
-            var ps = PowerShell.Create(runspace)
-                .AddCommand(new CmdletInfo("Get-PowerDir", typeof(GetPowerDir)));
-            pipeline.Commands.Add(ps);
-
-            pipeline.Invoke();
-            runspace.Close();
+            // This won't run due to using Host.UI.WriteLine
+            execute(createCmdLet().AddParameter("d", "w"));
         }
     }
 
