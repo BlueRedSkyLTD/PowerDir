@@ -57,15 +57,15 @@ namespace PowerDir.Tests
         }
 
         [TestMethod]
-        public void TestListDetailsInvoke()
-        {
-            execute(createCmdLet().AddParameter("d", "ld"));
-        }
-        
-        [TestMethod]
         public void TestListInvoke()
         {
             execute(createCmdLet().AddParameter("d", "l"));
+        }
+
+        [TestMethod]
+        public void TestListDetailsInvoke()
+        {
+            execute(createCmdLet().AddParameter("d", "ld"));
         }
 
         [TestMethod]

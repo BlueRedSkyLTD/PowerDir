@@ -180,41 +180,16 @@ namespace PowerDir
 
         private void displayListDetails()
         {
-            // TODO create date time
-            //      update date time
+            // TODO
             //      permissions?
             //      etc
+            ListDetailsView ldv = new ListDetailsView(LIST_DETAILS_MAX_NAME_LENGTH);
 
-
-            string fmt = "{0," + -LIST_DETAILS_MAX_NAME_LENGTH + "}";
             foreach(var r in results)
             {
-                // TODO 120 to be replaced with UI.Width and use it as a fallback
-                StringBuilder sb = new StringBuilder(" -", 120);
-                // Attributes
-                sb.Append(r.Directory ? 'd' : '-').Append(r.Link ? 'l' : '-')
-                    .Append(r.Hidden ? 'h' : '-').Append(r.ReadOnly ? 'r' : '-')
-                    .Append(r.System ? 's' : '-').Append('-');
-                // File/Dir Name
-                sb.Append(" ");
-
-                if (r.Name.Length > LIST_DETAILS_MAX_NAME_LENGTH)
-                {
-                    sb.Append(r.Name.Substring(0, LIST_DETAILS_MAX_NAME_LENGTH - 3));
-                    sb.Append("...");
-                } else
-                {
-                    sb.Append(String.Format(fmt, r.Name));
-
-                }
-                sb.Append(' ');
-                // File Size
-                sb.Append(r.normalizeSize());
-
                 setColor(theme.getColor(r)); // use it or remove it?
-                WriteObject(sb.ToString());
+                WriteObject(ldv.getRow(r));
             }
-
         }
 
         private void displayWide()

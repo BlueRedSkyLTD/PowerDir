@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,11 @@ namespace PowerDir
 {
     internal class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
     {
+        // TODO: evaluate to further elabore on link attribute
+        // ref: http://www.flexhex.com/docs/articles/hard-links.phtml#hardlinks
+        // (eg hard links are not detected, because not supported by .NET, but where is the power of this tool then?)
+        // ref: https://stackoverflow.com/questions/4193309/list-hard-links-of-a-file-in-c
+
         public string Name { get; }
         public string Extension { get; }
         public long size { get; }
@@ -17,7 +23,16 @@ namespace PowerDir
         public bool Hidden { get; }
         public bool System { get; }
         public bool ReadOnly { get; }
-        public bool ReparsePoint { get; }
+        //public bool ReparsePoint { get; }
+        public bool Archive { get; }
+        public bool Compressed { get; }
+        public bool Encrypted { get; }
+        public DateTime CreationTime { get; }
+        public DateTime LastAccessTime { get; }
+        public DateTime LastWriteTime { get; }
+
+        //public FileSystemSecurity SecurityInfo { get; }
+
         public GetPowerDirInfo(FileSystemInfo info)
         {
             Name = info.Name;
@@ -28,14 +43,21 @@ namespace PowerDir
             Hidden = info.Attributes.HasFlag(FileAttributes.Hidden);
             System = info.Attributes.HasFlag(FileAttributes.System);
             ReadOnly = info.Attributes.HasFlag(FileAttributes.ReadOnly);
-            ReadOnly = info.Attributes.HasFlag(FileAttributes.ReparsePoint);
+            //ReparsePoint = info.Attributes.HasFlag(FileAttributes.ReparsePoint);
+            Archive = info.Attributes.HasFlag(FileAttributes.Archive);
+            Compressed = info.Attributes.HasFlag(FileAttributes.Compressed);
+            Encrypted = info.Attributes.HasFlag(FileAttributes.Encrypted);
 
             size = Directory? 0 : ((FileInfo) info).Length; // not available for directory
 
-            //dirInfo.CreationTime
-            //dirInfo.GetAccessControl
-            //dirInfo.LastAccessTime
-            //dirInfo.LastWriteTime
+            CreationTime = info.CreationTime;
+            LastAccessTime = info.LastAccessTime;
+            LastWriteTime = info.LastWriteTime;
+            
+            // This throws
+            //SecurityInfo = Directory ?
+            //    ((DirectoryInfo)info).GetAccessControl() :
+            //    ((FileInfo)info).GetAccessControl();
         }
 
         public bool Equals(GetPowerDirInfo? other)
@@ -53,24 +75,6 @@ namespace PowerDir
         public override int GetHashCode()
         {
             return (Name, Extension, Directory, Link, Attributes).GetHashCode();
-        }
-
-        public string normalizeSize()
-        {
-            if (Directory)
-                return "-";
-
-            string[] suffixes = { "", "K", "M", "G", "T", "P" };
-            int exp = 0;
-            decimal _size = (decimal) size; // double could not contain a long (int64)
-            while (_size >= 1024)
-            {
-                _size /= 1024;
-                exp++;
-            }
-            exp %= suffixes.Length; // just to avoid errors
-            string fmt = exp == 0 ? "0" : "0.00";
-            return String.Format("{0}{1}", _size.ToString(fmt), suffixes[exp]);
         }
     }
 }
