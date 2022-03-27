@@ -101,14 +101,11 @@ namespace PowerDir
         private string basePath = "./";
         private EnumerationOptions enumerationOptions = new EnumerationOptions();
 
-        // TODO: display attributes
-
         // TODO: pagination
 
         // TODO: get-power-dir | format-wide
 
         // TODO: get-power-dir attributes, datetime, size, etc..
-
 
         private PowerDirTheme theme = new PowerDirTheme(ConsoleColor.Gray, ConsoleColor.Black);
 
@@ -150,7 +147,7 @@ namespace PowerDir
                 bg = Host.UI.RawUI.BackgroundColor;
                 // Loading Color Theme (only default one at the moment)
                 // TODO: load color theme from env variable or setting file
-                this.theme = new PowerDirTheme(this.fg, this.bg);
+                theme = new PowerDirTheme(fg, bg);
             }
             catch (HostException ex)
             {
@@ -242,19 +239,23 @@ namespace PowerDir
             // TODO
             //      permissions?
             //      etc
-            ListDetailsView ldv = new ListDetailsView(MAX_NAME_LENGTH, write, writeLine, setColor, theme);
+            
+            // TODO switch parameter for dateTime type
+            ListDetailsView ldv = new ListDetailsView(MAX_NAME_LENGTH, write, writeLine, setColor, theme, ListDetailsView.EDateTimes.CREATION);
             ldv.displayResults(results);
         }
 
         private void displayWide()
         {
+            // TODO as a dynamic parameter when using displayWide
             int num_columns = 4;
+            
             int col_size = _width / num_columns;
             // col_size = 40;
             // num_columns = width / col_size;
 
             WriteDebug($"width = {_width} --- col_size = {col_size} --- num_columns = {num_columns}");
-           
+
             WideView view = new WideView(_width, num_columns, write, writeLine, setColor, theme);
             view.displayResults(results);
         }

@@ -5,24 +5,31 @@ namespace PowerDir.views
     // TODO: using this class colors are lost unless use it to write too.
     internal class ListDetailsView : AbstractView, IView
     {
-        private readonly string _fmt_name;
         private const string _fmt_size = "{0,6}{1,1}";
-        private const string _fmt_date = "s";//"yy/MM/dd HH:mm:ss";
-        public int NameMaxLength { get; }
+        private const string _fmt_date = "s"; //"yy/MM/dd HH:mm:ss";
 
         private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
+
+        // TODO: as flags instead, so not mutual exclusive but 
+        // adding them as extra columns?
+        public enum EDateTimes
+        {
+            CREATION = 0,
+            LAST_ACCESS,
+            LAST_WRITE
+        }
+        private EDateTimes eDateTimes = EDateTimes.CREATION;
 
         internal ListDetailsView(
             in int name_max_length,
             in Action<string> writeFunc,
             in Action<string> writeLineFunc,
             in Action<PowerDirTheme.ColorThemeItem> setColorFunc,
-            in PowerDirTheme theme
-        ) : base(writeFunc, writeLineFunc, setColorFunc, theme)
+            in PowerDirTheme theme,
+            in EDateTimes eDateTimes
+        ) : base(name_max_length, writeFunc, writeLineFunc, setColorFunc, theme)
         {
-            NameMaxLength = name_max_length;
-            _fmt_name = "{0," + -NameMaxLength + "}";
-
+            this.eDateTimes = eDateTimes;
         }
 
         private void attributes(GetPowerDirInfo info, StringBuilder sb)
@@ -39,24 +46,20 @@ namespace PowerDir.views
                 .Append('-');
         }
 
-        private void names(GetPowerDirInfo info, StringBuilder sb)
-        {
-            if (info.Name.Length > NameMaxLength)
-            {
-                sb.Append(info.Name.Substring(0, NameMaxLength - 3));
-                sb.Append("...");
-            }
-            else
-                sb.Append(String.Format(_fmt_name, info.Name));
-        }
-
         private void dateTimes(GetPowerDirInfo info, StringBuilder sb)
         {
-            //sb.Append(info.CreationTime.ToLocalTime().ToString(_fmt_date));
-            //sb.Append(' ');
-            sb.Append(info.LastAccessTime.ToLocalTime().ToString(_fmt_date));
-            //sb.Append(' ');
-            //sb.Append(info.LastWriteTime.ToLocalTime().ToString(_fmt_date));
+            switch (eDateTimes)
+            {
+                case EDateTimes.CREATION:
+                    sb.Append(info.CreationTime.ToLocalTime().ToString(_fmt_date));
+                    break;
+                case EDateTimes.LAST_ACCESS:
+                    sb.Append(info.LastAccessTime.ToLocalTime().ToString(_fmt_date));
+                    break;
+                case EDateTimes.LAST_WRITE:
+                    sb.Append(info.LastWriteTime.ToLocalTime().ToString(_fmt_date));
+                    break;
+            }
         }
 
         private string normalizeSize(GetPowerDirInfo info)
@@ -74,7 +77,7 @@ namespace PowerDir.views
             exp %= _suffixes.Length; // just to avoid errors
             string fmt = exp == 0 ? "0" : "0.00";
 
-            return String.Format(_fmt_size, _size.ToString(fmt), _suffixes[exp]);
+            return string.Format(_fmt_size, _size.ToString(fmt), _suffixes[exp]);
         }
         private string getRow(GetPowerDirInfo info)
         {
