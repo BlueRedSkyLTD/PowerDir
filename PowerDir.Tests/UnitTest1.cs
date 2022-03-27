@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.Text;
 
 namespace PowerDir.Tests
 {
@@ -37,45 +38,54 @@ namespace PowerDir.Tests
         private void displayOutput(Collection<PSObject> res)
         {
             foreach (var item in res)
-            {
                 TestContext.WriteLine(item.ToString());
-            }
-
         }
-        private void execute(PowerShell ps)
+        private Collection<PSObject> execute(PowerShell ps)
         {
             var output = ps.Invoke();
             displayOutput(output);
+            Assert.IsNotNull(output);
+            Assert.IsTrue(output.Count > 0);
+            return output;
         }
 
-        private void execute(Pipeline pipeline)
+        private void checkType(PSObject o, string type)
         {
-            displayOutput(pipeline.Invoke());
+            Assert.IsNotNull(o);
+            StringBuilder sb = new StringBuilder();
+            foreach(var t in o.TypeNames)
+                sb.AppendLine(t);
+
+            Assert.IsTrue(o.TypeNames.Contains(type), sb.ToString());
         }
 
         [TestMethod]
         public void TestDefaultInvoke()
         {
-            execute(createCmdLet());
+            var output = execute(createCmdLet());
+            checkType(output[0], "PowerDir.GetPowerDirInfo");
         }
 
         [TestMethod]
         public void TestListInvoke()
         {
-            execute(createCmdLet().AddParameter("d", "l"));
+            var output = execute(createCmdLet().AddParameter("d", "l"));
+            checkType(output[0], "System.String");
         }
 
         [TestMethod]
         public void TestListDetailsInvoke()
         {
-            execute(createCmdLet().AddParameter("d", "ld"));
+            var output = execute(createCmdLet().AddParameter("d", "ld"));
+            checkType(output[0], "System.String");
         }
 
         [TestMethod]
         public void TestWideInvoke()
         {
             // This won't run due to using Host.UI.WriteLine
-            execute(createCmdLet().AddParameter("d", "w").AddParameter("Debug"));
+            var output = execute(createCmdLet().AddParameter("d", "w").AddParameter("Debug"));
+            checkType(output[0], "System.String");
         }
     }
 
