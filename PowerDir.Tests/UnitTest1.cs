@@ -14,7 +14,9 @@ namespace PowerDir.Tests
     [TestClass]
     public class UnitTest1
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private TestContext testContextInstance;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         /// <summary>
         /// Gets or sets the test context which provides
@@ -42,7 +44,8 @@ namespace PowerDir.Tests
         }
         private void execute(PowerShell ps)
         {
-            displayOutput(ps.Invoke());
+            var output = ps.Invoke();
+            displayOutput(output);
         }
 
         private void execute(Pipeline pipeline)
@@ -72,7 +75,7 @@ namespace PowerDir.Tests
         public void TestWideInvoke()
         {
             // This won't run due to using Host.UI.WriteLine
-            execute(createCmdLet().AddParameter("d", "w"));
+            execute(createCmdLet().AddParameter("d", "w").AddParameter("Debug"));
         }
     }
 

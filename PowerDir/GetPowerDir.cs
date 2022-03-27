@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Text;
+using PowerDir.views;
 
 
 namespace PowerDir
@@ -24,8 +25,9 @@ namespace PowerDir
     [OutputType(typeof(GetPowerDirInfo))]
     public class GetPowerDir : PSCmdlet
     {
-        // TODO: this should be compute based on the UI.Width, with a default of
-        const int LIST_DETAILS_MAX_NAME_LENGTH = 50;
+        const int MAX_NAME_LENGTH = 50;
+
+        #region Parameters
 
         /// <summary>
         /// <para type="description">Globbing path search (default: *).</para>
@@ -81,6 +83,7 @@ namespace PowerDir
         )]
         [Alias("d")]
         public DisplayOptions Display { get; set; } = DisplayOptions.Object;
+        #endregion Parameters
 
         private ConsoleColor fg;
         private ConsoleColor bg;
@@ -91,6 +94,9 @@ namespace PowerDir
         private HashSet<GetPowerDirInfo> results = new HashSet<GetPowerDirInfo>();
 
         private bool _supportColor = true;
+        int _width = 120;
+        bool _useUIWrite = true;
+        StringBuilder _sb = new StringBuilder();
 
         private string basePath = "./";
         private EnumerationOptions enumerationOptions = new EnumerationOptions();
@@ -113,11 +119,31 @@ namespace PowerDir
             Host.UI.RawUI.BackgroundColor = color.Bg;
         }
 
-        protected override void BeginProcessing()
+        private void write(string msg)
         {
-            basePath = this.SessionState.Path.CurrentFileSystemLocation.Path;
-            WriteDebug($"basePath = {basePath}");
-            WriteDebug($"Host.Name = {Host.Name}");
+            if (_useUIWrite)
+                Host.UI.Write(msg);
+            else
+                _sb.Append(msg);
+        }
+
+        private void writeLine(string msg = "")
+        {
+            if (_useUIWrite)
+            {
+                Host.UI.Write(msg);
+                Host.UI.WriteLine();
+            }
+            else
+            {
+                _sb.Append(msg);
+                WriteObject(_sb.ToString());
+                _sb.Clear();
+            }
+        }
+
+        private void checkColorSupport()
+        {
             try
             {
                 fg = Host.UI.RawUI.ForegroundColor;
@@ -129,26 +155,37 @@ namespace PowerDir
             catch (HostException ex)
             {
                 _supportColor = false;
-                WriteWarning(ex.Message);
+                WriteError(ex.ErrorRecord);
             }
+        }
 
-            WriteDebug($"Color = {_supportColor}");
-            WriteDebug($"Recursive = {_recursive}");
+        // TODO: this can be merged in checkColorSupport method
+        //       as if there is no color there won't be no with neither i guess... 
+        private void checkWidthSupport()
+        {
+            try
+            {
+                _width = Host.UI.RawUI.WindowSize.Width;
+            }
+            catch (HostException e)
+            {
+                _useUIWrite = false;
+                WriteError(e.ErrorRecord);
+            }
+        }
 
+        private void collectResults()
+        {
             enumerationOptions.RecurseSubdirectories = _recursive;
             enumerationOptions.MaxRecursionDepth = Level;
             //enumerationOptions.ReturnSpecialDirectories = true;
             enumerationOptions.IgnoreInaccessible = false;
             enumerationOptions.AttributesToSkip = 0;
-            
+
             dirs = Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
             files = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
-            if (pagination)
-            {
-                WriteDebug("paginated results");
-                WriteDebug(PagingParameters.ToString());
-            }
 
+            // TODO: consider to process this while displaying instead.
             foreach (string dir in dirs)
             {
                 var dirInfo = new DirectoryInfo(dir);
@@ -161,6 +198,32 @@ namespace PowerDir
                 results.Add(new GetPowerDirInfo(fileInfo));
             }
 
+            dirs.Clear();
+            files.Clear();
+        }
+
+        protected override void BeginProcessing()
+        {
+            basePath = this.SessionState.Path.CurrentFileSystemLocation.Path;
+            WriteDebug($"basePath = {basePath}");
+            WriteDebug($"Host.Name = {Host.Name}");
+
+            checkColorSupport();
+            checkWidthSupport();
+
+            WriteDebug($"Color = {_supportColor}");
+            WriteDebug($"Width = {_width} --- useUIWrite(default)={_useUIWrite}");
+            WriteDebug($"Recursive = {_recursive}");
+
+            collectResults();
+            
+            // TODO
+            if (pagination)
+            {
+                WriteDebug("paginated results");
+                WriteDebug(PagingParameters.ToString());
+            }
+
             base.BeginProcessing();
         }
 
@@ -171,80 +234,30 @@ namespace PowerDir
 
         private void displayList()
         {
-            foreach (var r in results)
-            {
-                setColor(theme.getColor(r));
-                WriteObject(r.Name);
-            }
+            var l = new ListView(write, writeLine, setColor, theme);
+            l.displayResults(results);
         }
-
         private void displayListDetails()
         {
             // TODO
             //      permissions?
             //      etc
-            ListDetailsView ldv = new ListDetailsView(LIST_DETAILS_MAX_NAME_LENGTH);
-
-            foreach(var r in results)
-            {
-                setColor(theme.getColor(r)); // use it or remove it?
-                WriteObject(ldv.getRow(r));
-            }
+            ListDetailsView ldv = new ListDetailsView(MAX_NAME_LENGTH, write, writeLine, setColor, theme);
+            ldv.displayResults(results);
         }
 
         private void displayWide()
         {
-            int width = Host.UI.RawUI.WindowSize.Width;
-            
             int num_columns = 4;
-            int col_size = width / num_columns;
+            int col_size = _width / num_columns;
             // col_size = 40;
             // num_columns = width / col_size;
 
-            WriteDebug($"width = {width} --- col_size = {col_size} --- num_columns = {num_columns}");
-
-            int c = 0;
-            foreach (var r in results)
-            {
-                int w = c * col_size;
-                int cc = w + col_size;
-                setColor(theme.getColor(r));
-                // TODO: if c == 3 and r.Name > col_size, should start a new line.
-                Host.UI.Write(r.Name);
-                w += r.Name.Length;
-                setColor(theme.getOriginalColor());
-                if (w < cc)
-                    Host.UI.Write(new string(' ', (cc - w)));
-                else
-                {
-                    // TODO if it wrote in over 2 columns?
-                    int rest = w - cc;
-                    while(rest > col_size)
-                    {
-                        //Coordinates coord = Host.UI.RawUI.CursorPosition;
-                        //coord.X += col_size;
-                        //Host.UI.RawUI.CursorPosition = coord;
-
-                        Host.UI.Write(new string(' ', col_size));
-                        rest -= col_size;
-                        c++;
-                    }
-
-                    // w>=cc => w-cc >= 0 (number of chars over column end)
-                    Host.UI.Write(new string(' ', col_size - rest));
-                    // skip 1 column;
-                    c++;
-                }
-
-                c++;
-                if (c >= num_columns)
-                {
-                    Host.UI.WriteLine();
-                    c = 0;
-                }
-            }
+            WriteDebug($"width = {_width} --- col_size = {col_size} --- num_columns = {num_columns}");
+           
+            WideView view = new WideView(_width, num_columns, write, writeLine, setColor, theme);
+            view.displayResults(results);
         }
-
         protected override void EndProcessing()
         {
             switch (Display)

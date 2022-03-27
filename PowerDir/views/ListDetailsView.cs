@@ -1,9 +1,9 @@
 ﻿using System.Text;
 
-namespace PowerDir
+namespace PowerDir.views
 {
     // TODO: using this class colors are lost unless use it to write too.
-    internal class ListDetailsView
+    internal class ListDetailsView : AbstractView, IView
     {
         private readonly string _fmt_name;
         private const string _fmt_size = "{0,6}{1,1}";
@@ -12,13 +12,19 @@ namespace PowerDir
 
         private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
 
-        public ListDetailsView(int name_max_length)
+        internal ListDetailsView(
+            in int name_max_length,
+            in Action<string> writeFunc,
+            in Action<string> writeLineFunc,
+            in Action<PowerDirTheme.ColorThemeItem> setColorFunc,
+            in PowerDirTheme theme
+        ) : base(writeFunc, writeLineFunc, setColorFunc, theme)
         {
             NameMaxLength = name_max_length;
             _fmt_name = "{0," + -NameMaxLength + "}";
+
         }
 
-        
         private void attributes(GetPowerDirInfo info, StringBuilder sb)
         {
             sb
@@ -70,7 +76,7 @@ namespace PowerDir
 
             return String.Format(_fmt_size, _size.ToString(fmt), _suffixes[exp]);
         }
-        public string getRow(GetPowerDirInfo info)
+        private string getRow(GetPowerDirInfo info)
         {
             // TODO 120 to be replaced with UI.Width and use it as a fallback
             StringBuilder sb = new StringBuilder(" -", 120);
@@ -88,5 +94,16 @@ namespace PowerDir
 
             return sb.ToString();
         }
+
+        public void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
+        {
+            foreach (var r in results)
+            {
+                // TODO: just highlight the name, instead of the whole row
+                _setColor(_theme.getColor(r));
+                _writeLine(getRow(r));
+            }
+        }
+
     }
 }
