@@ -59,9 +59,16 @@ namespace PowerDir.views
 
         protected string names(GetPowerDirInfo info)
         {
-            StringBuilder sb = new StringBuilder();
-            names(info, sb);
-            return sb.ToString();
+            //StringBuilder sb = new StringBuilder();
+            //names(info, sb);
+            //return sb.ToString();
+
+            if (info.Name.Length > NameMaxLength)
+            {
+                return info.Name.Substring(0, NameMaxLength - 3) + "...";
+            }
+            else
+                return String.Format(_fmt_name, info.Name);
         }
 
     }

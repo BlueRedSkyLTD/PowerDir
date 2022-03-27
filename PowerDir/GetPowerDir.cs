@@ -241,7 +241,7 @@ namespace PowerDir
             //      etc
             
             // TODO switch parameter for dateTime type
-            ListDetailsView ldv = new ListDetailsView(MAX_NAME_LENGTH, write, writeLine, setColor, theme, ListDetailsView.EDateTimes.CREATION);
+            ListDetailsView ldv = new ListDetailsView(_width, MAX_NAME_LENGTH, write, writeLine, setColor, theme, ListDetailsView.EDateTimes.CREATION);
             ldv.displayResults(results);
         }
 

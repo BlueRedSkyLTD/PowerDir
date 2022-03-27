@@ -2,13 +2,13 @@
 
 namespace PowerDir.views
 {
-    // TODO: using this class colors are lost unless use it to write too.
     internal class ListDetailsView : AbstractView, IView
     {
         private const string _fmt_size = "{0,6}{1,1}";
         private const string _fmt_date = "s"; //"yy/MM/dd HH:mm:ss";
 
         private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
+        private StringBuilder _sb;
 
         // TODO: as flags instead, so not mutual exclusive but 
         // adding them as extra columns?
@@ -21,6 +21,7 @@ namespace PowerDir.views
         private EDateTimes eDateTimes = EDateTimes.CREATION;
 
         internal ListDetailsView(
+            in int width,
             in int name_max_length,
             in Action<string> writeFunc,
             in Action<string> writeLineFunc,
@@ -30,11 +31,12 @@ namespace PowerDir.views
         ) : base(name_max_length, writeFunc, writeLineFunc, setColorFunc, theme)
         {
             this.eDateTimes = eDateTimes;
+            _sb = new StringBuilder(" -", width);
         }
 
-        private void attributes(GetPowerDirInfo info, StringBuilder sb)
+        private string attributes(GetPowerDirInfo info)
         {
-            sb
+            return new StringBuilder(10)
                 .Append(info.Directory ? 'd' : info.Archive ? 'a' : '-')
                 .Append(info.Link ? 'l' : '-')
                 //.Append(info.Archive ? 'a' : '-')
@@ -43,23 +45,23 @@ namespace PowerDir.views
                 .Append(info.Hidden ? 'h' : '-')
                 .Append(info.System ? 's' : '-')
                 .Append(info.Encrypted ? 'e' : '-')
-                .Append('-');
+                .Append('-')
+                .ToString();
         }
 
-        private void dateTimes(GetPowerDirInfo info, StringBuilder sb)
+        private string dateTimes(GetPowerDirInfo info)
         {
             switch (eDateTimes)
             {
                 case EDateTimes.CREATION:
-                    sb.Append(info.CreationTime.ToLocalTime().ToString(_fmt_date));
-                    break;
+                    return info.CreationTime.ToLocalTime().ToString(_fmt_date);
                 case EDateTimes.LAST_ACCESS:
-                    sb.Append(info.LastAccessTime.ToLocalTime().ToString(_fmt_date));
-                    break;
+                    return info.LastAccessTime.ToLocalTime().ToString(_fmt_date);
                 case EDateTimes.LAST_WRITE:
-                    sb.Append(info.LastWriteTime.ToLocalTime().ToString(_fmt_date));
-                    break;
+                    return info.LastWriteTime.ToLocalTime().ToString(_fmt_date);
             }
+
+            throw new NotImplementedException();
         }
 
         private string normalizeSize(GetPowerDirInfo info)
@@ -79,32 +81,24 @@ namespace PowerDir.views
 
             return string.Format(_fmt_size, _size.ToString(fmt), _suffixes[exp]);
         }
-        private string getRow(GetPowerDirInfo info)
-        {
-            // TODO 120 to be replaced with UI.Width and use it as a fallback
-            StringBuilder sb = new StringBuilder(" -", 120);
-            attributes(info, sb);
-            //File Name
-            sb.Append(' ');
-            names(info, sb);
-            // File Size
-            sb.Append(' ');
-            sb.Append(normalizeSize(info));
-
-            // Date Times
-            sb.Append(' ');
-            dateTimes(info, sb);
-
-            return sb.ToString();
-        }
 
         public void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
         {
             foreach (var r in results)
             {
-                // TODO: just highlight the name, instead of the whole row
+                //_writeLine(getRow(r));
+                _setColor(_theme.getOriginalColor());
+                _write(attributes(r));
+                _write(" ");
+
                 _setColor(_theme.getColor(r));
-                _writeLine(getRow(r));
+                _write(names(r));
+                
+                _setColor(_theme.getOriginalColor());
+                _write(" ");
+                _write(normalizeSize(r));
+                _write(" ");
+                _writeLine(dateTimes(r));
             }
         }
 
