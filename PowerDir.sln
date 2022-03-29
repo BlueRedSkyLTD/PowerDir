@@ -13,11 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerDir.Tests", "PowerDir.Tests\PowerDir.Tests.csproj", "{63E64054-8C0E-4DD0-8C2A-6FC9A054E731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerDir.Exe", "PowerDir.Exe\PowerDir.Exe.csproj", "{ED23926D-2D0F-4923-AF37-479F2A130057}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B4FDBF55-2028-4BFD-8C34-0846B755166F} = {B4FDBF55-2028-4BFD-8C34-0846B755166F}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,10 +27,6 @@ Global
 		{63E64054-8C0E-4DD0-8C2A-6FC9A054E731}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63E64054-8C0E-4DD0-8C2A-6FC9A054E731}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63E64054-8C0E-4DD0-8C2A-6FC9A054E731}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED23926D-2D0F-4923-AF37-479F2A130057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED23926D-2D0F-4923-AF37-479F2A130057}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED23926D-2D0F-4923-AF37-479F2A130057}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED23926D-2D0F-4923-AF37-479F2A130057}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
+using System.Linq;
 
 namespace PowerDir.Tests
 {
@@ -13,7 +14,7 @@ namespace PowerDir.Tests
     // https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/windows-powershell-host-quickstart?view=powershell-7.2
 
     [TestClass]
-    public class UnitTest1
+    public class BasicTest
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private TestContext testContextInstance;
@@ -29,11 +30,15 @@ namespace PowerDir.Tests
             set { testContextInstance = value; }
         }
 
+
+        private System.Type _type = typeof(GetPowerDir);
+        private string _filename = typeof(GetPowerDir).Module.ToString();
+
         private PowerShell createCmdLet()
         {
             return PowerShell
                 .Create()
-                .AddCommand(new CmdletInfo("Get-PowerDir", typeof(GetPowerDir)));
+                .AddCommand(new CmdletInfo("Get-PowerDir", _type));
         }
         private void displayOutput(Collection<PSObject> res)
         {
@@ -64,6 +69,9 @@ namespace PowerDir.Tests
         {
             var output = execute(createCmdLet());
             checkType(output[0], "PowerDir.GetPowerDirInfo");
+            Assert.IsNotNull(output.Where(
+                (dynamic o) => o.Name == _filename).First()
+            );
         }
 
         [TestMethod]
@@ -71,6 +79,9 @@ namespace PowerDir.Tests
         {
             var output = execute(createCmdLet().AddParameter("d", "l"));
             checkType(output[0], "System.String");
+            Assert.IsNotNull(
+                output.Where((dynamic o) => o == _filename).First()
+            );
         }
 
         [TestMethod]
@@ -78,6 +89,9 @@ namespace PowerDir.Tests
         {
             var output = execute(createCmdLet().AddParameter("d", "ld"));
             checkType(output[0], "System.String");
+            Assert.IsNotNull(
+                output.Where((dynamic o) => o.StartsWith("a------- " + _filename)).First()
+            );
         }
 
         [TestMethod]
@@ -86,6 +100,9 @@ namespace PowerDir.Tests
             // This won't run due to using Host.UI.WriteLine
             var output = execute(createCmdLet().AddParameter("d", "w").AddParameter("Debug"));
             checkType(output[0], "System.String");
+            Assert.IsNotNull(
+                output.Where((dynamic o) => o.Contains(_filename).First())
+            );
         }
     }
 
