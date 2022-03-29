@@ -23,6 +23,7 @@ namespace PowerDir
     /// </example>
     [Cmdlet(VerbsCommon.Get, "PowerDir")]
     [OutputType(typeof(GetPowerDirInfo))]
+    [Alias("d")]
     public class GetPowerDir : PSCmdlet
     {
         const int MAX_NAME_LENGTH = 50;

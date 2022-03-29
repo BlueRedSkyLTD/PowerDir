@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Import PowerDir": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "commandLineArgs": "-NoExit -Command \"Import-Module .\\PowerDir.dll\""
+    },
+    "Import Manifest": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "commandLineArgs": "-NoExit -Command \"Import-Module .\\PowerDir.GetPowerDir.psd1\""
+    }
+  }
+}

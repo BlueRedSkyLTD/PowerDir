@@ -34,6 +34,7 @@ namespace PowerDir.Tests
         private System.Type _type = typeof(GetPowerDir);
         private string _filename = typeof(GetPowerDir).Module.ToString();
 
+
         private PowerShell createCmdLet()
         {
             return PowerShell

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PowerDir
 {
-    internal class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
+    public class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
     {
         // TODO: evaluate to further elabore on link attribute
         // ref: http://www.flexhex.com/docs/articles/hard-links.phtml#hardlinks
