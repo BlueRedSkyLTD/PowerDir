@@ -7,20 +7,12 @@ using PowerDir.views;
 namespace PowerDir
 {
     /// <summary>
-    /// <para type="synopsis">This is the cmdlet synopsis.</para>
-    /// <para type="description">This is part of the longer cmdlet description.</para>
-    /// <para type="description">Also part of the longer cmdlet description.</para>
+    /// <para type="synopsis">Get-PowerDir an alternate Get-ChildItem.</para>
+    /// <para type="description">Get-PowerDir is used to display files and directories</para>
+    /// <para type="description">search for them in a user-friendly way, alsosupporting colors.</para>
     /// </summary>
     /// <para type="link" uri="(http://tempuri.org)">[My Web Page]</para>
     /// <para type="link">about_PowerDir</para>
-    /// 
-    /// <example>
-    ///   <para>This is part of the first example's introduction.</para>
-    ///   <para>This is also part of the first example's introduction.</para>
-    ///   <code>New-Thingy | Write-Host</code>
-    ///   <para>This is part of the first example's remarks.</para>
-    ///   <para>This is also part of the first example's remarks.</para>
-    /// </example>
     [Cmdlet(VerbsCommon.Get, "PowerDir")]
     [OutputType(typeof(GetPowerDirInfo))]
     [Alias("d")]
@@ -32,6 +24,7 @@ namespace PowerDir
 
         /// <summary>
         /// <para type="description">Globbing path search (default: *).</para>
+        /// <para type="inputDescription">string supporting some wildcards (Globbing not yet implemented).</para>
         /// </summary>
         [Parameter(
             Position = 0,
@@ -40,15 +33,18 @@ namespace PowerDir
         [SupportsWildcards()]
         public string Path { get; set; } = "*";
 
-        private bool pagination;
+        //private bool pagination;
         /// <summary>
         /// <para type="description"> blah blah blah</para>
         /// <para type="inputType">Input description for parameter.</para>
         /// </summary>
-        [Parameter]
-        public SwitchParameter Pagination { get { return pagination; } set { pagination = value; } }
+        //[Parameter]
+        //public SwitchParameter Pagination { get { return pagination; } set { pagination = value; } }
 
         private bool _recursive;
+        /// <summary>
+        /// <para type="description">Search Recursively (default: No)</para>
+        /// </summary>
         [Parameter(
             HelpMessage ="Search Recursively (default: No)",
             ParameterSetName = "Recursion"
@@ -59,6 +55,10 @@ namespace PowerDir
             set { _recursive = value; }
         }
 
+        /// <summary>
+        /// <para type="description">Max Recursion Depth (default: int.MaxValue)</para>
+        /// <para type="inputType">int</para>
+        /// </summary>
         [Parameter(
             HelpMessage = "Max Recursion Depth (default: int.MaxValue)",
             ParameterSetName = "Recursion"
@@ -66,19 +66,50 @@ namespace PowerDir
         [Alias("l")]
         public int Level { get; set; } = int.MaxValue;
 
+        /// <summary>
+        /// <para type="description"></para>
+        /// </summary>
         public enum DisplayOptions
         {
+            /// <summary>
+            ///
+            /// </summary>
             Object = 0,
+            /// <summary>
+            /// 
+            /// </summary>
             List = 1,
+            /// <summary>
+            /// 
+            /// </summary>
             ListDetails = 2,
+            /// <summary>
+            /// 
+            /// </summary>
             Wide = 3,
             // aliases
+            /// <summary>
+            /// 
+            /// </summary>
             o = 0,
+            /// <summary>
+            /// 
+            /// </summary>
             l = 1,
+            /// <summary>
+            /// 
+            /// </summary>
             ld = 2,
+            /// <summary>
+            /// 
+            /// </summary>
             w = 3
         }
 
+        /// <summary>
+        /// <para type="description">Display type (default: Object)</para>
+        /// <para type="inputType">DisplayOptions</para>
+        /// </summary>
         [Parameter(
             HelpMessage = "Display type (default: Object)"
         )]
@@ -92,6 +123,7 @@ namespace PowerDir
         private List<string> dirs = new List<string>();
         private List<string> files = new List<string>();
 
+        // TODO: review this HashSet, a concurrent bag maybe btter
         private HashSet<GetPowerDirInfo> results = new HashSet<GetPowerDirInfo>();
 
         private bool _supportColor = true;
@@ -200,6 +232,9 @@ namespace PowerDir
             files.Clear();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void BeginProcessing()
         {
             basePath = this.SessionState.Path.CurrentFileSystemLocation.Path;
@@ -216,11 +251,11 @@ namespace PowerDir
             collectResults();
             
             // TODO
-            if (pagination)
-            {
-                WriteDebug("paginated results");
-                WriteDebug(PagingParameters.ToString());
-            }
+            //if (pagination)
+            //{
+            //    WriteDebug("paginated results");
+            //    WriteDebug(PagingParameters.ToString());
+            //}
 
             base.BeginProcessing();
         }
@@ -260,6 +295,9 @@ namespace PowerDir
             WideView view = new WideView(_width, num_columns, write, writeLine, setColor, theme);
             view.displayResults(results);
         }
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void EndProcessing()
         {
             switch (Display)
@@ -279,6 +317,14 @@ namespace PowerDir
             }
 
             base.EndProcessing();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void StopProcessing()
+        {
+            base.StopProcessing();
         }
     }
 }
