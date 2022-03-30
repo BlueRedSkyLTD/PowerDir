@@ -1,6 +1,6 @@
 ﻿---
 external help file: PowerDir.dll-Help.xml
-Module Name: PowerDir
+Module Name: PowerDir.GetPowerDir
 online version:
 schema: 2.0.0
 ---
@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-PowerDir
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+An alternate Get-ChildItem.
 
 ## SYNTAX
 
@@ -17,16 +17,51 @@ Get-PowerDir [[-Path] <String>] [-Recursive] [-Level <Int32>] [-Display <Display
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Get-PowerDir is used to display files and directories.
+search for them in a user-friendly way, alsosupporting colors.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> d
 ```
 
-{{ Add example description here }}
+get all items in the current path folder.
+
+### Example 2
+```powershell
+PS C:\> d -d l
+```
+
+get all items as list in the current path folder.
+
+### Example 3
+```powershell
+PS C:\> d -d dl
+```
+
+get all items as detailed list in the current path folder.
+
+### Example 4
+```powershell
+PS C:\> d -d w
+```
+
+get all items in a wide 4 columns table in the current path folder.
+
+### Example 5
+```powershell
+PS C:\> d -r -l 2 *.exe
+```
+get all items ending with `.exe` recursively with a depth level of 2.
+
+### Example 6
+```powershell
+PS C:\> Get-PowerDir | ft
+```
+get all items in the current directory in `Format-table` mode.
+
 
 ## PARAMETERS
 
