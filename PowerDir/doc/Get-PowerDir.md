@@ -62,6 +62,18 @@ PS C:\> Get-PowerDir | ft
 ```
 get all items in the current directory in `Format-table` mode.
 
+### Suggested Aliases
+```powershell
+PS C:\> notepad $Profile
+```
+Edit your profile and add the following aliases
+```powershell
+function dd() { Get-PowerDir -d ld @args }
+function dw() { Get-PowerDir -d w  @args }
+function  l() { Get-PowerDir -d l  @args }
+```
+
+
 
 ## PARAMETERS
 
