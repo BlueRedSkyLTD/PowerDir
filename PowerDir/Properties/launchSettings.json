@@ -13,7 +13,7 @@
     "Generate Help": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
-      "commandLineArgs": "-NoExit -c \"Import-Module .\\PowerDir.GetPowerDir.psd1 && Import-Module platyps && New-ExternalHelp -Path  '$(ProjectDir)doc'  -OutputPath '$(TargetDir)'  && cp '$(TargetDir)PowerDir.dll-help.xml' '$(ProjectDir)' -verbose\" "
+      "commandLineArgs": "-NoExit -c \"Import-Module .\\PowerDir.GetPowerDir.psd1 && Import-Module platyps && New-ExternalHelp -Path  '$(ProjectDir)doc'  -OutputPath '$(TargetDir)' -Force  && cp '$(TargetDir)PowerDir.dll-help.xml' '$(ProjectDir)' -verbose\" "
     }
   }
 }

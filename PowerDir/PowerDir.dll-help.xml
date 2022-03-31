@@ -192,6 +192,17 @@
           <maml:para>get all items in the current directory in `Format-table` mode.</maml:para>
         </dev:remarks>
       </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 7 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; notepad $Profile
+
+function dd() { Get-PowerDir -d ld @args }
+function dw() { Get-PowerDir -d w  @args }
+function  l() { Get-PowerDir -d l  @args }</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
     </command:examples>
     <command:relatedLinks />
   </command:command>
