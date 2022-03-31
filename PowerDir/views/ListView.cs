@@ -21,7 +21,10 @@ namespace PowerDir.views
             foreach (var r in results)
             {
                 _setColor(_theme.getColor(r));
-                _writeLine(r.Name);
+                _write(r.Name);
+                _setColor(_theme.getOriginalColor());
+                _writeLine();
+                
             }
         }
     }
