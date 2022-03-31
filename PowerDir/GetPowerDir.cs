@@ -2,6 +2,7 @@
 using System.Management.Automation.Host;
 using System.Text;
 using PowerDir.views;
+using System.IO;
 
 
 namespace PowerDir
@@ -204,6 +205,36 @@ namespace PowerDir
             }
         }
 
+        private void processPath()
+        {
+            Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
+            var p = System.IO.Path.GetDirectoryName(Path);
+
+            if (Path != p)
+            {
+                basePath = System.IO.Path.Combine(basePath, p);
+                var split = Path.Split(p);
+                WriteDebug($"Path split = [{String.Join(',', split)}]");
+                foreach (var s in split)
+                {
+                    if (s.Length == 0) continue;
+                    if (Path.Contains(s))
+                    {
+                        int index = s.StartsWith(System.IO.Path.DirectorySeparatorChar) ? 1 : 0;
+                        Path = s.Substring(index);
+                        break;
+                    }
+                }
+            }
+
+            if(Directory.Exists(Path))
+            {
+                basePath = System.IO.Path.Combine(basePath, Path);
+                Path = "*";
+            }
+
+            if (string.IsNullOrEmpty(Path)) Path = "*";
+        }
         private void collectResults()
         {
             enumerationOptions.RecurseSubdirectories = _recursive;
@@ -238,7 +269,7 @@ namespace PowerDir
         protected override void BeginProcessing()
         {
             basePath = this.SessionState.Path.CurrentFileSystemLocation.Path;
-            WriteDebug($"basePath = {basePath}");
+            WriteDebug($"basePath = {basePath} --- Path = ${Path}");
             WriteDebug($"Host.Name = {Host.Name}");
 
             checkColorSupport();
@@ -248,6 +279,7 @@ namespace PowerDir
             WriteDebug($"Width = {_width} --- useUIWrite(default)={_useUIWrite}");
             WriteDebug($"Recursive = {_recursive}");
 
+            processPath();
             collectResults();
             
             // TODO

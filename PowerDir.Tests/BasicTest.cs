@@ -6,6 +6,7 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Linq;
+using System.IO;
 
 namespace PowerDir.Tests
 {
@@ -33,6 +34,7 @@ namespace PowerDir.Tests
 
         private System.Type _type = typeof(GetPowerDir);
         private string _filename = typeof(GetPowerDir).Module.ToString();
+        private string _parentDir = Path.GetRelativePath("../", Directory.GetCurrentDirectory());
 
 
         private PowerShell createCmdLet()
@@ -104,6 +106,38 @@ namespace PowerDir.Tests
             Assert.IsNotNull(
                 output.Where((dynamic o) => o.Contains(_filename).First())
             );
+        }
+
+        [DataTestMethod]
+        [DataRow("..")]
+        [DataRow("../")]
+        [DataRow("../*")]
+        [DataRow("../.")]
+        [DataRow(".././")]
+        [DataRow(".././*")]
+        [DataRow("./../")]
+        public void TestParentInvoke(string path)
+        {
+            var output = execute(createCmdLet().AddParameter("Path", path));
+            checkType(output[0], "PowerDir.GetPowerDirInfo");
+            Assert.IsNotNull(output.Where(
+                (dynamic o) => o.Name == _parentDir).First()
+            );
+        }
+
+        [DataTestMethod]
+        [DataRow("../*.0")]
+        [DataRow("../????.0")]
+        [DataRow(".././*.0")]
+        [DataRow("./../*.0")]
+        public void TestParentInvokeWildCard(string path)
+        {
+            var output = execute(createCmdLet().AddParameter("Path", path));
+            checkType(output[0], "PowerDir.GetPowerDirInfo");
+            Assert.IsNotNull(output.Where(
+                (dynamic o) => o.Name == _parentDir).First()
+            );
+
         }
     }
 
