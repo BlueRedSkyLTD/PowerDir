@@ -4,6 +4,6 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>Import PowerDir</ActiveDebugProfile>
+    <ActiveDebugProfile>Generate Help</ActiveDebugProfile>
   </PropertyGroup>
 </Project>
