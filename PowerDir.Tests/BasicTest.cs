@@ -139,6 +139,31 @@ namespace PowerDir.Tests
             );
 
         }
+
+        [DataTestMethod]
+        [DataRow("/")]
+        public void TestRootInvoke(string path)
+        {
+            var output = execute(createCmdLet().AddParameter("Path", path));
+            checkType(output[0], "PowerDir.GetPowerDirInfo");
+            string rootDir = "";
+            if (System.OperatingSystem.IsWindows())
+            { 
+                rootDir = "Windows";
+            } else if(System.OperatingSystem.IsLinux())
+            {
+                rootDir = "root";
+            } else if(System.OperatingSystem.IsMacOS())
+            {
+                rootDir = "root";
+            } else
+            {
+                throw new PSNotImplementedException(System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            }
+            
+            Assert.IsNotNull(output.Where(
+                (dynamic o) => o.Name == rootDir).First());
+        }
     }
 
 }

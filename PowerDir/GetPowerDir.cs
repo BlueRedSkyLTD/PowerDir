@@ -209,8 +209,8 @@ namespace PowerDir
         {
             Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
             var p = System.IO.Path.GetDirectoryName(Path);
-
-            if (Path != p)
+            // if p == null is root dir
+            if (p!=null && Path != p)
             {
                 basePath = System.IO.Path.Combine(basePath, p);
                 var split = Path.Split(p);

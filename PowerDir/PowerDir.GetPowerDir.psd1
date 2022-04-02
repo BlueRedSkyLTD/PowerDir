@@ -12,7 +12,7 @@
 RootModule = 'PowerDir.dll'
 
 # Version number of this module.
-ModuleVersion = '0.0.1'
+ModuleVersion = '0.1.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -24,7 +24,7 @@ GUID = '4b95261c-e995-46b3-a1ab-7cd61b1928fd'
 Author = 'Raffaello Bertini'
 
 # Company or vendor of this module
-CompanyName = 'BlueRedSKy LTD'
+CompanyName = 'BlueRedSky LTD'
 
 # Copyright statement for this module
 Copyright = '(c) BlueRedSky LTD. All rights reserved.'
@@ -33,7 +33,7 @@ Copyright = '(c) BlueRedSky LTD. All rights reserved.'
 Description = 'PowerDir is a Powershell 7 Module as an alternative to Get-Item.'
 
 # Minimum version of the PowerShell engine required by this module
-#PowerShellVersion = '7.0'
+PowerShellVersion = '7.2'
 
 # Name of the PowerShell host required by this module
 # PowerShellHostName = ''
@@ -42,7 +42,7 @@ Description = 'PowerDir is a Powershell 7 Module as an alternative to Get-Item.'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-#DotNetFrameworkVersion = '6.0'
+DotNetFrameworkVersion = '6.0'
 
 # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
 # ClrVersion = ''
