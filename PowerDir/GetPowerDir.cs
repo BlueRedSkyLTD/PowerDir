@@ -21,6 +21,20 @@ namespace PowerDir
     {
         const int MAX_NAME_LENGTH = 50;
 
+        /// <summary>
+        /// convert Hex color format to RGB
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns>(r,g,b)</returns>
+        private (byte,byte,byte) hexToRgb(int hex)
+        {
+            return (
+                (byte)((hex >> 16) & 0xFF),
+                (byte)((hex >> 8) & 0xFF),
+                (byte)((hex) & 0xFF)
+            );
+        }
+
         #region Parameters
 
         /// <summary>
@@ -129,6 +143,7 @@ namespace PowerDir
 
         private bool _supportColor = true;
         int _width = 120;
+        // TODO: consider to use just writeObject generating a string instead as it can support color with ESC[ sequence
         bool _useUIWrite = true;
         StringBuilder _sb = new StringBuilder();
 
@@ -141,16 +156,13 @@ namespace PowerDir
 
         // TODO: get-power-dir attributes, datetime, size, etc..
 
+        // TODO to be upgraded to 24 bits
         private PowerDirTheme theme = new PowerDirTheme(ConsoleColor.Gray, ConsoleColor.Black);
 
-        private void setColor(PowerDirTheme.ColorThemeItem color)
-        {
-            if (!_supportColor) return;
-            Host.UI.RawUI.ForegroundColor = color.Fg;
-            Host.UI.RawUI.BackgroundColor = color.Bg;
-        }
+        #region WriteOps
         private void write(string msg)
         {
+            // TODO consider to use just writeObject generating a string instead.
             if (_useUIWrite)
                 Host.UI.Write(msg);
             else
@@ -171,6 +183,66 @@ namespace PowerDir
                 _sb.Clear();
             }
         }
+        #endregion
+
+        #region Colors
+        private void resetColor()
+        {
+            if (!_supportColor) return;
+            Host.UI.RawUI.ForegroundColor = fg;
+            Host.UI.RawUI.ForegroundColor = bg;
+        }
+
+        //private void resetColor24Bits()
+        //{
+        //    write("\x1B[0m");
+        //}
+
+        private void setColor(PowerDirTheme.ColorThemeItem color)
+        {
+            if (!_supportColor) return;
+            Host.UI.RawUI.ForegroundColor = color.Fg;
+            Host.UI.RawUI.BackgroundColor = color.Bg;
+        }
+
+        //private void setColor(int fg_col, int bg_col)
+        //{
+        //    if (!_supportColor) return;
+        //    var (fr, fg, fb) = hexToRgb(fg_col);
+        //    var (br, bg, bb) = hexToRgb(bg_col);
+        //    write($"\x1B[38;2;{fr};{fg};{fb}m\x1B[48;2;{br};{bg};{bb}m");
+        //}
+
+        #endregion
+
+
+        #region Colored WriteOps
+        //private void write(string msg, int fg, int bg)
+        //{
+        //    setColor(fg, bg);
+        //    write(msg);
+        //    resetColor24Bits();
+        //}
+
+        //private void writeLine(string msg, int fg, int bg)
+        //{
+        //    write(msg, fg, bg);
+        //    writeLine();
+        //}
+        /// <summary>
+        /// write a message using the given color.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="col"></param>
+        private void write(string msg, PowerDirTheme.ColorThemeItem col)
+        {
+            setColor(col);
+            write(msg);
+            setColor(theme.GetOriginalColor());
+        }
+        
+        #endregion
+
         private void checkColorSupport()
         {
             try
@@ -266,6 +338,12 @@ namespace PowerDir
         /// </summary>
         protected override void BeginProcessing()
         {
+            //write("Power", 0xFF0000, 0x00FFFF);
+            //write("Dir", 0x00FF00, 0xFF00FF);
+            //write("terminal color test", 0x0000FF, 0xFFFF00);
+            //writeLine();
+            
+            
             WriteDebug($"Host Name = {Host.Name}");
             basePath = this.SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = ${Path}");
@@ -298,7 +376,7 @@ namespace PowerDir
 
         private void displayList()
         {
-            var l = new ListView(write, writeLine, setColor, theme);
+            var l = new ListView(write, write, writeLine, theme);
             l.displayResults(results);
         }
         private void displayListDetails()
@@ -308,7 +386,7 @@ namespace PowerDir
             //      etc
             
             // TODO switch parameter for dateTime type
-            ListDetailsView ldv = new ListDetailsView(_width, MAX_NAME_LENGTH, write, writeLine, setColor, theme, ListDetailsView.EDateTimes.CREATION);
+            ListDetailsView ldv = new ListDetailsView(_width, MAX_NAME_LENGTH, write, write, writeLine, theme, ListDetailsView.EDateTimes.CREATION);
             ldv.displayResults(results);
         }
 
@@ -323,7 +401,7 @@ namespace PowerDir
 
             WriteDebug($"width = {_width} --- col_size = {col_size} --- num_columns = {num_columns}");
 
-            WideView view = new WideView(_width, num_columns, write, writeLine, setColor, theme);
+            WideView view = new WideView(_width, num_columns, write, write, writeLine, theme);
             view.displayResults(results);
         }
         /// <summary>

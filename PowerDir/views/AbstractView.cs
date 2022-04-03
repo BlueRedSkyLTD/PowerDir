@@ -13,34 +13,34 @@ namespace PowerDir.views
         protected readonly string _fmt_name = "{0," + -MAX_NAME_LENGTH + "}";
 
         protected delegate void Write(string msg);
+        protected delegate void WriteColor(string msg, PowerDirTheme.ColorThemeItem color);
         protected delegate void WriteLine(string msg = "");
-        protected delegate void SetColor(PowerDirTheme.ColorThemeItem color);
 
         protected readonly Write _write;
+        protected  WriteColor _writeColor;
         protected readonly WriteLine _writeLine;
-        protected readonly SetColor _setColor;
 
         protected PowerDirTheme _theme;
-
+       
         internal AbstractView(
             in Action<string> writeFunc,
+            in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in Action<PowerDirTheme.ColorThemeItem> setColorFunc,
             in PowerDirTheme theme
         ) {
             _write = new Write(writeFunc);
+            _writeColor = new WriteColor(writeColorFunc);
             _writeLine = new WriteLine(writeLineFunc);
-            _setColor = new SetColor(setColorFunc);
             _theme = theme;
         }
 
         internal AbstractView(
             int nameMaxLength,
             in Action<string> writeFunc,
+            in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in Action<PowerDirTheme.ColorThemeItem> setColorFunc,
             in PowerDirTheme theme
-        ) : this(writeFunc, writeLineFunc, setColorFunc, theme)
+        ) : this(writeFunc, writeColorFunc, writeLineFunc, theme)
         {
             NameMaxLength = nameMaxLength;
             _fmt_name = "{0," + -NameMaxLength + "}";

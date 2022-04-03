@@ -24,11 +24,11 @@ namespace PowerDir.views
             in int width,
             in int name_max_length,
             in Action<string> writeFunc,
+            in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in Action<PowerDirTheme.ColorThemeItem> setColorFunc,
             in PowerDirTheme theme,
             in EDateTimes eDateTimes
-        ) : base(name_max_length, writeFunc, writeLineFunc, setColorFunc, theme)
+        ) : base(name_max_length, writeFunc, writeColorFunc, writeLineFunc, theme)
         {
             this.eDateTimes = eDateTimes;
             _sb = new StringBuilder(" -", width);
@@ -86,15 +86,11 @@ namespace PowerDir.views
         {
             foreach (var r in results)
             {
-                //_writeLine(getRow(r));
-                _setColor(_theme.GetOriginalColor());
-                _write(attributes(r));
+                _writeColor(attributes(r), _theme.GetOriginalColor());
                 _write(" ");
 
-                _setColor(_theme.GetColor(r));
-                _write(names(r));
+                _writeColor(names(r), _theme.GetColor(r));
                 
-                _setColor(_theme.GetOriginalColor());
                 _write(" ");
                 _write(normalizeSize(r));
                 _write(" ");
