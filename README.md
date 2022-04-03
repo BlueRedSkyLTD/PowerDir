@@ -50,7 +50,10 @@ eg 24-bits
 
 more info on VT100 ansi terminal:
 - https://en.wikipedia.org/wiki/ANSI_escape_code
-- https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm
+- https://ss64.com/ps/syntax-esc.html
+- https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_special_characters?view=powershell-7.2
+- https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
+- - https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm
 
 it is possible to underline text, bold, etc and so on too.
 
