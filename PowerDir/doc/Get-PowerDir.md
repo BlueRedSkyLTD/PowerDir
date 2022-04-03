@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-PowerDir
 
 ## SYNOPSIS
-An alternate Get-ChildItem.
+An alternative Get-ChildItem.
 
 ## SYNTAX
 
@@ -18,7 +18,7 @@ Get-PowerDir [[-Path] <String>] [-Recursive] [-Level <Int32>] [-Display <Display
 
 ## DESCRIPTION
 Get-PowerDir is used to display files and directories.
-search for them in a user-friendly way, alsosupporting colors.
+Search for them in a user-friendly way and supporting colors.
 
 ## EXAMPLES
 
@@ -63,6 +63,13 @@ PS C:\> Get-PowerDir | ft
 get all items in the current directory in `Format-table` mode.
 
 ### Example 7
+```powershell
+PS C:\> d \`$RecycleBin
+```
+Display content in the Recycle Bin in Windows System.
+Must use the backtick chat before `$`to escape it.
+
+### Example 8
 Edit your profile and add the following aliases
 ```powershell
 PS C:\> notepad $Profile

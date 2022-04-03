@@ -87,14 +87,14 @@ namespace PowerDir.views
             foreach (var r in results)
             {
                 //_writeLine(getRow(r));
-                _setColor(_theme.getOriginalColor());
+                _setColor(_theme.GetOriginalColor());
                 _write(attributes(r));
                 _write(" ");
 
-                _setColor(_theme.getColor(r));
+                _setColor(_theme.GetColor(r));
                 _write(names(r));
                 
-                _setColor(_theme.getOriginalColor());
+                _setColor(_theme.GetOriginalColor());
                 _write(" ");
                 _write(normalizeSize(r));
                 _write(" ");

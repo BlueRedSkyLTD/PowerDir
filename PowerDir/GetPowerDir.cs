@@ -149,7 +149,6 @@ namespace PowerDir
             Host.UI.RawUI.ForegroundColor = color.Fg;
             Host.UI.RawUI.BackgroundColor = color.Bg;
         }
-
         private void write(string msg)
         {
             if (_useUIWrite)
@@ -172,7 +171,6 @@ namespace PowerDir
                 _sb.Clear();
             }
         }
-
         private void checkColorSupport()
         {
             try
@@ -268,6 +266,7 @@ namespace PowerDir
         /// </summary>
         protected override void BeginProcessing()
         {
+            WriteDebug($"Host Name = {Host.Name}");
             basePath = this.SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = ${Path}");
             WriteDebug($"Host.Name = {Host.Name}");

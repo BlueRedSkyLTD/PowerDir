@@ -20,9 +20,9 @@ namespace PowerDir.views
         {
             foreach (var r in results)
             {
-                _setColor(_theme.getColor(r));
+                _setColor(_theme.GetColor(r));
                 _write(r.Name);
-                _setColor(_theme.getOriginalColor());
+                _setColor(_theme.GetOriginalColor());
                 _writeLine();
                 
             }

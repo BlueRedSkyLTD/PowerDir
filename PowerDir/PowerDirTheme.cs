@@ -57,32 +57,34 @@ namespace PowerDir
             colorTheme.Add(KeyColorTheme.ORIGINAL, original_color);
         }
 
-        public PowerDirTheme(ConsoleColor fg, ConsoleColor bg)
+        public PowerDirTheme(ConsoleColor original_fg, ConsoleColor original_bg)
         {
-            colorTheme.Add(KeyColorTheme.ORIGINAL, new ColorThemeItem(fg, bg));
+            colorTheme.Add(KeyColorTheme.ORIGINAL, new ColorThemeItem(original_fg, original_bg));
         }
 
-        public ColorThemeItem getOriginalColor()
+        public ColorThemeItem GetOriginalColor()
         {
             return colorTheme[KeyColorTheme.ORIGINAL];
         }
-        public ColorThemeItem getColor(GetPowerDirInfo info)
+        public ColorThemeItem GetColor(GetPowerDirInfo info)
         {
+            // TODO review the colors as those are not mutual exclusive
+            // eg a file can be system, hidden and readonly.
             if (info.Link)
             {
                 return colorTheme[KeyColorTheme.LINK];
-            }
-            else if (info.Hidden)
-            {
-                return info.Directory ?
-                    colorTheme[KeyColorTheme.HIDDEN_DIR] :
-                    colorTheme[KeyColorTheme.HIDDEN_FILE];
             }
             else if (info.System)
             {
                 return info.Directory ?
                     colorTheme[KeyColorTheme.SYSTEM_DIR] :
                     colorTheme[KeyColorTheme.SYSTEM_FILE];
+            }
+            else if (info.Hidden)
+            {
+                return info.Directory ?
+                    colorTheme[KeyColorTheme.HIDDEN_DIR] :
+                    colorTheme[KeyColorTheme.HIDDEN_FILE];
             }
             else if (info.ReadOnly)
             {
@@ -94,6 +96,7 @@ namespace PowerDir
             {
                 return colorTheme[KeyColorTheme.DIRECTORY];
             }
+            // FILES Only from here
             else if (info.Extension.ToUpper().EndsWith(".EXE"))
             {
                 return colorTheme[KeyColorTheme.EXE];

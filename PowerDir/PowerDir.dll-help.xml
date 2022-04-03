@@ -6,11 +6,11 @@
       <command:verb>Get</command:verb>
       <command:noun>PowerDir</command:noun>
       <maml:description>
-        <maml:para>An alternate Get-ChildItem.</maml:para>
+        <maml:para>An alternative Get-ChildItem.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Get-PowerDir is used to display files and directories. search for them in a user-friendly way, alsosupporting colors.</maml:para>
+      <maml:para>Get-PowerDir is used to display files and directories. Search for them in a user-friendly way and supporting colors.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -194,6 +194,13 @@
       </command:example>
       <command:example>
         <maml:title>-------------------------- Example 7 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; d \`$RecycleBin</dev:code>
+        <dev:remarks>
+          <maml:para>Display content in the Recycle Bin in Windows System. Must use the backtick chat before `$`to escape it.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 8 --------------------------</maml:title>
         <dev:code>PS C:\&gt; notepad $Profile
 
 function dd() { Get-PowerDir -d ld @args }
