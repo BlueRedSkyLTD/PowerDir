@@ -105,8 +105,8 @@ namespace PowerDir
             }
             // FILES Only from here
             else if (
-                _extensions.Any((x) => x == info.Extension.ToUpper().Substring(
-                    info.Extension.Length - 4)))
+                _extensions.Any((x) => x == info.Extension.ToUpper())
+                )
             {
                 return colorTheme[KeyColorTheme.EXE];
             }

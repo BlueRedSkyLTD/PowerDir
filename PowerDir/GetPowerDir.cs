@@ -278,8 +278,11 @@ namespace PowerDir
         private void processPath()
         {
             Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
+            if (Path.StartsWith("~"))
+                Path = SessionState.Path.NormalizeRelativePath(Path, basePath);
+
             Path = System.IO.Path.GetFullPath(Path);
-            basePath = System.IO.Path.GetFullPath(path);
+            basePath = System.IO.Path.GetFullPath(Path);
             var p = System.IO.Path.GetDirectoryName(Path);
             // if p == null is root dir
             if (p!=null && Path != p)
