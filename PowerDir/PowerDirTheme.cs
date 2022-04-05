@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace PowerDir
 {
+    // TODOS:
+    // - echo $env:PATHEXT
+    // .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
+    // check if PATHEXT is a powershell env variable for executable file
+    // in case integrate for the extension to highlight
     internal class PowerDirTheme
     {
         
@@ -52,6 +57,8 @@ namespace PowerDir
             {KeyColorTheme.READONLY_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkRed)},
         };
 
+        private readonly string[] _extensions = { ".EXE", ".COM", ".BAT", ".CMD" };
+
         public PowerDirTheme(ColorThemeItem original_color)
         {
             colorTheme.Add(KeyColorTheme.ORIGINAL, original_color);
@@ -97,7 +104,9 @@ namespace PowerDir
                 return colorTheme[KeyColorTheme.DIRECTORY];
             }
             // FILES Only from here
-            else if (info.Extension.ToUpper().EndsWith(".EXE"))
+            else if (
+                _extensions.Any((x) => x == info.Extension.ToUpper().Substring(
+                    info.Extension.Length - 4)))
             {
                 return colorTheme[KeyColorTheme.EXE];
             }

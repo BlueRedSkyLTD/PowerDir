@@ -164,6 +164,62 @@ namespace PowerDir.Tests
             Assert.IsNotNull(output.Where(
                 (dynamic o) => o.Name == rootDir).First());
         }
-    }
 
+        [TestMethod]
+        public void TestHomeDirectory()
+        {
+            // tode delete this test
+            // TODO create a temporary file in $HOME path
+            // check for it and then delete it in a try catch finally block
+
+            const string path = "~/__power_dir_test__";
+            var symlink = Directory.CreateSymbolicLink(path, ".");
+            try
+            {
+                var output = execute(createCmdLet().AddParameter("Path", "$HOME"));
+                checkType(output[0], "PowerDir.GetPowerDirInfo");
+                Assert.Fail();
+            }
+            finally
+            {
+                Directory.Delete(path);
+            }
+            
+        }
+
+        [TestMethod]
+        public void TestTildeDirectory()
+        {
+            // todo delete this test
+            const string path = "~/__power_dir_test__";
+            var symlink = Directory.CreateSymbolicLink(path, ".");
+            try
+            {
+                var output = execute(createCmdLet().AddParameter("Path", $"{path}/{_filename}"));
+                Assert.IsNotNull(output.Where((dynamic o) => o.Name == symlink.Name).First());
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow("$HOME")]
+        [DataRow("~")]
+        public void TestSpecialDirectories(string pathToTest)
+        {
+            const string path = "~/__power_dir_test__";
+            var symlink = Directory.CreateSymbolicLink(path, ".");
+            try
+            {
+                var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}/{_filename}"));
+                Assert.IsNotNull(output.Where((dynamic o) => o.Name == symlink.Name).First());
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+    }
 }

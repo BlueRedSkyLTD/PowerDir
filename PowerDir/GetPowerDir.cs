@@ -278,10 +278,15 @@ namespace PowerDir
         private void processPath()
         {
             Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
+            Path = System.IO.Path.GetFullPath(Path);
+            basePath = System.IO.Path.GetFullPath(path);
             var p = System.IO.Path.GetDirectoryName(Path);
             // if p == null is root dir
             if (p!=null && Path != p)
             {
+                var a = SessionState.Path.NormalizeRelativePath("~", basePath);
+                var b = System.IO.Path.GetFullPath(Path);
+
                 basePath = System.IO.Path.Combine(basePath, p);
                 var split = Path.Split(p);
                 WriteDebug($"Path split = [{String.Join(',', split)}]");
@@ -297,7 +302,7 @@ namespace PowerDir
                 }
             }
 
-            if(Directory.Exists(Path))
+            if(Directory.Exists(Path) || Directory.Exists(System.IO.Path.Combine(basePath, Path)))
             {
                 basePath = System.IO.Path.Combine(basePath, Path);
                 Path = "*";
@@ -342,10 +347,9 @@ namespace PowerDir
             //write("Dir", 0x00FF00, 0xFF00FF);
             //write("terminal color test", 0x0000FF, 0xFFFF00);
             //writeLine();
-            
-            
+
             WriteDebug($"Host Name = {Host.Name}");
-            basePath = this.SessionState.Path.CurrentFileSystemLocation.Path;
+            basePath = SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = ${Path}");
             WriteDebug($"Host.Name = {Host.Name}");
 
