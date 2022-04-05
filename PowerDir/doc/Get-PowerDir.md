@@ -67,10 +67,9 @@ get all items in the current directory in `Format-table` mode.
 PS C:\> d \`$RecycleBin
 ```
 Display content in the Recycle Bin in Windows System.
-Must use the backtick chat before `$`to escape it.
+Must use the backtick char before `$`to escape it.
 
 ### Example 8
-Edit your profile and add the following aliases
 ```powershell
 PS C:\> notepad $Profile
 
@@ -78,6 +77,7 @@ function dd() { Get-PowerDir -d ld @args }
 function dw() { Get-PowerDir -d w  @args }
 function  l() { Get-PowerDir -d l  @args }
 ```
+Edit your profile and add the following aliases
 
 
 

@@ -196,7 +196,7 @@
         <maml:title>-------------------------- Example 7 --------------------------</maml:title>
         <dev:code>PS C:\&gt; d \`$RecycleBin</dev:code>
         <dev:remarks>
-          <maml:para>Display content in the Recycle Bin in Windows System. Must use the backtick chat before `$`to escape it.</maml:para>
+          <maml:para>Display content in the Recycle Bin in Windows System. Must use the backtick char before `$`to escape it.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
@@ -207,7 +207,7 @@ function dd() { Get-PowerDir -d ld @args }
 function dw() { Get-PowerDir -d w  @args }
 function  l() { Get-PowerDir -d l  @args }</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>Edit your profile and add the following aliases</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
