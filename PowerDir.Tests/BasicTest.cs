@@ -7,6 +7,7 @@ using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Linq;
 using System.IO;
+using System;
 
 namespace PowerDir.Tests
 {
@@ -165,56 +166,19 @@ namespace PowerDir.Tests
                 (dynamic o) => o.Name == rootDir).First());
         }
 
-        [TestMethod]
-        public void TestHomeDirectory()
-        {
-            // tode delete this test
-            // TODO create a temporary file in $HOME path
-            // check for it and then delete it in a try catch finally block
-
-            const string path = "~/__power_dir_test__";
-            var symlink = Directory.CreateSymbolicLink(path, ".");
-            try
-            {
-                var output = execute(createCmdLet().AddParameter("Path", "$HOME"));
-                checkType(output[0], "PowerDir.GetPowerDirInfo");
-                Assert.Fail();
-            }
-            finally
-            {
-                Directory.Delete(path);
-            }
-            
-        }
-
-        [TestMethod]
-        public void TestTildeDirectory()
-        {
-            // todo delete this test
-            const string path = "~/__power_dir_test__";
-            var symlink = Directory.CreateSymbolicLink(path, ".");
-            try
-            {
-                var output = execute(createCmdLet().AddParameter("Path", $"{path}/{_filename}"));
-                Assert.IsNotNull(output.Where((dynamic o) => o.Name == symlink.Name).First());
-            }
-            finally
-            {
-                File.Delete(path);
-            }
-        }
-
         [DataTestMethod]
-        [DataRow("$HOME")]
+        [DataRow("$HOME")] // $HOME looks working for real, but not substituted in the test
         [DataRow("~")]
         public void TestSpecialDirectories(string pathToTest)
         {
-            const string path = "~/__power_dir_test__";
-            var symlink = Directory.CreateSymbolicLink(path, ".");
+            string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string path = $"{home}/{_filename}";
+            File.Copy(_filename, path);
+            Assert.IsTrue(File.Exists(path));
             try
             {
                 var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}/{_filename}"));
-                Assert.IsNotNull(output.Where((dynamic o) => o.Name == symlink.Name).First());
+                Assert.IsNotNull(output.Where((dynamic o) => o.Name == _filename).First());
             }
             finally
             {
