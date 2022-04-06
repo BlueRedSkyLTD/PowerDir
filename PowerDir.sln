@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerDir", "PowerDir\PowerDir.csproj", "{B4FDBF55-2028-4BFD-8C34-0846B755166F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerDir", "PowerDir\PowerDir.csproj", "{B4FDBF55-2028-4BFD-8C34-0846B755166F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B27621F8-398A-4B88-BF34-52E0DB0929C3}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPowerDir", "TestPowerDir\TestPowerDir.csproj", "{63E64054-8C0E-4DD0-8C2A-6FC9A054E731}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerDir.Tests", "PowerDir.Tests\PowerDir.Tests.csproj", "{63E64054-8C0E-4DD0-8C2A-6FC9A054E731}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
