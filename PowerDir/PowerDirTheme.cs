@@ -13,7 +13,7 @@ namespace PowerDir
     // in case integrate for the extension to highlight
     internal class PowerDirTheme
     {
-        
+        const string PATHEXT = "PATHEXT";
         /// <summary>
         /// Mapping colors
         /// </summary>
@@ -57,16 +57,19 @@ namespace PowerDir
             {KeyColorTheme.READONLY_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkRed)},
         };
 
-        private readonly string[] _extensions = { ".EXE", ".COM", ".BAT", ".CMD" };
+        private readonly string[] _extensions;
+        private readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD" };
 
         public PowerDirTheme(ColorThemeItem original_color)
         {
             colorTheme.Add(KeyColorTheme.ORIGINAL, original_color);
+            var pathExt = Environment.GetEnvironmentVariable(PATHEXT, EnvironmentVariableTarget.Process);
+            _extensions = pathExt != null? pathExt.Split(';') : _default_extensions;
         }
 
-        public PowerDirTheme(ConsoleColor original_fg, ConsoleColor original_bg)
+        public PowerDirTheme(ConsoleColor original_fg, ConsoleColor original_bg) :
+            this(new ColorThemeItem(original_fg, original_bg))
         {
-            colorTheme.Add(KeyColorTheme.ORIGINAL, new ColorThemeItem(original_fg, original_bg));
         }
 
         public ColorThemeItem GetOriginalColor()
