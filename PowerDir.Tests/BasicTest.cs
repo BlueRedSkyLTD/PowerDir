@@ -167,7 +167,7 @@ namespace PowerDir.Tests
         }
 
         [DataTestMethod]
-        [DataRow("$HOME")] // $HOME looks working for real, but not substituted in the test
+        [DataRow("$HOME")] // $HOME looks working for real, but not when used in testing
         [DataRow("~")]
         public void TestSpecialDirectories(string pathToTest)
         {
