@@ -54,19 +54,21 @@ steps:
 # #     platform: '$(buildPlatform)'
 # #     configuration: '$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: '**/*Tests/*.csproj'
-    arguments: '-t --configuration $(buildConfiguration)'
-    publishTestResults: false
-    testRunTitle: 'Display test'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-    testRunTitle: 'run test'
+- script: dotnet test -t 
+- script: dotnet test
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'test'
+#     projects: '**/*Tests/*.csproj'
+#     arguments: '-t --configuration $(buildConfiguration)'
+#     publishTestResults: false
+#     testRunTitle: 'Display test'
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'test'
+#     projects: '**/*Tests/*.csproj'
+#     arguments: '--configuration $(buildConfiguration)'
+#     testRunTitle: 'run test'
 # - task: VSTest@2
 #   inputs:
 #     testSelector: 'testAssemblies'
