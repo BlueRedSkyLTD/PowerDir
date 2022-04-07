@@ -54,10 +54,13 @@ steps:
 # #     platform: '$(buildPlatform)'
 # #     configuration: '$(buildConfiguration)'
 
-- script: dotnet test -t
-  condition: always()
-- script: dotnet test
-  condition: always()
+- powershell: |
+    Import-Module PowerDir.GetPowerDir.psd1
+    d -d dl
+  workingDirectory: PowerDir/bin/$(buildConfiguration)/net6.0
+  name: SmokeTest
+
+- script: dotnet --info
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
