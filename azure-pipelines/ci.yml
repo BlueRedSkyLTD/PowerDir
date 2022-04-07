@@ -44,10 +44,6 @@ steps:
     #netShare: # Required when packageFeedSelector == NetShare
 - task: VSTest@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-- task: VSTest@2
-  inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
       **\*test*.dll
@@ -58,21 +54,19 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    testSelector: 'testPlan'
-    testConfiguration: '1'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    distributionBatchType: 'basedOnAssembly'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    failOnMinTestsNotRun: true
-    minimumExpectedTests: '18'
 - task: DotNetCoreCLI@2
   inputs:
-    command: test
+    command: 'test'
+    projects: '**/*Tests/*.csproj'
+    arguments: '-t --configuration $(buildConfiguration)'
+    publishTestResults: false
+    testRunTitle: 'Display test'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+    testRunTitle: 'run test'
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
@@ -81,3 +75,7 @@ steps:
       !**\*TestAdapter.dll
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    codeCoverageEnabled: true
+    publishRunAttachments: true
