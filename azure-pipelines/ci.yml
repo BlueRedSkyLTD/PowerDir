@@ -55,4 +55,29 @@ steps:
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
     codeCoverageEnabled: true
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
+- task: VSTest@2
+  inputs:
+    testSelector: 'testPlan'
+    testConfiguration: '1'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    distributionBatchType: 'basedOnAssembly'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    failOnMinTestsNotRun: true
+    minimumExpectedTests: '18'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
