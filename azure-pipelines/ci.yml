@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2022'
 
 variables:
   solution: '**/*.sln'
@@ -27,33 +27,6 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-# - task: UseDotNet@2 # 2021-Dec Needed for running Unit Test, otherwise https://github.com/microsoft/azure-pipelines-tasks/issues/15607
-#   displayName: 'Install .net6 runtime (required for running Unit Tests only)'
-#   inputs:
-#     packageType: 'runtime'
-#     version: '6.x'
-
-# - task: VisualStudioTestPlatformInstaller@1
-#   #inputs:
-#     #packageFeedSelector: 'nugetOrg' # Options: nugetOrg, customFeed, netShare
-#     #versionSelector: 'latestPreRelease' # Required when packageFeedSelector == NugetOrg || PackageFeedSelector == CustomFeed# Options: latestPreRelease, latestStable, specificVersion
-#     #testPlatformVersion: # Required when versionSelector == SpecificVersion
-#     #customFeed: # Required when packageFeedSelector == CustomFeed
-#     #username: # Optional
-#     #password: # Optional
-# #     #netShare: # Required when packageFeedSelector == NetShare
-# # - task: VSTest@2
-# #   inputs:
-# #     testSelector: 'testAssemblies'
-# #     testAssemblyVer2: |
-# #       **\*test*.dll
-# #       !**\*TestAdapter.dll
-# #       !**\obj\**
-# #     searchFolder: '$(System.DefaultWorkingDirectory)'
-# #     codeCoverageEnabled: true
-# #     platform: '$(buildPlatform)'
-# #     configuration: '$(buildConfiguration)'
 
 - powershell: |
     ls
@@ -79,17 +52,3 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '-f $(netVersion) --configuration $(buildConfiguration)'
     testRunTitle: 'run tests $(Build.BuildNumber)'
-
-# - task: VSTest@2
-#   condition: always()
-#   inputs:
-#     testSelector: 'testAssemblies'
-#     testAssemblyVer2: |
-#       **\*test*.dll
-#       !**\*TestAdapter.dll
-#       !**\obj\**
-#     searchFolder: '$(System.DefaultWorkingDirectory)'
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
-#     codeCoverageEnabled: true
-#     publishRunAttachments: true
