@@ -172,6 +172,7 @@ namespace PowerDir.Tests
         public void TestSpecialDirectories(string pathToTest)
         {
             string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            TestContext.WriteLine($"[DEBUG] home = {home}");
             string path = $"{home}/{_filename}";
             File.Copy(_filename, path);
             Assert.IsTrue(File.Exists(path));
