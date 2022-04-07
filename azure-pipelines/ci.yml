@@ -21,6 +21,12 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: UseDotNet@2 # 2021-Dec Needed for running Unit Test, otherwise https://github.com/microsoft/azure-pipelines-tasks/issues/15607
+  displayName: 'Install .net6 runtime (required for running Unit Tests only)'
+  inputs:
+    packageType: 'runtime'
+    version: '6.x'
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
