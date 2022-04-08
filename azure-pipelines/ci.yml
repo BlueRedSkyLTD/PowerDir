@@ -16,6 +16,10 @@ variables:
   netVersion: 'net6.0'
 
 steps:
+- pwsh: $PSVersionTable
+- powershell: $PSVersionTable
+  
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
@@ -27,10 +31,6 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-- script: $PSVersionTable
-- pwsh: $PSVersionTable
-- powershell: $PSVersionTable
 
 - powershell: |
     ls
