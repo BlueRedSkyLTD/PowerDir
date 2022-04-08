@@ -35,6 +35,9 @@ steps:
   workingDirectory: PowerDir/bin/$(buildConfiguration)/$(netVersion)
   name: SmokeTest
 
+- script: $host.Version
+  condition: always()
+
 - script: dotnet --info
   condition: always()
 - task: DotNetCoreCLI@2
