@@ -32,7 +32,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- powershell: |
+- pwsh: |
     ls
     Import-Module  .\PowerDir.GetPowerDir.psd1
     d -d dl
