@@ -28,6 +28,10 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- script: $PSVersionTable
+- pwsh: $PSVersionTable
+- powershell: $PSVersionTable
+
 - powershell: |
     ls
     Import-Module  .\PowerDir.GetPowerDir.psd1
