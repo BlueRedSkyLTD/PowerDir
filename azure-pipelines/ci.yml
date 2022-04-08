@@ -16,10 +16,6 @@ variables:
   netVersion: 'net6.0'
 
 steps:
-- pwsh: $PSVersionTable
-- powershell: $PSVersionTable
-  
-
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
@@ -35,7 +31,7 @@ steps:
 - pwsh: |
     ls
     Import-Module  .\PowerDir.GetPowerDir.psd1
-    d -d dl
+    d -d ld
   workingDirectory: PowerDir/bin/$(buildConfiguration)/$(netVersion)
   name: SmokeTest
 
