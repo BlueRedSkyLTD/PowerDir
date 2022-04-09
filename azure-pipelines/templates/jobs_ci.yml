@@ -40,14 +40,14 @@ jobs:
     steps:
       - ${{ each step in parameters.install_PS7_Steps }}:
         - ${{ each pair in step }}:
-            ${{ pair.key }}: ${{ pair.value }}  
+            ${{ pair.key }}: ${{ pair.value }}
       # build
       - template: steps_build.yml
         parameters:
           solution: ${{ parameters.solution }}
           buildPlatform: ${{ parameters.buildPlatform }}
           buildConfiguration: $(buildConfiguration)
-          netVersion: ${{ parameters.useNetVersion }} 
+          netVersion: ${{ parameters.useNetVersion }}
       # tests
       - template: steps_tests.yml
         parameters:
