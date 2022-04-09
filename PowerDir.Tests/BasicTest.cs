@@ -60,11 +60,25 @@ namespace PowerDir.Tests
             }
         }
 
+        private void onDataAdding(object? sender, DataAddingEventArgs e)
+        {
+            string prefix = "";
+            if (sender != null)
+            {
+                if (sender.ToString().Contains("Debug"))
+                    prefix = "[Debug] ";
+                if (sender.ToString().Contains("Verbose"))
+                    prefix = "[Verbose] ";
+            }
+
+           TestContext.WriteLine(prefix + e.ItemAdded.ToString());
+        }
+
         private Collection<PSObject> execute(PowerShell ps)
         {
+            ps.Streams.Debug.DataAdding += onDataAdding;
+            ps.Streams.Verbose.DataAdding += onDataAdding;
             var output = ps.Invoke();
-            displayOutput(ps.Streams.Debug, "[DEBUG] ");
-            displayOutput(ps.Streams.Verbose, "[VERBOSE] ");
             displayOutput(output);
             Assert.IsNotNull(output);
             Assert.IsTrue(output.Count > 0);
@@ -162,8 +176,17 @@ namespace PowerDir.Tests
             checkType(output[0], "PowerDir.GetPowerDirInfo");
             string rootDir = "";
             if (System.OperatingSystem.IsWindows())
-            { 
-                rootDir = "Windows";
+            {
+                // CI fix: run in D:
+                if (Path.GetPathRoot(Environment.SystemDirectory) == Path.GetPathRoot(Directory.GetCurrentDirectory()))
+                {
+                    // if in the same drive
+                    rootDir = "Windows"; // eg. only if in C: drive
+                } else
+                {
+                    // root dir won't contain "Windows".
+                    rootDir = "."; // always existing
+                }
             } else if(System.OperatingSystem.IsLinux())
             {
                 rootDir = "root";
@@ -175,6 +198,9 @@ namespace PowerDir.Tests
                 throw new PSNotImplementedException(System.Runtime.InteropServices.RuntimeInformation.OSDescription);
             }
             TestContext.WriteLine($"rootDir = {rootDir}");
+
+            Assert.IsNotNull(output);
+            Assert.IsTrue(output.Count >= 1);
 
             Assert.IsNotNull(output.Where(
                 (dynamic o) => o.Name == rootDir).First());

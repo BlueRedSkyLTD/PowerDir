@@ -359,14 +359,13 @@ namespace PowerDir
 
             WriteDebug($"Host Name = {Host.Name}");
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
-            WriteDebug($"basePath = {basePath} --- Path = ${Path}");
-            WriteDebug($"Host.Name = {Host.Name}");
+            WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
             checkColorSupport();
             checkWidthSupport();
 
             WriteDebug($"Color = {_supportColor}");
-            WriteDebug($"Width = {_width} --- useUIWrite(default)={_useUIWrite}");
+            WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
             WriteDebug($"Recursive = {_recursive}");
 
             processPath();
