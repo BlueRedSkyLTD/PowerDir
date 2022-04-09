@@ -187,13 +187,14 @@ namespace PowerDir.Tests
                 {
                     string[] dirs = Directory.GetDirectories(drive);
                     // root dir won't contain "Windows".
-                    // skipping special dirs
-                    rootDir = dirs[0].Substring(drive.Length); // always existing
+                    rootDir = dirs[0].Substring(drive.Length); // always existing, cut off drive unit
                 }
-            } else if(System.OperatingSystem.IsLinux())
+            }
+            else if(System.OperatingSystem.IsLinux())
             {
                 rootDir = "root";
-            } else if(System.OperatingSystem.IsMacOS())
+            }
+            else if(System.OperatingSystem.IsMacOS())
             {
                 rootDir = "root";
             } else
@@ -223,10 +224,11 @@ namespace PowerDir.Tests
         public void TestHomeDirectory(string pathToTest)
         {
             string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            TestContext.WriteLine($"[DEBUG] home = {home}");
+            TestContext.WriteLine($"[TEST DEBUG] home = {home}");
             string path = $"{home}/{_filename}";
             File.Copy(_filename, path, true);
             Assert.IsTrue(File.Exists(path));
+            TestContext.WriteLine($"[TEST DEBUG] file copied in = {path}");
             try
             {
                 var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}/{_filename}"));

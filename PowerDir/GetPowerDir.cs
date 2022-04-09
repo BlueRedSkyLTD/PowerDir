@@ -289,9 +289,10 @@ namespace PowerDir
                 if (nPath == Path)
                 {
                     // drive issue? is Windows?
-                    nPath = Path.Substring(1); // strip out '~'
-                    WriteDebug($"UserProfile = {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}");
-                    Path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), nPath);
+                    Path = Path.Substring(Path.Length >= 2 ? 2 : 1); // strip out starting of '~'
+                    nPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                    WriteDebug($"[UserProfile] npath = {nPath} --- Path = {Path}");
+                    Path = System.IO.Path.Combine(nPath, Path);
                 } else
                     Path = nPath;
                 WriteDebug($"Normalized Relative Path = {Path}");
