@@ -17,7 +17,7 @@ parameters:
     default: '**/*Tests/*.csproj'
   - name: netVersion
     type: string
-    default: 'net6.0'
+    default: '6.0.x'
 
 
 jobs:
@@ -38,14 +38,14 @@ jobs:
       - script: dotnet --info
         name: dotnet_info
       # build
-      - template: build.yml
+      - template: steps_build.yml
         parameters:
           solution: ${{ parameters.solution }}
           buildPlatform: ${{ parameters.buildPlatform }}
           buildConfiguration: $(buildConfiguration)
           netVersion: ${{ parameters.netVersion }} 
       # tests
-      - template: tests.yml
+      - template: steps_tests.yml
         parameters:
           projects: ${{ parameters.projects }}
           netVersion: ${{ parameters.netVersion }}

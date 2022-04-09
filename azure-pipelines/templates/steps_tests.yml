@@ -1,10 +1,8 @@
 parameters:
   - name: projects
     type: string
-    default: '**/*Tests/*.csproj'
   - name: netVersion
     type: string
-    default: 'net6.0'
   - name: buildConfiguration
     type: string
     # default: 'Debug'

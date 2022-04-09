@@ -1,16 +1,13 @@
 parameters:
   - name: solution
     type: string
-    default: '**/*.sln'
   - name: buildPlatform
     type: string
-    default: 'Any CPU'
   - name: buildConfiguration
     type: string
     # default: 'Debug'
   - name: netVersion
     type: string
-    default: 'net6.0'
 
 steps:
   - task: NuGetToolInstaller@1

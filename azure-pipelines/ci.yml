@@ -12,15 +12,15 @@ variables:
 stages:
 - stage: CI
   jobs:
-    - template: templates/ci.yml
+    - template: templates/jobs_ci.yml
       parameters:
         jobName: "Windows"
         vmImage: ${{ variables.windows_image }}
-    - template: templates/ci.yml
+    - template: templates/jobs_ci.yml
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
-    - template: templates/ci.yml
+    - template: templates/jobs_ci.yml
       parameters:
         jobName: "MacOS"
         vmImage: ${{ variables.mac_image }}
