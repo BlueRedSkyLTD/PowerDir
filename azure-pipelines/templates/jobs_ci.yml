@@ -32,11 +32,6 @@ jobs:
             buildConfiguration: 'Release'
     
     steps:
-        # info
-      - pwsh: $PSVersionTable
-        name: PSVersionTable
-      - script: dotnet --info
-        name: dotnet_info
       # build
       - template: steps_build.yml
         parameters:
