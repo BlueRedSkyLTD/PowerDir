@@ -15,15 +15,12 @@ stages:
     - template: templates/ci.yml
       parameters:
         jobName: "Windows"
-        pool:
-          vmImage: ${{ variables.windows_image }}
+        vmImage: ${{ variables.windows_image }}
     - template: templates/ci.yml
       parameters:
         jobName: "Linux"
-        pool:
-          vmImage: ${{ variables.linux_image }}
+        vmImage: ${{ variables.linux_image }}
     - template: templates/ci.yml
       parameters:
         jobName: "MacOS"
-        pool:
-          vmImage: ${{ variables.mac_image }}
+        vmImage: ${{ variables.mac_image }}
