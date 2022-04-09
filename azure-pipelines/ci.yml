@@ -52,4 +52,3 @@ stages:
             ../../../../runtime-tests.ps1
           workingDirectory: PowerDir/bin/$(buildConfiguration)/$(netVersion)
           name: RunTimeTests
-          dependsOn: VSBuild
