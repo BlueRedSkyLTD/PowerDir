@@ -285,7 +285,14 @@ namespace PowerDir
                 Path = Path.Replace("$HOME", "~");
             if (Path.StartsWith("~"))
             {
-                Path = SessionState.Path.NormalizeRelativePath(Path, basePath);
+                string nPath = SessionState.Path.NormalizeRelativePath(Path, basePath);
+                if(nPath == Path)
+                {
+                    // drive issue? is Windows?
+                    nPath = Path.Substring(1); // strip out '~'
+                    Path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), nPath);
+                } else
+                    Path = nPath;
                 WriteDebug($"Normalized Relative Path = {Path}");
             }
             Path = System.IO.Path.GetFullPath(Path);

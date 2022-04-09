@@ -32,10 +32,9 @@ namespace PowerDir.Tests
             set { testContextInstance = value; }
         }
 
-
-        private System.Type _type = typeof(GetPowerDir);
-        private string _filename = typeof(GetPowerDir).Module.ToString();
-        private string _parentDir = Path.GetRelativePath("../", Directory.GetCurrentDirectory());
+        private readonly Type _type = typeof(GetPowerDir);
+        private readonly string _filename = typeof(GetPowerDir).Module.ToString();
+        private readonly string _parentDir = Path.GetRelativePath("../", Directory.GetCurrentDirectory());
 
 
         private PowerShell createCmdLet()
@@ -219,7 +218,7 @@ namespace PowerDir.Tests
         [DataRow("~")]
         [DataRow("~/")]
         //[DataRow("~/*")] // ~/*aaa 
-        public void TestSpecialDirectories(string pathToTest)
+        public void TestHomeDirectory(string pathToTest)
         {
             string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             TestContext.WriteLine($"[DEBUG] home = {home}");
@@ -234,6 +233,29 @@ namespace PowerDir.Tests
             finally
             {
                 File.Delete(path);
+            }
+        }
+
+        [TestMethod]
+        public void TestInHomeDirectory()
+        {
+            string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            TestContext.WriteLine($"[DEBUG] home = {home}");
+            const string dirName = "___power_dir_test___";
+            string dirPath = Path.Combine(home, dirName);
+            const string filename = "_power_dir_.test";
+            string filePath = Path.Combine(dirPath, filename);
+            Directory.CreateDirectory(dirPath);
+            File.Create(filePath).Close();
+            try
+            {
+                var output = execute(createCmdLet().AddParameter("Path", $"~/{dirName}"));
+                Assert.IsNotNull(output.Where((dynamic o) => o.Name == filename).First());
+            }
+            finally
+            {
+                File.Delete(filePath);
+                Directory.Delete(dirPath);
             }
         }
     }
