@@ -282,7 +282,6 @@ namespace PowerDir
                 Path = Path.Replace("$HOME", "~");
             if (Path.StartsWith("~"))
                 Path = SessionState.Path.NormalizeRelativePath(Path, basePath);
-            
 
             Path = System.IO.Path.GetFullPath(Path);
             basePath = System.IO.Path.GetFullPath(Path);

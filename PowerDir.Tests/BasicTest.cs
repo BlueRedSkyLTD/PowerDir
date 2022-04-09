@@ -148,6 +148,7 @@ namespace PowerDir.Tests
             var output = execute(createCmdLet().AddParameter("Path", path));
             checkType(output[0], "PowerDir.GetPowerDirInfo");
             string rootDir = "";
+            TestContext.WriteLine($"rootDir = ${rootDir}");
             if (System.OperatingSystem.IsWindows())
             { 
                 rootDir = "Windows";
