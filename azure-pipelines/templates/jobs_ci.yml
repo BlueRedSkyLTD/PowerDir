@@ -52,5 +52,5 @@ jobs:
       - template: steps_tests.yml
         parameters:
           projects: ${{ parameters.projects }}
-          netVersion: ${{ parameters.netVersion }}
+          netVersion: ${{ parameters.netVersionAAAA }}
           buildConfiguration: $(buildConfiguration)
