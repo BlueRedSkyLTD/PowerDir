@@ -81,8 +81,8 @@ namespace PowerDir.Tests
             ps.Streams.Verbose.DataAdding += onDataAdding;
             var output = ps.Invoke();
             displayOutput(output);
-            Assert.IsNotNull(output);
-            Assert.IsTrue(output.Count > 0);
+            Assert.IsNotNull(output, "output is null");
+            Assert.IsTrue(output.Count > 0, "output is empty");
             return output;
         }
 
@@ -228,7 +228,7 @@ namespace PowerDir.Tests
             try
             {
                 var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}/{_filename}"));
-                Assert.IsNotNull(output.Where((dynamic o) => o.Name == _filename).First());
+                Assert.IsNotNull(output.Where((dynamic o) => o.Name == _filename).First(), $"{pathToTest}/{_filename} not found");
             }
             finally
             {
