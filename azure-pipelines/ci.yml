@@ -20,7 +20,21 @@ stages:
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
+        install_PS7_Steps:
+          - bash: |
+              sudo apt-get update
+              sudo apt-get install -y wget apt-transport-https software-properties-common
+              wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+              sudo dpkg -i packages-microsoft-prod.deb
+              sudo apt-get update
+              sudo apt-get install -y powershell
+            name: InstallPS7
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "MacOS"
         vmImage: ${{ variables.mac_image }}
+        install_PS7_Steps:
+          - bash: |
+              /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+              brew install --cask powershell
+            name: InstallPS7

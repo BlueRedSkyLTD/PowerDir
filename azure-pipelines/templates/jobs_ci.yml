@@ -18,6 +18,10 @@ parameters:
   - name: netVersion
     type: string
     default: '6.0.x'
+  - name: install_PS7_Steps
+    type: stepList
+    default: []
+
 
 
 jobs:
@@ -32,6 +36,7 @@ jobs:
             buildConfiguration: 'Release'
     
     steps:
+      - ${{ each step in parameters.install_PS7_Steps }}:
       # build
       - template: steps_build.yml
         parameters:
