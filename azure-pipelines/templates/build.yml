@@ -19,7 +19,7 @@ steps:
       restoreSolution: ${{ parameters.solution }}
   - task: UseDotNet@2
     inputs:
-      version: $${{ parameters.netVersion}}
+      version: ${{ parameters.netVersion}}
       #includePreviewVersions: true
   - task: VSBuild@1
     inputs:
