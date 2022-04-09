@@ -10,14 +10,20 @@ parameters:
     type: string
 
 steps:
-  - task: NuGetToolInstaller@1
-  - task: NuGetCommand@2
-    inputs:
-      restoreSolution: ${{ parameters.solution }}
   - task: UseDotNet@2
     inputs:
       version: ${{ parameters.netVersion}}
       #includePreviewVersions: true
+    # info
+  - pwsh: $PSVersionTable
+    name: PSVersionTable
+  - script: dotnet --info
+    name: dotnet_info
+  - task: NuGetToolInstaller@1
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: ${{ parameters.solution }}
+  
   - task: VSBuild@1
     inputs:
       solution: ${{ parameters.solution }}
