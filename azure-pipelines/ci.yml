@@ -26,13 +26,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- pwsh: $PSVersionTable
-- pwsh: |
-    Import-Module  .\PowerDir.GetPowerDir.psd1
-    ../../../../runtime-tests.ps1
-  workingDirectory: PowerDir/bin/$(buildConfiguration)/$(netVersion)
-  name: RunTimeTests
-
 - script: dotnet --info
 - task: DotNetCoreCLI@2
   name: DisplayTests
@@ -49,3 +42,10 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '-f $(netVersion) --configuration $(buildConfiguration)'
     testRunTitle: 'RunTests-$(Build.BuildNumber)'
+
+- pwsh: $PSVersionTable
+- pwsh: |
+    Import-Module  .\PowerDir.GetPowerDir.psd1
+    ../../../../runtime-tests.ps1
+  workingDirectory: PowerDir/bin/$(buildConfiguration)/$(netVersion)
+  name: RunTimeTests
