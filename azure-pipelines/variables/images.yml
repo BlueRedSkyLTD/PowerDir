@@ -1,0 +1,4 @@
+variables:
+  windows_image: 'windows-2022'
+  linux_image: 'ubuntu-20.04'
+  mac_image: 'macOS-11'

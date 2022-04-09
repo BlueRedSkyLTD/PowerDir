@@ -9,7 +9,6 @@ parameters:
     type: string
     # default: 'Debug'
 
-
 steps:
   - task: NuGetToolInstaller@1
   - task: NuGetCommand@2

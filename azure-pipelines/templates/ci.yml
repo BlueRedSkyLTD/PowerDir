@@ -1,0 +1,51 @@
+parameters:
+  - name: jobName
+    type: string
+  - name: vmImage
+    type: string
+  - name: solution
+    type: string
+    default: '**/*.sln'
+  - name: buildPlatform
+    type: string
+    default: 'Any CPU'
+  # - name: buildConfiguration
+    # type: string
+    # default: 'Debug'
+  - name: projects
+    type: string
+    default: '**/*Tests/*.csproj'
+  - name: netVersion
+    type: string
+    default: 'net6.0'
+
+
+jobs:
+  - job: ${{ parameters.jobName }}
+    pool:
+      vmImage: ${{ parameters.vmImage }}
+    strategy:
+        matrix:
+          Debug:
+            buildConfiguration: 'Debug'
+          Release:
+            buildConfiguration: 'Release'
+    
+    steps:
+        # info
+      - pwsh: $PSVersionTable
+        name: PSVersionTable
+      - script: dotnet --info
+        name: dotnet_info
+      # build
+      - template: build.yml
+        parameters:
+          solution: ${{ parameters.solution }}
+          buildPlatform: ${{ parameters.buildPlatform }}
+          buildConfiguration: $(buildConfiguration)
+      # tests
+      - template: tests.yml
+        parameters:
+          projects: ${{ parameters.projects }}
+          netVersion: ${{ parameters.netVersion }}
+          buildConfiguration: $(buildConfiguration)

@@ -6,49 +6,24 @@
 trigger:
 - main
 
-pool:
-  vmImage: 'windows-2022'
-
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Debug'
-  netVersion: 'net6.0'
+  template: variables/images.yml
 
 stages:
-- stage: Windows
+- stage: CI
   jobs:
-    - job: CI
-      steps:
-        # - template: templates/prepare.yml
-        - task: NuGetToolInstaller@1
-        - task: NuGetCommand@2
-          inputs:
-            restoreSolution: '$(solution)'
-        - pwsh: $PSVersionTable
-        - script: dotnet --info
-        - task: VSBuild@1
-          inputs:
-            solution: '$(solution)'
-            platform: '$(buildPlatform)'
-            configuration: '$(buildConfiguration)'
-        - task: DotNetCoreCLI@2
-          name: DisplayTests
-          inputs:
-            command: 'test'
-            projects: '**/*Tests/*.csproj'
-            arguments: '-t -f $(netVersion) --configuration $(buildConfiguration)'
-            publishTestResults: false
-            testRunTitle: 'Display test'
-        - task: DotNetCoreCLI@2
-          name: RunTests
-          inputs:
-            command: 'test'
-            projects: '**/*Tests/*.csproj'
-            arguments: '-f $(netVersion) --configuration $(buildConfiguration)'
-            testRunTitle: 'RunTests-$(Build.BuildNumber)'
-        - pwsh: |
-            Import-Module  .\PowerDir.GetPowerDir.psd1
-            ../../../../runtime-tests.ps1
-          workingDirectory: PowerDir/bin/$(buildConfiguration)/$(netVersion)
-          name: RunTimeTests
+    - template: templates/ci.yml
+      parameters:
+        jobName: "Windows"
+        pool:
+          vmImage: ${{ variables.windows_image }}
+    - template: templates/ci.yml
+      parameters:
+        jobName: "Linux"
+        pool:
+          vmImage: ${{ variables.linux_image }}
+    - template: templates/ci.yml
+      parameters:
+        jobName: "MacOS"
+        pool:
+          vmImage: ${{ variables.mac_image }}
