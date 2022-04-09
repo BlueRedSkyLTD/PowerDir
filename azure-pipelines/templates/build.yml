@@ -8,12 +8,19 @@ parameters:
   - name: buildConfiguration
     type: string
     # default: 'Debug'
+  - name: netVersion
+    type: string
+    default: 'net6.0'
 
 steps:
   - task: NuGetToolInstaller@1
   - task: NuGetCommand@2
     inputs:
       restoreSolution: ${{ parameters.solution }}
+  - task: UseDotNet@2
+    inputs:
+      version: $${{ parameters.netVersion}}
+      #includePreviewVersions: true
   - task: VSBuild@1
     inputs:
       solution: ${{ parameters.solution }}

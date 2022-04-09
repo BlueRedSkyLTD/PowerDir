@@ -43,6 +43,7 @@ jobs:
           solution: ${{ parameters.solution }}
           buildPlatform: ${{ parameters.buildPlatform }}
           buildConfiguration: $(buildConfiguration)
+          netVersion: ${{ parameters.netVersion }} 
       # tests
       - template: tests.yml
         parameters:
