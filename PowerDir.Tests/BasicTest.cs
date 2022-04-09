@@ -35,8 +35,9 @@ namespace PowerDir.Tests
         private readonly Type _type = typeof(GetPowerDir);
         private readonly string _filename = typeof(GetPowerDir).Module.ToString();
         private readonly string _parentDir = Path.GetRelativePath("../", Directory.GetCurrentDirectory());
+        private readonly string _home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-
+        #region helpers
         private PowerShell createCmdLet()
         {
             return PowerShell
@@ -49,14 +50,6 @@ namespace PowerDir.Tests
         {
             foreach (var item in res)
                 TestContext.WriteLine(item.ToString());
-        }
-        private void displayOutput<T>(PSDataCollection<T> dataCollection, string prefix)
-        {
-            foreach(var data in dataCollection)
-            {
-                if (data == null) continue;
-                TestContext.WriteLine(prefix + data.ToString());
-            }
         }
 
         private void onDataAdding(object? sender, DataAddingEventArgs e)
@@ -95,6 +88,44 @@ namespace PowerDir.Tests
 
             Assert.IsTrue(o.TypeNames.Contains(type), sb.ToString());
         }
+
+        private string getRootDir()
+        {
+            string rootDir = "";
+            if (System.OperatingSystem.IsWindows())
+            {
+                string? drive = Path.GetPathRoot(Directory.GetCurrentDirectory());
+                // CI fix: run in D:
+                if (Path.GetPathRoot(Environment.SystemDirectory) == drive)
+                {
+                    // if in the same drive
+                    rootDir = "Windows"; // eg. only if in C: drive
+                }
+                else if (drive != null)
+                {
+                    string[] dirs = Directory.GetDirectories(drive);
+                    // root dir won't contain "Windows".
+                    rootDir = dirs[0].Substring(drive.Length); // always existing, cut off drive unit
+                }
+            }
+            else if (System.OperatingSystem.IsLinux())
+            {
+                rootDir = "root";
+            }
+            else if (System.OperatingSystem.IsMacOS())
+            {
+                rootDir = "root";
+            }
+            else
+            {
+                throw new PSNotImplementedException(System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            }
+            TestContext.WriteLine($"rootDir = {rootDir}");
+
+            return rootDir;
+        }
+
+        #endregion helpers
 
         [TestMethod]
         public void TestDefaultInvoke()
@@ -174,35 +205,7 @@ namespace PowerDir.Tests
         {
             var output = execute(createCmdLet().AddParameter("Path", path));
             checkType(output[0], "PowerDir.GetPowerDirInfo");
-            string rootDir = "";
-            if (System.OperatingSystem.IsWindows())
-            {
-                string? drive = Path.GetPathRoot(Directory.GetCurrentDirectory());
-                // CI fix: run in D:
-                if (Path.GetPathRoot(Environment.SystemDirectory) == drive)
-                {
-                    // if in the same drive
-                    rootDir = "Windows"; // eg. only if in C: drive
-                } else if(drive != null)
-                {
-                    string[] dirs = Directory.GetDirectories(drive);
-                    // root dir won't contain "Windows".
-                    rootDir = dirs[0].Substring(drive.Length); // always existing, cut off drive unit
-                }
-            }
-            else if(System.OperatingSystem.IsLinux())
-            {
-                rootDir = "root";
-            }
-            else if(System.OperatingSystem.IsMacOS())
-            {
-                rootDir = "root";
-            } else
-            {
-                throw new PSNotImplementedException(System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-            }
-            TestContext.WriteLine($"rootDir = {rootDir}");
-
+            string rootDir = getRootDir();
             Assert.IsNotNull(output);
             Assert.IsTrue(output.Count >= 1);
 
@@ -223,9 +226,9 @@ namespace PowerDir.Tests
         //[DataRow("~/*")] // ~/*aaa 
         public void TestHomeDirectory(string pathToTest)
         {
-            string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            TestContext.WriteLine($"[TEST DEBUG] home = {home}");
-            string path = $"{home}/{_filename}";
+            
+            TestContext.WriteLine($"[TEST DEBUG] home = {_home}");
+            string path = $"{_home}/{_filename}";
             File.Copy(_filename, path, true);
             Assert.IsTrue(File.Exists(path));
             TestContext.WriteLine($"[TEST DEBUG] file copied in = {path}");
@@ -246,9 +249,8 @@ namespace PowerDir.Tests
         //[DataRow("~/*")] // ~/*aaa 
         public void TestFileInHomeDirectory(string pathToTest)
         {
-            string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            TestContext.WriteLine($"[TEST DEBUG] home = {home}");
-            string path = $"{home}/{_filename}";
+            TestContext.WriteLine($"[TEST DEBUG] home = {_home}");
+            string path = $"{_home}/{_filename}";
             File.Copy(_filename, path, true);
             Assert.IsTrue(File.Exists(path));
             TestContext.WriteLine($"[TEST DEBUG] file copied in = {path}");
@@ -266,10 +268,9 @@ namespace PowerDir.Tests
         [TestMethod]
         public void TestDirInHomeDirectory()
         {
-            string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            TestContext.WriteLine($"[DEBUG] home = {home}");
+            TestContext.WriteLine($"[TEST DEBUG] home = {_home}");
             const string dirName = "___power_dir_test___";
-            string dirPath = Path.Combine(home, dirName);
+            string dirPath = Path.Combine(_home, dirName);
             const string filename = "_power_dir_.test";
             string filePath = Path.Combine(dirPath, filename);
             Directory.CreateDirectory(dirPath);

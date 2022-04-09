@@ -277,9 +277,7 @@ namespace PowerDir
         private void processPath()
         {
             WriteDebug($"[START] Path = {Path} --- basePath = {basePath}");
-
             Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
-            // TODO this not work due to drive letters that needs absolute path
             if (Path.StartsWith("$HOME"))
                 Path = Path.Replace("$HOME", "~");
             if (Path.StartsWith("~"))
@@ -338,15 +336,16 @@ namespace PowerDir
             enumerationOptions.IgnoreInaccessible = false;
             enumerationOptions.AttributesToSkip = 0;
 
-            dirs = Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
-            files = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
-
             // TODO: consider to process this while displaying instead.
+            dirs = Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
             foreach (string dir in dirs)
             {
                 var dirInfo = new DirectoryInfo(dir);
                 results.Add(new GetPowerDirInfo(dirInfo));
             }
+            
+            dirs.Clear();
+            files = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
 
             foreach (string file in files)
             {
@@ -354,7 +353,6 @@ namespace PowerDir
                 results.Add(new GetPowerDirInfo(fileInfo));
             }
 
-            dirs.Clear();
             files.Clear();
         }
 
