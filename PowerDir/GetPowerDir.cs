@@ -285,10 +285,12 @@ namespace PowerDir
             if (Path.StartsWith("~"))
             {
                 string nPath = SessionState.Path.NormalizeRelativePath(Path, basePath);
-                if(nPath == Path)
+                WriteDebug($"nPath = {nPath}");
+                if (nPath == Path)
                 {
                     // drive issue? is Windows?
                     nPath = Path.Substring(1); // strip out '~'
+                    WriteDebug($"UserProfile = {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}");
                     Path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), nPath);
                 } else
                     Path = nPath;
