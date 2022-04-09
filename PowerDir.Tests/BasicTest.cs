@@ -207,6 +207,7 @@ namespace PowerDir.Tests
 
             if (rootDir.Length > 0)
             {
+                TestContext.WriteLine("[TEST DEBUG] " + String.Join(",", output.Select((dynamic o) => o.Name));
                 Assert.IsNotNull(output.Where(
                     (dynamic o) => o.Name == rootDir).First(),
                     "output contains" + String.Join(",", output.Select((dynamic o) => o.Name)));
