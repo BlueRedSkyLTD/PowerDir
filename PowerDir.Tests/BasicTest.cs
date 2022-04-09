@@ -189,7 +189,7 @@ namespace PowerDir.Tests
                     string[] dirs = Directory.GetDirectories(drive);
                     // root dir won't contain "Windows".
                     // skipping special dirs
-                    rootDir = dirs.Where(d => !d.StartsWith('$')).First(); // always existing
+                    rootDir = dirs[0]; // always existing
                 }
             } else if(System.OperatingSystem.IsLinux())
             {
@@ -209,7 +209,7 @@ namespace PowerDir.Tests
             if (rootDir.Length > 0)
             {
                 Assert.IsNotNull(output.Where(
-                    (dynamic o) => o.Name == rootDir).First());
+                    (dynamic o) => o.Name == rootDir).First(), "output contains" + output.Select((dynamic o) => o.Name).ToString());
             }
         }
 
