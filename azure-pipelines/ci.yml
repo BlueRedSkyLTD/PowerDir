@@ -29,12 +29,9 @@ steps:
 - pwsh: $PSVersionTable
 - pwsh: |
     Import-Module  .\PowerDir.GetPowerDir.psd1
-    d -d ld
-    d -d w ~/
-    d -d w $HOME/
-    d -d w ~
+    ../../../../runtime-tests.ps1
   workingDirectory: PowerDir/bin/$(buildConfiguration)/$(netVersion)
-  name: SmokeTest
+  name: RunTimeTests
 
 - script: dotnet --info
 - task: DotNetCoreCLI@2

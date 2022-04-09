@@ -168,13 +168,16 @@ namespace PowerDir.Tests
 
         [DataTestMethod]
         [DataRow("$HOME")] // $HOME looks working for real, but not when used in testing
+        [DataRow("$HOME/")]
         [DataRow("~")]
+        [DataRow("~/")]
+        //[DataRow("~/*")] // ~/*aaa 
         public void TestSpecialDirectories(string pathToTest)
         {
             string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             TestContext.WriteLine($"[DEBUG] home = {home}");
             string path = $"{home}/{_filename}";
-            File.Copy(_filename, path);
+            File.Copy(_filename, path, true);
             Assert.IsTrue(File.Exists(path));
             try
             {
