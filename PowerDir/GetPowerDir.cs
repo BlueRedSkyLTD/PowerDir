@@ -2,7 +2,6 @@
 using System.Management.Automation.Host;
 using System.Text;
 using PowerDir.views;
-using System.IO;
 
 
 namespace PowerDir

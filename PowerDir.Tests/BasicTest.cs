@@ -112,8 +112,7 @@ namespace PowerDir.Tests
             var output = execute(createCmdLet().AddParameter("d", "l"));
             checkType(output[0], "System.String");
             Assert.IsNotNull(
-                output.Where((dynamic o) => o == _filename).First()
-            );
+                output.Where((dynamic o) => o == _filename).First());
         }
 
         [TestMethod]
@@ -209,7 +208,8 @@ namespace PowerDir.Tests
             if (rootDir.Length > 0)
             {
                 Assert.IsNotNull(output.Where(
-                    (dynamic o) => o.Name == rootDir).First(), "output contains" + output.Select((dynamic o) => o.Name).ToString());
+                    (dynamic o) => o.Name == rootDir).First(),
+                    "output contains" + String.Join(",", output.Select((dynamic o) => o.Name)));
             }
         }
 
