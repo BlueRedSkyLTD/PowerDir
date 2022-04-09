@@ -188,7 +188,7 @@ namespace PowerDir.Tests
                     string[] dirs = Directory.GetDirectories(drive);
                     // root dir won't contain "Windows".
                     // skipping special dirs
-                    rootDir = dirs[0].Remove(drive.Length); // always existing
+                    rootDir = dirs[0].Substring(drive.Length); // always existing
                 }
             } else if(System.OperatingSystem.IsLinux())
             {
