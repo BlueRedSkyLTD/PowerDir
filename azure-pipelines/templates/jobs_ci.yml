@@ -17,6 +17,9 @@ parameters:
     default: '**/*Tests/*.csproj'
   - name: netVersion
     type: string
+    default: 'net6'
+  - name: useNetVersion
+    type: string 
     default: '6.0.x'
   - name: install_PS7_Steps
     type: stepList
@@ -34,7 +37,6 @@ jobs:
             buildConfiguration: 'Debug'
           Release:
             buildConfiguration: 'Release'
-    
     steps:
       - ${{ each step in parameters.install_PS7_Steps }}:
         - ${{ each pair in step }}:

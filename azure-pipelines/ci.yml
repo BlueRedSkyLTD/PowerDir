@@ -36,5 +36,8 @@ stages:
         install_PS7_Steps:
           - bash: |
               /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            name: install_HomeBrew
+          - bash: |
+              /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
               brew install --cask powershell
             name: InstallPS7
