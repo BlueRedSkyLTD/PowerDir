@@ -231,6 +231,29 @@ namespace PowerDir.Tests
             TestContext.WriteLine($"[TEST DEBUG] file copied in = {path}");
             try
             {
+                var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}"));
+                Assert.IsNotNull(output.Where((dynamic o) => o.Name == _filename).First(), $"{pathToTest}/{_filename} not found");
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow("$HOME")] // $HOME looks working for real, but not when used in testing
+        [DataRow("~")]
+        //[DataRow("~/*")] // ~/*aaa 
+        public void TestFileInHomeDirectory(string pathToTest)
+        {
+            string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            TestContext.WriteLine($"[TEST DEBUG] home = {home}");
+            string path = $"{home}/{_filename}";
+            File.Copy(_filename, path, true);
+            Assert.IsTrue(File.Exists(path));
+            TestContext.WriteLine($"[TEST DEBUG] file copied in = {path}");
+            try
+            {
                 var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}/{_filename}"));
                 Assert.IsNotNull(output.Where((dynamic o) => o.Name == _filename).First(), $"{pathToTest}/{_filename} not found");
             }
@@ -241,7 +264,7 @@ namespace PowerDir.Tests
         }
 
         [TestMethod]
-        public void TestInHomeDirectory()
+        public void TestDirInHomeDirectory()
         {
             string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             TestContext.WriteLine($"[DEBUG] home = {home}");
