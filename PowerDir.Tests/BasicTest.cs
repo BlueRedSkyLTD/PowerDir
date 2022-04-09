@@ -63,11 +63,13 @@ namespace PowerDir.Tests
         private void onDataAdding(object? sender, DataAddingEventArgs e)
         {
             string prefix = "";
-            if (sender != null)
+            string? s;
+
+            if (sender != null && (s = sender.ToString()) != null)
             {
-                if (sender.ToString().Contains("Debug"))
+                if (s.Contains("Debug"))
                     prefix = "[Debug] ";
-                if (sender.ToString().Contains("Verbose"))
+                if (s.Contains("Verbose"))
                     prefix = "[Verbose] ";
             }
 
@@ -177,15 +179,17 @@ namespace PowerDir.Tests
             string rootDir = "";
             if (System.OperatingSystem.IsWindows())
             {
+                string? drive = Path.GetPathRoot(Directory.GetCurrentDirectory());
                 // CI fix: run in D:
-                if (Path.GetPathRoot(Environment.SystemDirectory) == Path.GetPathRoot(Directory.GetCurrentDirectory()))
+                if (Path.GetPathRoot(Environment.SystemDirectory) == drive)
                 {
                     // if in the same drive
                     rootDir = "Windows"; // eg. only if in C: drive
-                } else
+                } else if(drive != null)
                 {
+                    string[] dirs = Directory.GetDirectories(drive);
                     // root dir won't contain "Windows".
-                    rootDir = "."; // always existing
+                    rootDir = dirs[0]; // always existing
                 }
             } else if(System.OperatingSystem.IsLinux())
             {
@@ -202,8 +206,11 @@ namespace PowerDir.Tests
             Assert.IsNotNull(output);
             Assert.IsTrue(output.Count >= 1);
 
-            Assert.IsNotNull(output.Where(
-                (dynamic o) => o.Name == rootDir).First());
+            if (rootDir.Length > 0)
+            {
+                Assert.IsNotNull(output.Where(
+                    (dynamic o) => o.Name == rootDir).First());
+            }
         }
 
         [DataTestMethod]

@@ -280,19 +280,21 @@ namespace PowerDir
             WriteDebug($"[START] Path = {Path} --- basePath = {basePath}");
 
             Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
+            // TODO this not work due to drive letters that needs absolute path
             if (Path.StartsWith("$HOME"))
                 Path = Path.Replace("$HOME", "~");
             if (Path.StartsWith("~"))
+            {
                 Path = SessionState.Path.NormalizeRelativePath(Path, basePath);
+                WriteDebug($"Normalized Relative Path = {Path}");
+            }
             Path = System.IO.Path.GetFullPath(Path);
+            WriteDebug($"Normalized Absolute Path = {Path}");
             basePath = System.IO.Path.GetFullPath(Path);
             var p = System.IO.Path.GetDirectoryName(Path);
             // if p == null is root dir
             if (p!=null && Path != p)
             {
-                var a = SessionState.Path.NormalizeRelativePath("~", basePath);
-                var b = System.IO.Path.GetFullPath(Path);
-
                 basePath = System.IO.Path.Combine(basePath, p);
                 var split = Path.Split(p);
                 WriteDebug($"Path split = [{String.Join(',', split)}]");
