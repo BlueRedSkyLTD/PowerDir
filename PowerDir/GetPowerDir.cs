@@ -277,12 +277,13 @@ namespace PowerDir
 
         private void processPath()
         {
+            WriteDebug($"[START] Path = {Path} --- basePath = {basePath}");
+
             Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
             if (Path.StartsWith("$HOME"))
                 Path = Path.Replace("$HOME", "~");
             if (Path.StartsWith("~"))
                 Path = SessionState.Path.NormalizeRelativePath(Path, basePath);
-
             Path = System.IO.Path.GetFullPath(Path);
             basePath = System.IO.Path.GetFullPath(Path);
             var p = System.IO.Path.GetDirectoryName(Path);
@@ -314,6 +315,9 @@ namespace PowerDir
             }
 
             if (string.IsNullOrEmpty(Path)) Path = "*";
+
+            WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
+
         }
         private void collectResults()
         {

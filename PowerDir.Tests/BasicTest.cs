@@ -42,16 +42,29 @@ namespace PowerDir.Tests
         {
             return PowerShell
                 .Create()
-                .AddCommand(new CmdletInfo("Get-PowerDir", _type));
+                .AddCommand(new CmdletInfo("Get-PowerDir", _type))
+                .AddParameter("Debug")
+                .AddParameter("Verbose");
         }
         private void displayOutput(Collection<PSObject> res)
         {
             foreach (var item in res)
                 TestContext.WriteLine(item.ToString());
         }
+        private void displayOutput<T>(PSDataCollection<T> dataCollection, string prefix)
+        {
+            foreach(var data in dataCollection)
+            {
+                if (data == null) continue;
+                TestContext.WriteLine(prefix + data.ToString());
+            }
+        }
+
         private Collection<PSObject> execute(PowerShell ps)
         {
             var output = ps.Invoke();
+            displayOutput(ps.Streams.Debug, "[DEBUG] ");
+            displayOutput(ps.Streams.Verbose, "[VERBOSE] ");
             displayOutput(output);
             Assert.IsNotNull(output);
             Assert.IsTrue(output.Count > 0);
@@ -102,7 +115,7 @@ namespace PowerDir.Tests
         public void TestWideInvoke()
         {
             // This won't run due to using Host.UI.WriteLine
-            var output = execute(createCmdLet().AddParameter("d", "w").AddParameter("Debug"));
+            var output = execute(createCmdLet().AddParameter("d", "w"));
             checkType(output[0], "System.String");
             Assert.IsNotNull(
                 output.Where((dynamic o) => o.Contains(_filename).First())
@@ -148,7 +161,6 @@ namespace PowerDir.Tests
             var output = execute(createCmdLet().AddParameter("Path", path));
             checkType(output[0], "PowerDir.GetPowerDirInfo");
             string rootDir = "";
-            TestContext.WriteLine($"rootDir = ${rootDir}");
             if (System.OperatingSystem.IsWindows())
             { 
                 rootDir = "Windows";
@@ -162,7 +174,8 @@ namespace PowerDir.Tests
             {
                 throw new PSNotImplementedException(System.Runtime.InteropServices.RuntimeInformation.OSDescription);
             }
-            
+            TestContext.WriteLine($"rootDir = {rootDir}");
+
             Assert.IsNotNull(output.Where(
                 (dynamic o) => o.Name == rootDir).First());
         }

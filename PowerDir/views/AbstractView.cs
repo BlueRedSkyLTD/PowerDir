@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PowerDir.views
 {
+    // TODO instead of delegate functions, could use events
     internal class AbstractView
     {
         const int MAX_NAME_LENGTH = 50;
