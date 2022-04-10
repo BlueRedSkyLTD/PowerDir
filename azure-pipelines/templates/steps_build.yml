@@ -12,11 +12,11 @@ parameters:
 
 steps:
   # prepare
-  - task: UseDotNet@2
-    inputs:
-      version: ${{ parameters.useNetVersion }}
-      packageType: 'sdk'
-      #includePreviewVersions: true
+  # - task: UseDotNet@2
+  #   inputs:
+  #     version: ${{ parameters.useNetVersion }}
+  #     packageType: 'sdk'
+  #     #includePreviewVersions: true
     # info
   - pwsh: $PSVersionTable
     name: PSVersionTable
