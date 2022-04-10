@@ -31,7 +31,7 @@ stages:
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
-        install_PS7_Steps:
+        pre_CI_Stepes:
           - script: |
               wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
               sudo dpkg -i packages-microsoft-prod.deb
@@ -40,7 +40,7 @@ stages:
               sudo apt-get install -y apt-transport-https && \
               sudo apt-get update && \
               sudo apt-get install -y dotnet-sdk-6.0
-            name: install .NET6.0
+            name: Install_.NET6.0
           # - script: |
           #     sudo apt-get update
           #     sudo apt-get install -y wget apt-transport-https software-properties-common
@@ -53,7 +53,7 @@ stages:
     #   parameters:
     #     jobName: "MacOS"
     #     vmImage: ${{ variables.mac_image }}
-    #     install_PS7_Steps:
+    #     pre_CI_Stepes:
     #       # - script: |
     #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     #         # name: install_HomeBrew
