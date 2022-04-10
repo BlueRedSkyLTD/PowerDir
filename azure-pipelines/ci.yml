@@ -10,6 +10,16 @@ variables:
   template: variables/images.yml
 
 stages:
+- stage: showVar
+  jobs:
+    - job: tests
+      steps:
+        - script: |
+            echo ${{ variables.windows_image }}
+            echo ${{ variables.linux_image }}
+            echo ${{ variables.mac_image }}
+
+      
 - stage: CI
   jobs:
     # - template: templates/jobs_ci.yml

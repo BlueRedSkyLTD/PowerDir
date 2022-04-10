@@ -1,6 +1,8 @@
 parameters:
   - name: jobName
     type: string
+  - name: vmImage
+    type: string
   - name: solution
     type: string
     default: '**/*.sln'
