@@ -35,10 +35,8 @@ steps:
       platform: ${{ parameters.buildPlatform }}
       configuration: ${{ parameters.buildConfiguration }}
     continueOnError: true
-  - script: dotnet msbuild
-    name: MSBuild
-  - task: DotNetCoreCLI@2
-    name: MSBuild_Build
-    inputs:
-      command: 'build'
-      arguments: '-restore -t:Rebuild -p:Configuration=${{ parameters.buildConfiguration }}'
+  # - task: DotNetCoreCLI@2
+  #   name: MSBuild_Build
+  #   inputs:
+  #     command: 'build'
+  #     arguments: '-restore -t:Rebuild -p:Configuration=${{ parameters.buildConfiguration }}'
