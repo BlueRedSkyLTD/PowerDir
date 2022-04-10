@@ -12,11 +12,16 @@ parameters:
 
 steps:
   # prepare
-  # - task: UseDotNet@2
-  #   inputs:
-  #     version: ${{ parameters.useNetVersion }}
-  #     packageType: 'sdk'
-  #     #includePreviewVersions: true
+  - task: UseDotNet@2
+    inputs:
+      version: ${{ parameters.useNetVersion }}
+      packageType: 'runtime'
+      installationPath: $(Agent.TempDirectory)
+  - task: UseDotNet@2
+    inputs:
+      version: ${{ parameters.useNetVersion }}
+      packageType: 'sdk'
+      installationPath: $(Agent.TempDirectory)
     # info
   - pwsh: $PSVersionTable
     name: PSVersionTable
