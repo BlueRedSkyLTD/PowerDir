@@ -1,0 +1,16 @@
+steps:
+  - ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+    - pwsh: |
+        $ProgressPreference = 'SilentlyContinue'
+        Invoke-WebRequest -Uri https://uploader.codecov.io/latest/windows/codecov.exe -Outfile codecov.exe
+        .\codecov.exe
+  - ${{ if eq(variables['Agent.OS'], 'Linux') }}:
+    - script: |
+        curl -Os https://uploader.codecov.io/latest/linux/codecov
+        chmod +x codecov
+        ./codecov
+  - ${{ if eq(variables['Agent.OS'], 'Darwin') }}:
+    - script: |
+       curl -Os https://uploader.codecov.io/latest/macos/codecov
+       chmod +x codecov
+       ./codecov

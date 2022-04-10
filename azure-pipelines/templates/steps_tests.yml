@@ -27,8 +27,12 @@ steps:
     inputs:
       command: 'test'
       projects: ${{ parameters.projects }}
-      arguments: '-f ${{ parameters.netVersion }} --configuration ${{ parameters.buildConfiguration }}'
+      arguments: '-f ${{ parameters.netVersion }} --configuration ${{ parameters.buildConfiguration }} /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
       testRunTitle: 'RunTests-$(Build.BuildNumber)'
+  ## CodeCov
+  - template: stes_codecov.yml
+    name: CodeCov
+  ##
   - pwsh: |
       Import-Module  .\PowerDir.GetPowerDir.psd1
       ../../../../runtime-tests.ps1
