@@ -45,7 +45,7 @@ jobs:
         parameters:
           solution: ${{ parameters.solution }}
           buildPlatform: ${{ parameters.buildPlatform }}
-          buildConfiguration: $(buildConfiguration)
+          buildConfiguration: ${{ parameters.buildConfiguration }}
           useNetVersion: ${{ parameters.useNetVersion }}
       # tests
       - template: steps_tests.yml
