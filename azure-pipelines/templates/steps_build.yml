@@ -35,3 +35,5 @@ steps:
       platform: ${{ parameters.buildPlatform }}
       configuration: ${{ parameters.buildConfiguration }}
     continueOnError: true
+  - script: dotnet msbuild
+    name: MSBuild
