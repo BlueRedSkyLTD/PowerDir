@@ -21,7 +21,7 @@ parameters:
   - name: useNetVersion
     type: string 
     default: '6.0.x'
-  - name: pre_CI_Stepes
+  - name: pre_CI_Steps
     type: stepList
     default: []
 
@@ -33,11 +33,11 @@ jobs:
         matrix:
           Debug:
             buildConfiguration: 'Debug'
-          # Release:
-            # buildConfiguration: 'Release'
+          Release:
+            buildConfiguration: 'Release'
     steps:
        # pre-ci steps
-      - ${{ each step in parameters.pre_CI_Stepes }}:
+      - ${{ each step in parameters.pre_CI_Steps }}:
         - ${{ each pair in step }}:
             ${{ pair.key }}: ${{ pair.value }}
       # build
