@@ -22,7 +22,7 @@ steps:
     name: PSVersionTable
   - script: dotnet --info
     name: dotnet_info
-  - script: msbuild -version
+  - script: dotnet msbuild -version
     name: msbuild_info
   # build
   - task: NuGetToolInstaller@1
