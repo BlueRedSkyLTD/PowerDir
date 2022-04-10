@@ -114,7 +114,7 @@ namespace PowerDir.Tests
             }
             else if (System.OperatingSystem.IsMacOS())
             {
-                rootDir = "root";
+                rootDir = "System";
             }
             else
             {
