@@ -45,10 +45,10 @@ steps:
   #   inputs:
   #     command: 'build'
   #     arguments: '-restore -t:Rebuild -p:Configuration=${{ parameters.buildConfiguration }}'
-  - task: MSBuild@1
-    inputs:
-      solution: ${{ parameters.solution }}
-      platform: ${{ parameters.buildPlatform }}
-      configuration: ${{ parameters.buildConfiguration }}
-      clean: true
-    continueOnError: true
+  # - task: MSBuild@1
+  #   inputs:
+  #     solution: ${{ parameters.solution }}
+  #     platform: ${{ parameters.buildPlatform }}
+  #     configuration: ${{ parameters.buildConfiguration }}
+  #     clean: true
+  #   continueOnError: true
