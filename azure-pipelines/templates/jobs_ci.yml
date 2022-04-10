@@ -1,8 +1,6 @@
 parameters:
   - name: jobName
     type: string
-  - name: vmImage
-    type: string
   - name: solution
     type: string
     default: '**/*.sln'
@@ -30,7 +28,7 @@ parameters:
 jobs:
   - job: ${{ parameters.jobName }}
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: ${{ parameters.vmImage }}
     strategy:
         matrix:
           Debug:
