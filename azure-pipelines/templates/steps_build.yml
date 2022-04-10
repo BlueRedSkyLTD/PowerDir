@@ -23,6 +23,7 @@ steps:
   - script: dotnet --info
     name: dotnet_info
   - script: msbuild -version
+    name: msbuild_info
   # build
   - task: NuGetToolInstaller@1
   - task: NuGetCommand@2
