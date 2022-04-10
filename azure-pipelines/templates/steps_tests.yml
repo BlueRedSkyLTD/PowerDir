@@ -5,6 +5,7 @@ parameters:
     type: string
     values:
       - 'net6.0'
+      - 'net60'
   - name: buildConfiguration
     type: string
     # default: 'Debug'
