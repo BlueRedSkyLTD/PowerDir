@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworkAlias>net60</TargetFrameworkAlias>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -39,12 +40,9 @@
     
   <Target Name="CopyFiles" AfterTargets="PostBuildEvent">
     <ItemGroup>
-        <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1"/>
+        <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1" />
     </ItemGroup>
-    <Copy
-        SourceFiles="@(MySourceFiles)"
-        DestinationFolder="$(OutDir)"
-    />
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" />
   </Target>
 
 </Project>

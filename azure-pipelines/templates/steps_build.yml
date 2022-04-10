@@ -55,6 +55,6 @@ steps:
         solution: ${{ parameters.solution }}
         platform: ${{ parameters.buildPlatform }}
         configuration: ${{ parameters.buildConfiguration }}
-        clean: true
+        # clean: true
       continueOnError: true
       # condition: not(eq(variables['Agent.OS'], 'Windows_NT'))
