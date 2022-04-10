@@ -41,7 +41,4 @@ steps:
     name: MSBuild_Build
     inputs:
       command: 'msbuild'
-      projects: ${{ parameters.projects }}
       arguments: '-restore -t:Rebuild -p:Configuration=${{ parameters.buildConfiguration }}'
-      publishTestResults: false
-      testRunTitle: 'Display test'
