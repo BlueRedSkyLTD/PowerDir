@@ -31,9 +31,17 @@
   <ItemGroup>
     <Folder Include="doc\" />
   </ItemGroup>
-
+<!--
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="COPY /Y $(ProjectDir)PowerDir.GetPowerDir.psd1 $(OutDir) " />
+    <Exec Command="COPY /Y $(ProjectDir)PowerDir.GetPowerDir.psd1 $(OutDir)" />
+  </Target>
+-->
+    
+  <Target Name="CopyFiles" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+        <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" />
   </Target>
 
 </Project>

@@ -2,7 +2,6 @@
 using System.Management.Automation.Host;
 using System.Text;
 using PowerDir.views;
-using System.IO;
 
 
 namespace PowerDir
@@ -277,22 +276,32 @@ namespace PowerDir
 
         private void processPath()
         {
+            WriteDebug($"[START] Path = {Path} --- basePath = {basePath}");
             Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
             if (Path.StartsWith("$HOME"))
                 Path = Path.Replace("$HOME", "~");
             if (Path.StartsWith("~"))
-                Path = SessionState.Path.NormalizeRelativePath(Path, basePath);
-            
-
+            {
+                string nPath = SessionState.Path.NormalizeRelativePath(Path, basePath);
+                WriteDebug($"nPath = {nPath}");
+                if (nPath == Path)
+                {
+                    // drive issue? is Windows?
+                    Path = Path.Substring(Path.Length >= 2 ? 2 : 1); // strip out starting of '~'
+                    nPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                    WriteDebug($"[UserProfile] npath = {nPath} --- Path = {Path}");
+                    Path = System.IO.Path.Combine(nPath, Path);
+                } else
+                    Path = nPath;
+                WriteDebug($"Normalized Relative Path = {Path}");
+            }
             Path = System.IO.Path.GetFullPath(Path);
+            WriteDebug($"Normalized Absolute Path = {Path}");
             basePath = System.IO.Path.GetFullPath(Path);
             var p = System.IO.Path.GetDirectoryName(Path);
             // if p == null is root dir
             if (p!=null && Path != p)
             {
-                var a = SessionState.Path.NormalizeRelativePath("~", basePath);
-                var b = System.IO.Path.GetFullPath(Path);
-
                 basePath = System.IO.Path.Combine(basePath, p);
                 var split = Path.Split(p);
                 WriteDebug($"Path split = [{String.Join(',', split)}]");
@@ -315,6 +324,9 @@ namespace PowerDir
             }
 
             if (string.IsNullOrEmpty(Path)) Path = "*";
+
+            WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
+
         }
         private void collectResults()
         {
@@ -324,15 +336,16 @@ namespace PowerDir
             enumerationOptions.IgnoreInaccessible = false;
             enumerationOptions.AttributesToSkip = 0;
 
-            dirs = Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
-            files = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
-
             // TODO: consider to process this while displaying instead.
+            dirs = Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
             foreach (string dir in dirs)
             {
                 var dirInfo = new DirectoryInfo(dir);
                 results.Add(new GetPowerDirInfo(dirInfo));
             }
+            
+            dirs.Clear();
+            files = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
 
             foreach (string file in files)
             {
@@ -340,7 +353,6 @@ namespace PowerDir
                 results.Add(new GetPowerDirInfo(fileInfo));
             }
 
-            dirs.Clear();
             files.Clear();
         }
 
@@ -356,14 +368,13 @@ namespace PowerDir
 
             WriteDebug($"Host Name = {Host.Name}");
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
-            WriteDebug($"basePath = {basePath} --- Path = ${Path}");
-            WriteDebug($"Host.Name = {Host.Name}");
+            WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
             checkColorSupport();
             checkWidthSupport();
 
             WriteDebug($"Color = {_supportColor}");
-            WriteDebug($"Width = {_width} --- useUIWrite(default)={_useUIWrite}");
+            WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
             WriteDebug($"Recursive = {_recursive}");
 
             processPath();
