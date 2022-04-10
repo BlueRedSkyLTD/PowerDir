@@ -151,8 +151,12 @@ namespace PowerDir.Tests
         {
             var output = execute(createCmdLet().AddParameter("d", "ld"));
             checkType(output[0], "System.String");
+            // TODO: here Linux/MacOS doesn't display 'a' attribute for files.
             Assert.IsNotNull(
-                output.Where((dynamic o) => o.StartsWith("a------- " + _filename)).First()
+                output.Where(
+                    (dynamic o) => o.StartsWith("a------- " + _filename) 
+                                || o.StartsWith("-------- " + _filename)
+                ).First()
             );
         }
 
