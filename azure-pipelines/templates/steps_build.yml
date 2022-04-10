@@ -40,5 +40,5 @@ steps:
   - task: DotNetCoreCLI@2
     name: MSBuild_Build
     inputs:
-      command: 'msbuild'
+      command: 'build'
       arguments: '-restore -t:Rebuild -p:Configuration=${{ parameters.buildConfiguration }}'
