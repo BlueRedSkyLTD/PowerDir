@@ -23,10 +23,10 @@ stages:
 
 - stage: CI
   jobs:
-    - template: templates/jobs_ci.yml
-      parameters:
-        jobName: "Windows"
-        vmImage: ${{ variables.windows_image }}
+    # - template: templates/jobs_ci.yml
+    #   parameters:
+    #     jobName: "Windows"
+    #     vmImage: ${{ variables.windows_image }}
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "Linux"
