@@ -30,7 +30,7 @@ parameters:
 jobs:
   - job: ${{ parameters.jobName }}
     pool:
-      vmImage: ${{ parameters.vmImage }}
+      vmImage: 'ubuntu-latest'
     strategy:
         matrix:
           Debug:

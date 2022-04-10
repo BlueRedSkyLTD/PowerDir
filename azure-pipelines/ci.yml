@@ -29,15 +29,15 @@ stages:
               sudo apt-get update
               sudo apt-get install -y powershell
             name: InstallPS7
-    - template: templates/jobs_ci.yml
-      parameters:
-        jobName: "MacOS"
-        vmImage: ${{ variables.mac_image }}
-        install_PS7_Steps:
-          # - script: |
-              # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            # name: install_HomeBrew
-          - script: |
-              /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-              brew install --cask powershell
-            name: InstallPS7
+    # - template: templates/jobs_ci.yml
+    #   parameters:
+    #     jobName: "MacOS"
+    #     vmImage: ${{ variables.mac_image }}
+    #     install_PS7_Steps:
+    #       # - script: |
+    #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    #         # name: install_HomeBrew
+    #       - script: |
+    #           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    #           brew install --cask powershell
+    #         name: InstallPS7
