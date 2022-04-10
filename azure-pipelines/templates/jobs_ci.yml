@@ -52,4 +52,4 @@ jobs:
         parameters:
           projects: ${{ parameters.projects }}
           netVersion: ${{ parameters.netVersion }}
-          buildConfiguration: $(buildConfiguration)
+          buildConfiguration: ${{ parameters.buildConfiguration }}
