@@ -47,7 +47,7 @@ steps:
       platform: ${{ parameters.buildPlatform }}
       configuration: ${{ parameters.buildConfiguration }}
     continueOnError: true
-    condition: eq(variables.Agent.OS, 'Windows_NT')
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
   - task: MSBuild@1
     inputs:
       solution: ${{ parameters.solution }}
@@ -55,4 +55,4 @@ steps:
       configuration: ${{ parameters.buildConfiguration }}
       clean: true
     continueOnError: true
-    condition: not(eq(variables.Agent.OS, 'Windows_NT'))
+    condition: not(eq(variables['Agent.OS'], 'Windows_NT'))

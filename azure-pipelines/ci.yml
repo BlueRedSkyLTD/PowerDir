@@ -31,6 +31,7 @@ stages:
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
+        netVersion: 'net60'
         # install_PS7_Steps:
         #   - script: |
         #       sudo apt-get update
