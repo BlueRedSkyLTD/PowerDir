@@ -6,15 +6,15 @@ parameters:
   - name: buildConfiguration
     type: string
     # default: 'Debug'
-  # - name: useNetVersion
-    # type: string
+  - name: useNetVersion
+    type: string
 
 steps:
-  # - task: UseDotNet@2
-  #   inputs:
-  #     version: ${{ parameters.useNetVersion }}
-  #     packageType: 'sdk'
-  #     #includePreviewVersions: true
+  - task: UseDotNet@2
+    inputs:
+      version: ${{ parameters.useNetVersion }}
+      packageType: 'sdk'
+      #includePreviewVersions: true
     # info
   - pwsh: $PSVersionTable
     name: PSVersionTable

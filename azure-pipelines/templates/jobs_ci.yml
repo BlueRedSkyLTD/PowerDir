@@ -9,9 +9,9 @@ parameters:
   - name: buildPlatform
     type: string
     default: 'Any CPU'
-  # - name: buildConfiguration
-    # type: string
-    # default: 'Debug'
+  - name: buildConfiguration
+    type: string
+    default: 'Debug'
   - name: projects
     type: string
     default: '**/*Tests/*.csproj'
@@ -47,7 +47,7 @@ jobs:
           solution: ${{ parameters.solution }}
           buildPlatform: ${{ parameters.buildPlatform }}
           buildConfiguration: $(buildConfiguration)
-          # useNetVersion: ${{ parameters.useNetVersion }}
+          useNetVersion: ${{ parameters.useNetVersion }}
       # tests
       - template: steps_tests.yml
         parameters:
