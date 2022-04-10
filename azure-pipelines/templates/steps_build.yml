@@ -41,21 +41,18 @@ steps:
   - task: NuGetCommand@2
     inputs:
       restoreSolution: ${{ parameters.solution }}
-  - task: VSBuild@1
-    inputs:
-      solution: ${{ parameters.solution }}
-      platform: ${{ parameters.buildPlatform }}
-      configuration: ${{ parameters.buildConfiguration }}
-    continueOnError: true
-  # - task: DotNetCoreCLI@2
-  #   name: MSBuild_Build
-  #   inputs:
-  #     command: 'build'
-  #     arguments: '-restore -t:Rebuild -p:Configuration=${{ parameters.buildConfiguration }}'
-  # - task: MSBuild@1
-  #   inputs:
-  #     solution: ${{ parameters.solution }}
-  #     platform: ${{ parameters.buildPlatform }}
-  #     configuration: ${{ parameters.buildConfiguration }}
-  #     clean: true
-  #   continueOnError: true
+  - ${{ if eq(Agent.OS, 'Windows_NT') }}:
+    - task: VSBuild@1
+      inputs:
+        solution: ${{ parameters.solution }}
+        platform: ${{ parameters.buildPlatform }}
+        configuration: ${{ parameters.buildConfiguration }}
+      continueOnError: true
+  - ${{ if not(eq(Agent.OS, 'Windows_NT')) }}:
+    - task: MSBuild@1
+      inputs:
+        solution: ${{ parameters.solution }}
+        platform: ${{ parameters.buildPlatform }}
+        configuration: ${{ parameters.buildConfiguration }}
+        clean: true
+      continueOnError: true
