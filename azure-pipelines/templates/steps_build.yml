@@ -23,7 +23,7 @@ steps:
   - script: dotnet --info
     name: dotnet_info
   - script: dotnet msbuild -version
-    name: msbuild_info
+    name: MSBuild_info
   # build
   - task: NuGetToolInstaller@1
   - task: NuGetCommand@2
@@ -37,3 +37,11 @@ steps:
     continueOnError: true
   - script: dotnet msbuild
     name: MSBuild
+  - task: DotNetCoreCLI@2
+    name: MSBuild_Build
+    inputs:
+      command: 'msbuild'
+      projects: ${{ parameters.projects }}
+      arguments: '-restore -t:Rebuild -p:Configuration=${{ parameters.buildConfiguration }}'
+      publishTestResults: false
+      testRunTitle: 'Display test'
