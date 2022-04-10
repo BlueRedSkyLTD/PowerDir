@@ -3,11 +3,18 @@ parameters:
     type: string
   - name: buildPlatform
     type: string
+    values:
+      - 'Any CPU'
   - name: buildConfiguration
     type: string
+    values:
+      - 'Debug'
+      - 'Release'
     # default: 'Debug'
   - name: useNetVersion
     type: string
+    values:
+      - 6.0.x
 
 
 steps:

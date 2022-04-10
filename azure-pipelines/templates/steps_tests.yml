@@ -3,9 +3,14 @@ parameters:
     type: string
   - name: netVersion
     type: string
+    values:
+      - 'net6.0'
   - name: buildConfiguration
     type: string
     # default: 'Debug'
+    values:
+      - 'Debug'
+      - 'Release'
 
 
 steps:
