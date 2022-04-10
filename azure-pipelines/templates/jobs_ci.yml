@@ -17,7 +17,7 @@ parameters:
     default: '**/*Tests/*.csproj'
   - name: netVersion
     type: string
-    default: 'net6'
+    default: 'net6.0'
   - name: useNetVersion
     type: string 
     default: '6.0.x'
