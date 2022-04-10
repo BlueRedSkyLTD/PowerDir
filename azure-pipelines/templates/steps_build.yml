@@ -9,7 +9,9 @@ parameters:
   - name: useNetVersion
     type: string
 
+
 steps:
+  # prepare
   - task: UseDotNet@2
     inputs:
       version: ${{ parameters.useNetVersion }}
@@ -20,11 +22,12 @@ steps:
     name: PSVersionTable
   - script: dotnet --info
     name: dotnet_info
+  - script: msbuild -version
+  # build
   - task: NuGetToolInstaller@1
   - task: NuGetCommand@2
     inputs:
       restoreSolution: ${{ parameters.solution }}
-  
   - task: VSBuild@1
     inputs:
       solution: ${{ parameters.solution }}

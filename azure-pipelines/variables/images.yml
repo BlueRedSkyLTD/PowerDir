@@ -1,7 +1,4 @@
 variables:
-  - name: windows_image
-    value: 'windows-2022'
-  - name: linux_image
-    value: 'ubuntu-20.04'
-  - name: mac_image
-    value: 'macOS-11'
+  windows_image: 'windows-2022'
+  linux_image: 'ubuntu-20.04'
+  mac_image: 'macOS-11'

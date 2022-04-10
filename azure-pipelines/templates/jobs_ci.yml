@@ -25,8 +25,6 @@ parameters:
     type: stepList
     default: []
 
-
-
 jobs:
   - job: ${{ parameters.jobName }}
     pool:
@@ -38,6 +36,7 @@ jobs:
           Release:
             buildConfiguration: 'Release'
     steps:
+       # pre-ci steps
       - ${{ each step in parameters.install_PS7_Steps }}:
         - ${{ each pair in step }}:
             ${{ pair.key }}: ${{ pair.value }}
