@@ -11,6 +11,9 @@ PowerDir is a PowerShell 7.2 Cmdlet as alternative to `Get-ChildItem`.
 
 At the moment only Windows is fully supported, but still compatible where .NET6.0 can be run.
 
+| Code Coverage |
+|:-------------:|
+| [![codecov](https://codecov.io/gh/BlueRedSkyLTD/PowerDir/branch/main/graph/badge.svg?token=IYQC61BVWR)](https://codecov.io/gh/BlueRedSkyLTD/PowerDir) |
 
 ## Usage
 
