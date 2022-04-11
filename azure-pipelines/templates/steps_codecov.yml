@@ -10,6 +10,7 @@ steps:
       echo ${env:CODECOV_TOKEN}
       .\codecov.exe -t ${env:CODECOV_TOKEN}
     condition: eq( '${{ parameters.buildConfiguration }}', 'Debug')
+    env: $(codecov_token)
     name: CodeCov
   # - ${{ if eq(variables['Agent.OS'], 'Linux') }}:
   #   - script: |
