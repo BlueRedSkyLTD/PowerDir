@@ -12,8 +12,8 @@ parameters:
       - 'Debug'
       - 'Release'
   - name: codeCoverage
-    type: boolean
-    default: false
+    type: string
+    default: 'false'
 
 
 steps:
@@ -33,7 +33,7 @@ steps:
       arguments: '-f ${{ parameters.netVersion }} --configuration ${{ parameters.buildConfiguration }} /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
       testRunTitle: 'RunTests-$(Build.BuildNumber)'
   ## CodeCov
-  - ${{ if eq(parameters['codeCoverage'], true) }}:
+  - ${{ if eq(parameters['codeCoverage'], 'true') }}:
     - template: steps_codecov.yml
   ##
   - pwsh: |
