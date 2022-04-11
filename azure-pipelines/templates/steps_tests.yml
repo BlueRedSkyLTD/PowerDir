@@ -11,6 +11,9 @@ parameters:
     values:
       - 'Debug'
       - 'Release'
+  - name: codeCoverage
+    type: boolean
+    default: false
 
 
 steps:
@@ -31,6 +34,7 @@ steps:
       testRunTitle: 'RunTests-$(Build.BuildNumber)'
   ## CodeCov
   - template: steps_codecov.yml
+    condition: ${{ parameters.codeCoverage }}
   ##
   - pwsh: |
       Import-Module  .\PowerDir.GetPowerDir.psd1
