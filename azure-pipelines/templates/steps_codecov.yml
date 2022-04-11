@@ -1,9 +1,14 @@
+parameters:
+  - name: buildConfiguration
+    type: string
+    # default: 'Debug'
+
 steps:
   - pwsh: |
       $ProgressPreference = 'SilentlyContinue'
       Invoke-WebRequest -Uri https://uploader.codecov.io/latest/windows/codecov.exe -Outfile codecov.exe
       .\codecov.exe -t ${env:CODECOV_TOKEN}
-    condition: eq(variables['Agent.OS'], 'Windows_NT')
+    condition: eq(parameters.buildConfiguration, 'Debug')
     name: CodeCov
   # - ${{ if eq(variables['Agent.OS'], 'Linux') }}:
   #   - script: |

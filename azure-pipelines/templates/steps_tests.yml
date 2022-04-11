@@ -32,8 +32,9 @@ steps:
       arguments: '-f ${{ parameters.netVersion }} --configuration ${{ parameters.buildConfiguration }} /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
       testRunTitle: 'RunTests-$(Build.BuildNumber)'
   ## CodeCov
-  - ${{ if eq(parameters['codeCoverage'], 'true') }}:
-    - template: steps_codecov.yml
+  - template: steps_codecov.yml
+    parameters:
+      buildConfiguration: ${{ parameters.buildConfiguration }}
   ##
   - pwsh: |
       Import-Module  .\PowerDir.GetPowerDir.psd1
