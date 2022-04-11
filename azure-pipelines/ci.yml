@@ -17,31 +17,31 @@ variables:
  - template: variables/images.yml
 
 stages:
-- stage: showVar
-  jobs:
-    - job: tests
-      steps:
-        - script: |
-            echo "*** START ***"
-            echo ${{ variables.windows_image }}
-            echo ${{ variables.linux_image }}
-            echo ${{ variables.mac_image }}
-            echo .
-            echo ${{ variables['Agent.OS'] }}
-            echo .
-            echo $(Agent.OS)
-            echo "*** END ***"
-
-# - stage: CI
+# - stage: showVar
 #   jobs:
-#     - template: templates/jobs_ci.yml
-#       parameters:
-#         jobName: "Windows"
-#         vmImage: ${{ variables.windows_image }}
-#     - template: templates/jobs_ci.yml
-#       parameters:
-#         jobName: "Linux"
-#         vmImage: ${{ variables.linux_image }}
+#     - job: tests
+#       steps:
+#         - script: |
+#             echo "*** START ***"
+#             echo ${{ variables.windows_image }}
+#             echo ${{ variables.linux_image }}
+#             echo ${{ variables.mac_image }}
+#             echo .
+#             echo ${{ variables['Agent.OS'] }}
+#             echo .
+#             echo $(Agent.OS)
+#             echo "*** END ***"
+
+- stage: CI
+  jobs:
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "Windows"
+        vmImage: ${{ variables.windows_image }}
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "Linux"
+        vmImage: ${{ variables.linux_image }}
         # pre_CI_Steps:
         #   - script: |
         #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -60,10 +60,10 @@ stages:
           #     sudo apt-get update
           #     sudo apt-get install -y powershell
           #   name: InstallPS7
-    # - template: templates/jobs_ci.yml
-    #   parameters:
-    #     jobName: "MacOS"
-    #     vmImage: ${{ variables.mac_image }}
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "MacOS"
+        vmImage: ${{ variables.mac_image }}
     #     pre_CI_Steps:
     #       # - script: |
     #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
