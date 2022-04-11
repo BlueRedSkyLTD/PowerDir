@@ -33,8 +33,8 @@ jobs:
         matrix:
           Debug:
             buildConfiguration: 'Debug'
-          # Release:
-          #   buildConfiguration: 'Release'
+          Release:
+            buildConfiguration: 'Release'
     steps:
        # pre-ci steps
       - ${{ each step in parameters.pre_CI_Steps }}:

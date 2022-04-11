@@ -7,7 +7,6 @@ steps:
   - pwsh: |
       $ProgressPreference = 'SilentlyContinue'
       Invoke-WebRequest -Uri https://uploader.codecov.io/latest/windows/codecov.exe -Outfile codecov.exe
-      echo ${env:CODECOV_TOKEN}
       .\codecov.exe -t ${env:CODECOV_TOKEN}
     condition: eq( '${{ parameters.buildConfiguration }}', 'Debug')
     env:
