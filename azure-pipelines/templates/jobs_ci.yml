@@ -33,10 +33,10 @@ jobs:
         matrix:
           Debug:
             buildConfiguration: 'Debug'
-            codeCoverage: 'true'
+            codeCoverage: true
           Release:
             buildConfiguration: 'Release'
-            codeCoverage: 'false'
+            codeCoverage: false
     steps:
        # pre-ci steps
       - ${{ each step in parameters.pre_CI_Steps }}:
@@ -55,4 +55,4 @@ jobs:
           projects: ${{ parameters.projects }}
           netVersion: ${{ parameters.netVersion }}
           buildConfiguration: ${{ parameters.buildConfiguration }}
-          codeCoverage: codeCoverage
+          codeCoverage: $(codeCoverage)

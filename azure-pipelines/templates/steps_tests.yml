@@ -13,7 +13,6 @@ parameters:
       - 'Release'
   - name: codeCoverage
     type: string
-    default: 'false'
 
 
 steps:
