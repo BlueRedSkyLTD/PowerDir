@@ -11,8 +11,6 @@ parameters:
     values:
       - 'Debug'
       - 'Release'
-  - name: codeCoverage
-    type: string
 
 
 steps:
