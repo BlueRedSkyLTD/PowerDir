@@ -26,7 +26,10 @@ stages:
             echo ${{ variables.windows_image }}
             echo ${{ variables.linux_image }}
             echo ${{ variables.mac_image }}
+            echo .
             echo ${{ variables['Agent.OS'] }}
+            echo .
+            echo $(Agent.OS)
             echo "*** END ***"
 
 # - stage: CI
