@@ -55,4 +55,4 @@ jobs:
           projects: ${{ parameters.projects }}
           netVersion: ${{ parameters.netVersion }}
           buildConfiguration: ${{ parameters.buildConfiguration }}
-          codeCoverage: $(variables.codeCoverage)
+          codeCoverage: eq($(variables.codeCoverage), true)
