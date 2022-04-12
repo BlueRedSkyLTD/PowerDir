@@ -19,7 +19,7 @@ namespace PowerDir
     public class GetPowerDir : PSCmdlet
     {
         const int MAX_NAME_LENGTH = 50;
-
+        /*
         /// <summary>
         /// convert Hex color format to RGB
         /// </summary>
@@ -33,7 +33,7 @@ namespace PowerDir
                 (byte)((hex) & 0xFF)
             );
         }
-
+        */
         #region Parameters
 
         /// <summary>
@@ -185,12 +185,12 @@ namespace PowerDir
         #endregion
 
         #region Colors
-        private void resetColor()
-        {
-            if (!_supportColor) return;
-            Host.UI.RawUI.ForegroundColor = fg;
-            Host.UI.RawUI.ForegroundColor = bg;
-        }
+        //private void resetColor()
+        //{
+        //    if (!_supportColor) return;
+        //    Host.UI.RawUI.ForegroundColor = fg;
+        //    Host.UI.RawUI.ForegroundColor = bg;
+        //}
 
         //private void resetColor24Bits()
         //{
@@ -326,7 +326,6 @@ namespace PowerDir
             if (string.IsNullOrEmpty(Path)) Path = "*";
 
             WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
-
         }
         private void collectResults()
         {

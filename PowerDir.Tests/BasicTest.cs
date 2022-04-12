@@ -26,7 +26,9 @@ namespace PowerDir.Tests
         /// Gets or sets the test context which provides
         /// information about and functionality for the current test run.
         /// </summary>
+#pragma warning disable S2292 // Trivial properties should be auto-implemented
         public TestContext TestContext
+#pragma warning restore S2292 // Trivial properties should be auto-implemented
         {
             get { return testContextInstance; }
             set { testContextInstance = value; }
@@ -132,9 +134,7 @@ namespace PowerDir.Tests
         {
             var output = execute(createCmdLet());
             checkType(output[0], "PowerDir.GetPowerDirInfo");
-            Assert.IsNotNull(output.Where(
-                (dynamic o) => o.Name == _filename).First()
-            );
+            Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename));
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace PowerDir.Tests
             var output = execute(createCmdLet().AddParameter("d", "l"));
             checkType(output[0], "System.String");
             Assert.IsNotNull(
-                output.Where((dynamic o) => o == _filename).First());
+                output.First((dynamic o) => o == _filename));
         }
 
         [TestMethod]
@@ -153,11 +153,9 @@ namespace PowerDir.Tests
             checkType(output[0], "System.String");
             // TODO: here Linux/MacOS doesn't display 'a' attribute for files.
             Assert.IsNotNull(
-                output.Where(
-                    (dynamic o) => o.StartsWith("a------- " + _filename) 
+                output.First((dynamic o) => o.StartsWith("a------- " + _filename) 
                                 || o.StartsWith("-------- " + _filename)
-                ).First()
-            );
+));
         }
 
         [TestMethod]
@@ -179,28 +177,15 @@ namespace PowerDir.Tests
         [DataRow(".././")]
         [DataRow(".././*")]
         [DataRow("./../")]
-        public void TestParentInvoke(string path)
-        {
-            var output = execute(createCmdLet().AddParameter("Path", path));
-            checkType(output[0], "PowerDir.GetPowerDirInfo");
-            Assert.IsNotNull(output.Where(
-                (dynamic o) => o.Name == _parentDir).First()
-            );
-        }
-
-        [DataTestMethod]
         [DataRow("../*.0")]
         [DataRow("../????.0")]
         [DataRow(".././*.0")]
         [DataRow("./../*.0")]
-        public void TestParentInvokeWildCard(string path)
+        public void TestParentInvoke(string path)
         {
             var output = execute(createCmdLet().AddParameter("Path", path));
             checkType(output[0], "PowerDir.GetPowerDirInfo");
-            Assert.IsNotNull(output.Where(
-                (dynamic o) => o.Name == _parentDir).First()
-            );
-
+            Assert.IsNotNull(output.First((dynamic o) => o.Name == _parentDir));
         }
 
         [DataTestMethod]
@@ -213,13 +198,9 @@ namespace PowerDir.Tests
             Assert.IsNotNull(output);
             Assert.IsTrue(output.Count >= 1);
 
-            if (rootDir.Length > 0)
-            {
-                TestContext.WriteLine("[TEST DEBUG] " + String.Join(",", output.Select((dynamic o) => o.Name)));
-                Assert.IsNotNull(output.Where(
-                    (dynamic o) => o.Name == rootDir).First(),
-                    "output contains" + String.Join(",", output.Select((dynamic o) => o.Name)));
-            }
+            TestContext.WriteLine("[TEST DEBUG] " + String.Join(",", output.Select((dynamic o) => o.Name)));
+            Assert.IsNotNull(output.First((dynamic o) => o.Name == rootDir),
+                "output contains" + String.Join(",", output.Select((dynamic o) => o.Name)));
         }
 
         [DataTestMethod]
@@ -230,7 +211,6 @@ namespace PowerDir.Tests
         //[DataRow("~/*")] // ~/*aaa 
         public void TestHomeDirectory(string pathToTest)
         {
-            
             TestContext.WriteLine($"[TEST DEBUG] home = {_home}");
             string path = $"{_home}/{_filename}";
             File.Copy(_filename, path, true);
@@ -239,7 +219,8 @@ namespace PowerDir.Tests
             try
             {
                 var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}"));
-                Assert.IsNotNull(output.Where((dynamic o) => o.Name == _filename).First(), $"{pathToTest}/{_filename} not found");
+                Assert.IsNotNull(output.First((dynamic o) =>
+                    o.Name == _filename), $"{pathToTest}/{_filename} not found");
             }
             finally
             {
@@ -261,7 +242,7 @@ namespace PowerDir.Tests
             try
             {
                 var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}/{_filename}"));
-                Assert.IsNotNull(output.Where((dynamic o) => o.Name == _filename).First(), $"{pathToTest}/{_filename} not found");
+                Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename), $"{pathToTest}/{_filename} not found");
             }
             finally
             {
@@ -282,7 +263,7 @@ namespace PowerDir.Tests
             try
             {
                 var output = execute(createCmdLet().AddParameter("Path", $"~/{dirName}"));
-                Assert.IsNotNull(output.Where((dynamic o) => o.Name == filename).First());
+                Assert.IsNotNull(output.First((dynamic o) => o.Name == filename));
             }
             finally
             {
