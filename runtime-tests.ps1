@@ -1,3 +1,4 @@
+$ErrorActionPreference = "Stop"
 $tests = @("$HOME", "$HOME/", "$HOME/", "~", "~/", "~/*")
 
 ### Debug
