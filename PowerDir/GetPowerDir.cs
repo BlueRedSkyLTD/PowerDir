@@ -295,7 +295,7 @@ namespace PowerDir
                     Path = nPath;
                 WriteDebug($"Normalized Relative Path = {Path}");
             }
-            Path = System.IO.Path.GetFullPath(Path);
+            Path = System.IO.Path.Combine(basePath, Path);
             WriteDebug($"Normalized Absolute Path = {Path}");
             basePath = System.IO.Path.GetFullPath(Path);
             var p = System.IO.Path.GetDirectoryName(Path);
