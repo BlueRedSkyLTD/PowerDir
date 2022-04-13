@@ -6,3 +6,6 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Debug'
+  projects: '**/*Tests/*.csproj'
+  netVersion: 'net6.0'
+  useNetVersion: '6.0.x'
