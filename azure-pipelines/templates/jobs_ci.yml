@@ -5,22 +5,14 @@ parameters:
     type: string
   - name: solution
     type: string
-    default: '**/*.sln'
   - name: buildPlatform
     type: string
-    default: 'Any CPU'
-  - name: buildConfiguration
-    type: string
-    default: 'Debug'
   - name: projects
     type: string
-    default: '**/*Tests/*.csproj'
   - name: netVersion
     type: string
-    default: 'net6.0'
   - name: useNetVersion
     type: string 
-    default: '6.0.x'
   - name: pre_CI_Steps
     type: stepList
     default: []

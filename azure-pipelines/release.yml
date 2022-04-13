@@ -1,0 +1,59 @@
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+    #- .gitignore
+    - .github/*
+    - README.md
+  tags:
+    include:
+    - '*'
+
+variables:
+  - template: variables/globals.yml
+  - template: variables/images.yml
+
+stages:
+- stage: Release
+  variables:
+    buildConfiguration: Release
+  jobs:
+    # build
+      - template: steps_build.yml
+        parameters:
+          solution: ${{ variables.solution }}
+          buildPlatform: ${{ variables.buildPlatform }}
+          buildConfiguration: ${{ variables.buildPlatform }}
+          useNetVersion: ${{ parameters.useNetVersion }}
+      # tests
+      - template: steps_tests.yml
+        parameters:
+          projects: ${{ variables.projects }}
+          netVersion: ${{ variables.netVersion }}
+          buildConfiguration: Release
+      # package
+      - task: CopyFiles@2
+        inputs:
+          sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
+          contents: '*.zip'
+          targetFolder: '$(Build.ArtifactStagingDirectory)'
+        condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+      - task: GithubRelease@1 
+        displayName: 'Create GitHub Release'
+        inputs:
+          gitHubConnection: BlueRedSkyLTD
+          repositoryName: '$(Build.Repository.Name)'
+          action: 'edit'
+          target: '$(Build.SourceVersion)'
+          tagSource: auto
+          tag: $(Build.BuildNumber)
+          title: $(Build.SourceBranchName)
+          isDraft: true
+          assetUploadMode: 'replace'
+          addChangeLog: true
+          compareWith: 'lastFullRelease'
+          assets: '$(Build.ArtifactStagingDirectory)/*'
+        condition: contains(variables['Build.SourceBranch'], 'refs/tags/')

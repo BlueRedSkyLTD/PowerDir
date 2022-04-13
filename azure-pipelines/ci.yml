@@ -3,7 +3,7 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
-trigger:
+pr:
   branches:
     include:
       - main
@@ -40,12 +40,22 @@ stages:
       parameters:
         jobName: "Windows"
         vmImage: ${{ variables.windows_image }}
+        solution: ${{ variables.solution }}
+        buildPlatform: ${{ variables.buildPlatform }}
+        projects: ${{ variables.projects }}
+        netVersion: ${{ variables.netVersion }}
+        useNetVersion: ${{ variables.useNetVersion }}
         execution: ${{ variables.ci_windows }}
 
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
+        solution: ${{ variables.solution }}
+        buildPlatform: ${{ variables.buildPlatform }}
+        projects: ${{ variables.projects }}
+        netVersion: ${{ variables.netVersion }}
+        useNetVersion: ${{ variables.useNetVersion }}
         execution: ${{ variables.ci_linux }}
       # pre_CI_Steps:
       #   - script: |
@@ -70,6 +80,11 @@ stages:
       parameters:
         jobName: "MacOS"
         vmImage: ${{ variables.mac_image }}
+        solution: ${{ variables.solution }}
+        buildPlatform: ${{ variables.buildPlatform }}
+        projects: ${{ variables.projects }}
+        netVersion: ${{ variables.netVersion }}
+        useNetVersion: ${{ variables.useNetVersion }}
         execution: ${{ variables.ci_macos }}
     #     pre_CI_Steps:
     #       # - script: |
