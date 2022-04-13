@@ -73,3 +73,9 @@ stages:
           compareWith: 'lastFullRelease'
           assets: '$(Build.ArtifactStagingDirectory)/*'
         # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+      # Publishing to Powershell Gallery
+      - pwsh: |
+          PublishModule -WhatIf -Path $(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir -NuGetApiKey ${env:PWSH_PUBLISH}
+        name: PublishModule
+        env:
+         PWSH_PUBLISH: $(pwsh_publish)

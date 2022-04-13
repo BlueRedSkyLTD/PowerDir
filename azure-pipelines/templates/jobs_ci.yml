@@ -52,12 +52,3 @@ jobs:
           projects: ${{ parameters.projects }}
           netVersion: ${{ parameters.netVersion }}
           buildConfiguration: $(BUILD_CONFIGURATION)
-      # check if versions are matching: project, manifest, git tag
-      - task: PowerShell@2
-        inputs:
-          filePath: $(Build.SourcesDirectory)/check-versions.ps1
-          targetType: filepath
-          failOnStderr: true
-          displayName: CheckVersions
-          arguments: $(Build.SourceVersion)
-        name: CheckVersions
