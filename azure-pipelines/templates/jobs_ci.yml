@@ -33,7 +33,7 @@ parameters:
 
 jobs:
   - job: ${{ parameters.jobName }}
-    condition: eq('${{ }'parameters.execution }}', 'true')
+    condition: eq('${{ parameters.execution }}', 'true')
     pool:
       vmImage: ${{ parameters.vmImage }}
     strategy:
