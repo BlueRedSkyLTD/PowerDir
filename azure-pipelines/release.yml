@@ -21,7 +21,14 @@ stages:
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
         inputs:
-          filePath: ./check-versions.ps1
+          filePath: $(Build.SourcesDirectory)/check-versions-tag.ps1
+          targetType: filepath
+          failOnStderr: true
+          displayName: CheckVersions
+          arguments: $(Build.SourceVersion)
+      - task: PowerShell@2
+        inputs:
+          filePath: $(Build.SourcesDirectory)/check-versions.ps1
           targetType: filepath
           failOnStderr: true
           displayName: CheckVersions
