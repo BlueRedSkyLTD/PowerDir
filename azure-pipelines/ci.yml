@@ -18,21 +18,21 @@ variables:
   - template: variables/images.yml
 
 stages:
-- stage: DebugInfo
-  condition:  eq(variables.debug_info, 'true')
-  jobs:
-    - job: ShowVars
-      steps:
-        - script: |
-            echo "*** START ***"
-            echo ${{ variables.windows_image }}
-            echo ${{ variables.linux_image }}
-            echo ${{ variables.mac_image }}
-            echo .
-            echo ${{ variables['Agent.OS'] }}
-            echo .
-            echo $(Agent.OS)
-            echo "*** END ***"
+# - stage: DebugInfo
+#   condition:  eq(variables.debug_info, 'true')
+#   jobs:
+#     - job: ShowVars
+#       steps:
+#         - script: |
+#             echo "*** START ***"
+#             echo ${{ variables.windows_image }}
+#             echo ${{ variables.linux_image }}
+#             echo ${{ variables.mac_image }}
+#             echo .
+#             echo ${{ variables['Agent.OS'] }}
+#             echo .
+#             echo $(Agent.OS)
+#             echo "*** END ***"
 
 - stage: CI
   jobs:
