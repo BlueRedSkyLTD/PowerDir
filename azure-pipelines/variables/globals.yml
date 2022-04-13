@@ -2,4 +2,4 @@ variables:
   ci_windows: true
   ci_linux: true
   ci_macos: false
-  debug_info: false
+  debug_info: true

@@ -36,44 +36,44 @@ stages:
 
 - stage: CI
   jobs:
-    - ${{ eq(variables['ci_windows'], 'true') }}:
-      - template: templates/jobs_ci.yml
-        parameters:
-          jobName: "Windows"
-          vmImage: ${{ variables.windows_image }}
-    - ${{ eq(variables.ci_linux, 'true') }}:
-      - template: templates/jobs_ci.yml
-        parameters:
-          jobName: "Linux"
-          vmImage: ${{ variables.linux_image }}
-        # pre_CI_Steps:
-        #   - script: |
-        #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-        #       sudo dpkg -i packages-microsoft-prod.deb
-        #       rm packages-microsoft-prod.deb
-        #       sudo apt-get update; \
-        #       sudo apt-get install -y apt-transport-https && \
-        #       sudo apt-get update && \
-        #       sudo apt-get install -y dotnet-sdk-6.0
-        #     name: Install_NET6_0
-          # - script: |
-          #     sudo apt-get update
-          #     sudo apt-get install -y wget apt-transport-https software-properties-common
-          #     wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-          #     sudo dpkg -i packages-microsoft-prod.deb
-          #     sudo apt-get update
-          #     sudo apt-get install -y powershell
-          #   name: InstallPS7
-    - ${{ eq(variables.ci_macos, 'true') }}:
-      - template: templates/jobs_ci.yml
-        parameters:
-          jobName: "MacOS"
-          vmImage: ${{ variables.mac_image }}
-      #     pre_CI_Steps:
-      #       # - script: |
-      #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      #         # name: install_HomeBrew
-      #       - script: |
-      #           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      #           brew install --cask powershell
-      #         name: InstallPS7
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "Windows"
+        vmImage: ${{ variables.windows_image }}
+        execution: eq(variables['ci_windows'], 'true')
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "Linux"
+        vmImage: ${{ variables.linux_image }}
+        execution: eq(variables.ci_linux, 'true')
+      # pre_CI_Steps:
+      #   - script: |
+      #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+      #       sudo dpkg -i packages-microsoft-prod.deb
+      #       rm packages-microsoft-prod.deb
+      #       sudo apt-get update; \
+      #       sudo apt-get install -y apt-transport-https && \
+      #       sudo apt-get update && \
+      #       sudo apt-get install -y dotnet-sdk-6.0
+      #     name: Install_NET6_0
+        # - script: |
+        #     sudo apt-get update
+        #     sudo apt-get install -y wget apt-transport-https software-properties-common
+        #     wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+        #     sudo dpkg -i packages-microsoft-prod.deb
+        #     sudo apt-get update
+        #     sudo apt-get install -y powershell
+        #   name: InstallPS7
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "MacOS"
+        vmImage: ${{ variables.mac_image }}
+        execution: eq(variables.ci_macos, 'true')
+    #     pre_CI_Steps:
+    #       # - script: |
+    #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    #         # name: install_HomeBrew
+    #       - script: |
+    #           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    #           brew install --cask powershell
+    #         name: InstallPS7

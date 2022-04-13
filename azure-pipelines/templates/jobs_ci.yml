@@ -24,6 +24,9 @@ parameters:
   - name: pre_CI_Steps
     type: stepList
     default: []
+  - name: execution
+    type: boolean
+    # default: true
 
 jobs:
   - job: ${{ parameters.jobName }}
