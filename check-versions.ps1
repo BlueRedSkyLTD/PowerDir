@@ -16,6 +16,7 @@ else {
     exit 1
 }
 
+### TODO: instead of [PSCustomOjbect] use [Version]
 $v1 = Select-String -Path .\PowerDir\PowerDir.GetPowerDir.psd1 -Pattern "^ModuleVersion = '(\d).(\d).(\d)'$" | ForEach-Object {
     $major, $minor, $patch = $_.Matches[0].Groups[1..3].Value
     [PSCustomObject] @{
@@ -67,7 +68,7 @@ else {
 }
 
 echo "check published modules..."
-if (Find-Module -name PowerDir.GetPowerDir -ErrorAction SilentlyContinue) {
+if (Find-Module -name PowerDir.GetPowerDir -RequiredVersion $tag.Substring(1) -ErrorAction SilentlyContinue) {
     echo "version already existing, exit!"
     exit 1
 }
