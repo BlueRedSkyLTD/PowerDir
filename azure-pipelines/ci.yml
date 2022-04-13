@@ -54,6 +54,8 @@ stages:
 
 - stage: CI
   jobs:
+    ### Matrix variables expansion is not working with job templates
+    ### TODO convert to steps_ci template instead of job_ci
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "Windows"
@@ -64,6 +66,18 @@ stages:
         netVersion: ${{ variables.netVersion }}
         useNetVersion: ${{ variables.useNetVersion }}
         execution: ${{ variables.ci_windows }}
+        buildConfiguration: Debug
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "Windows"
+        vmImage: ${{ variables.windows_image }}
+        solution: ${{ variables.solution }}
+        buildPlatform: ${{ variables.buildPlatform }}
+        projects: ${{ variables.projects }}
+        netVersion: ${{ variables.netVersion }}
+        useNetVersion: ${{ variables.useNetVersion }}
+        execution: ${{ variables.ci_windows }}
+        buildConfiguration: Release
 
     - template: templates/jobs_ci.yml
       parameters:
@@ -75,6 +89,7 @@ stages:
         netVersion: ${{ variables.netVersion }}
         useNetVersion: ${{ variables.useNetVersion }}
         execution: ${{ variables.ci_linux }}
+        buildConfiguration: Debug
       # pre_CI_Steps:
       #   - script: |
       #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -104,6 +119,7 @@ stages:
         netVersion: ${{ variables.netVersion }}
         useNetVersion: ${{ variables.useNetVersion }}
         execution: ${{ variables.ci_macos }}
+        buildConfiguration: Debug
     #     pre_CI_Steps:
     #       # - script: |
     #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

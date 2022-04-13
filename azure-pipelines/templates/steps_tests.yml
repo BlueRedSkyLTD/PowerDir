@@ -19,7 +19,7 @@ steps:
     inputs:
       command: 'test'
       projects: ${{ parameters.projects }}
-      arguments: '-t -f ${{ parameters.netVersion }} --configuration $(buildConfiguration)'
+      arguments: '-t -f ${{ parameters.netVersion }} --configuration ${{ parameters.buildConfiguration }}'
       publishTestResults: false
       testRunTitle: 'Display test'
   - task: DotNetCoreCLI@2
@@ -27,17 +27,17 @@ steps:
     inputs:
       command: 'test'
       projects: ${{ parameters.projects }}
-      arguments: '-f ${{ parameters.netVersion }} --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
+      arguments: '-f ${{ parameters.netVersion }} --configuration ${{ parameters.buildConfiguration }} /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
       testRunTitle: 'RunTests-$(Build.BuildNumber)'
   ## CodeCov
   - template: steps_codecov.yml
     parameters:
-      buildConfiguration: $(buildConfiguration)
+      buildConfiguration: ${{ parameters.buildConfiguration }}
   ##
   - pwsh: |
       echo $PWD
       Copy-Item ..\..\..\PowerDir.GetPowerDir.psd1 .
       Import-Module  .\PowerDir.GetPowerDir.psd1
       ../../../../runtime-tests.ps1
-    workingDirectory: $(System.DefaultWorkingDirectory)/PowerDir/bin/$(buildConfiguration)/${{ parameters.netVersion }}
+    workingDirectory: $(System.DefaultWorkingDirectory)/PowerDir/bin/${{ parameters.buildConfiguration }}/${{ parameters.netVersion }}
     name: RunTimeTests
