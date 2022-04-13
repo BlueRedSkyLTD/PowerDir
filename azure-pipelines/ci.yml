@@ -46,7 +46,7 @@ stages:
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
-        execution: ${{ eq(variables.ci_linux }}
+        execution: ${{ variables.ci_linux }}
       # pre_CI_Steps:
       #   - script: |
       #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
