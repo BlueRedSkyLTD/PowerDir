@@ -22,6 +22,7 @@ stages:
     buildConfiguration: Release
   jobs:
     - job: WindowsRelease
+      condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       steps:
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
@@ -37,7 +38,7 @@ stages:
           solution: ${{ variables.solution }}
           buildPlatform: ${{ variables.buildPlatform }}
           buildConfiguration: ${{ variables.buildPlatform }}
-          useNetVersion: ${{ varialbles.useNetVersion }}
+          useNetVersion: ${{ variables.useNetVersion }}
       # tests
       - template: steps_tests.yml
         parameters:
@@ -50,7 +51,7 @@ stages:
           sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
           contents: '*'
           targetFolder: '$(Build.ArtifactStagingDirectory)'
-        condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+        # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
 
       - task: GithubRelease@1
         displayName: 'Create GitHub Release'
@@ -67,4 +68,4 @@ stages:
           addChangeLog: true
           compareWith: 'lastFullRelease'
           assets: '$(Build.ArtifactStagingDirectory)/*'
-        condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+        # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')

@@ -7,11 +7,6 @@ parameters:
     type: string
   - name: buildPlatform
     type: string
-  - name: buildConfiguration
-    type: string
-    values:
-      - 'Debug'
-      - 'Release'
   - name: projects
     type: string
   - name: netVersion
