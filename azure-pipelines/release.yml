@@ -26,10 +26,10 @@ stages:
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
         inputs:
-        filePath: ./check-versions.ps1
-        targetType: filepath
-        failOnStderr: true
-        displayName: CheckVersions
+          filePath: ./check-versions.ps1
+          targetType: filepath
+          failOnStderr: true
+          displayName: CheckVersions
 
       # build
       - template: steps_build.yml

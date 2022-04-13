@@ -7,6 +7,11 @@ parameters:
     type: string
   - name: buildPlatform
     type: string
+  - name: buildConfiguration
+    type: string
+    values:
+      - 'Debug'
+      - 'Release'
   - name: projects
     type: string
   - name: netVersion
@@ -31,9 +36,9 @@ jobs:
     strategy:
         matrix:
           Debug:
-            buildConfiguration: 'Debug'
+            BUILD_CONFIGURATION: 'Debug'
           Release:
-            buildConfiguration: 'Release'
+            BUILD_CONFIGURATION: 'Release'
     steps:
        # pre-ci steps
       - ${{ each step in parameters.pre_CI_Steps }}:
@@ -44,11 +49,11 @@ jobs:
         parameters:
           solution: ${{ parameters.solution }}
           buildPlatform: ${{ parameters.buildPlatform }}
-          buildConfiguration: $(buildConfiguration)
+          buildConfiguration: $(BUILD_CONFIGURATION)
           useNetVersion: ${{ parameters.useNetVersion }}
       # tests
       - template: steps_tests.yml
         parameters:
           projects: ${{ parameters.projects }}
           netVersion: ${{ parameters.netVersion }}
-          buildConfiguration: $(buildConfiguration)
+          buildConfiguration: $(BUILD_CONFIGURATION)
