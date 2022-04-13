@@ -23,13 +23,19 @@ stages:
   jobs:
     - job: WindowsRelease
       steps:
+      # check if versions are matching: project, manifest, git tag
+      - pwsh: ./check-versions.ps1
+        targetType: filepath
+        failOnStderr: true
+        displayName: CheckVersions
+
       # build
       - template: steps_build.yml
         parameters:
           solution: ${{ variables.solution }}
           buildPlatform: ${{ variables.buildPlatform }}
           buildConfiguration: ${{ variables.buildPlatform }}
-          useNetVersion: ${{ parameters.useNetVersion }}
+          useNetVersion: ${{ varialbles.useNetVersion }}
       # tests
       - template: steps_tests.yml
         parameters:
@@ -40,7 +46,7 @@ stages:
       - task: CopyFiles@2
         inputs:
           sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
-          contents: '*.zip'
+          contents: '*'
           targetFolder: '$(Build.ArtifactStagingDirectory)'
         condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
 
