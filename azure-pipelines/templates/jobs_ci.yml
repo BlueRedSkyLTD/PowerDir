@@ -31,9 +31,9 @@ jobs:
     strategy:
         matrix:
           Debug:
-            BUILD_CONFIGURATION: 'Debug'
+            BUILD_CONFIGURATION: Debug
           Release:
-            BUILD_CONFIGURATION: 'Release'
+            BUILD_CONFIGURATION: Release
     steps:
        # pre-ci steps
       - ${{ each step in parameters.pre_CI_Steps }}:

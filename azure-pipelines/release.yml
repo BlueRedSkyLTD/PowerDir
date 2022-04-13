@@ -56,7 +56,7 @@ stages:
       - task: GithubRelease@1
         displayName: 'Create GitHub Release'
         inputs:
-          gitHubConnection: BlueRedSkyLTD
+          gitHubConnection: github.com_Raffaello
           repositoryName: '$(Build.Repository.Name)'
           action: 'edit'
           target: '$(Build.SourceVersion)'
