@@ -40,7 +40,7 @@ stages:
       parameters:
         jobName: "Windows"
         vmImage: ${{ variables.windows_image }}
-        execution: eq(variables['ci_windows'], 'true')
+        execution: eq(variables.ci_windows, 'true')
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "Linux"
