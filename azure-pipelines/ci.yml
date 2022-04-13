@@ -39,16 +39,18 @@ stages:
 - stage: CheckVersions
   pool:
     vmImage: ${{ variables.windows_image }}
-  steps:
-    # check if versions are matching: project, manifest, git tag
-    - task: PowerShell@2
-      inputs:
-        filePath: $(Build.SourcesDirectory)/check-versions.ps1
-        targetType: filepath
-        failOnStderr: true
-        displayName: CheckVersions
-        arguments: $(Build.SourceVersion)
-      name: CheckVersions
+  jobs:
+    - job: Windows
+      steps:
+      # check if versions are matching: project, manifest, git tag
+      - task: PowerShell@2
+        inputs:
+          filePath: $(Build.SourcesDirectory)/check-versions.ps1
+          targetType: filepath
+          failOnStderr: true
+          displayName: CheckVersions
+          arguments: $(Build.SourceVersion)
+        name: CheckVersions
 
 - stage: CI
   jobs:
