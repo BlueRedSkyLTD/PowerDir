@@ -60,3 +60,4 @@ jobs:
           failOnStderr: true
           displayName: CheckVersions
           arguments: $(Build.SourceVersion)
+        name: CheckVersions

@@ -26,6 +26,7 @@ stages:
           failOnStderr: true
           displayName: CheckVersions
           arguments: $(Build.SourceVersion)
+        name: CheckVersionsTag
       - task: PowerShell@2
         inputs:
           filePath: $(Build.SourcesDirectory)/check-versions.ps1
@@ -33,6 +34,7 @@ stages:
           failOnStderr: true
           displayName: CheckVersions
           arguments: $(Build.SourceVersion)
+        name: CheckVersions
 
       # build
       - template: templates/steps_build.yml
