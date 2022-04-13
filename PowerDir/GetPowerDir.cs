@@ -436,7 +436,7 @@ namespace PowerDir
 
             base.EndProcessing();
         }
-
+        /*
         /// <summary>
         /// 
         /// </summary>
@@ -444,5 +444,6 @@ namespace PowerDir
         //{
         //    base.StopProcessing();
         //}
+        */
     }
 }
