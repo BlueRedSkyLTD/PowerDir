@@ -20,7 +20,35 @@ At the moment only Windows is fully supported, but still compatible where .NET6.
 - [Help Get-PowerDir](./PowerDir/doc/Get-PowerDir.md)
 - [Module Help](./PowerDir/doc/PowerDir.GetPowerDir.md)
 
+### Suggested Aliases
+
+Edit `$Profile` and add the following aliases
+```powershell
+function dd() { Get-PowerDir -d ld @args }
+function dw() { Get-PowerDir -d w  @args }
+function  l() { Get-PowerDir -d l  @args }
+```
+
+## Install
+
+Install it from [Powershell Gallery](https://www.powershellgallery.com/packages/PowerDir.GetPowerDir)
+```powershell
+C:\ PS> Install-Module -Name PowerDir.GetPowerDir
+```
 
 ## Generate CmdLet help
 
 ref: https://docs.microsoft.com/en-us/powershell/utility-modules/platyps/create-help-using-platyps?view=ps-modules&viewFallbackFrom=powershell-7.2
+
+## Feedback
+
+Open an issue on github or send a message in Powershell gallery
+
+## Contribution
+
+## RoadMap / Changelog
+
+- [x] v0.1.0: publishing test, basic functionalities almost complete
+- [ ] v0.2.0: basic functionalities
+- [ ] v0.3.0: using escape codes
+- [ ] v0.4.0: globbing search / advanced search patterns
