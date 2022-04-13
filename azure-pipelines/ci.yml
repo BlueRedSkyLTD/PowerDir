@@ -36,7 +36,7 @@ stages:
 
 - stage: CI
   jobs:
-    - ${{ eq(variables.ci_windows, 'true') }}:
+    - ${{ eq(variables['ci_windows'], 'true') }}:
       - template: templates/jobs_ci.yml
         parameters:
           jobName: "Windows"
