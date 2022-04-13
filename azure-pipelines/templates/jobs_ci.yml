@@ -24,9 +24,16 @@ parameters:
   - name: pre_CI_Steps
     type: stepList
     default: []
+  - name: execution
+    type: string
+    # values:
+      # - 'true'
+      # - 'false'
+    # default: true
 
 jobs:
   - job: ${{ parameters.jobName }}
+    condition: eq('${{ parameters.execution }}', 'true')
     pool:
       vmImage: ${{ parameters.vmImage }}
     strategy:

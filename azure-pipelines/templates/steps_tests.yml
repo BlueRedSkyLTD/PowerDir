@@ -35,7 +35,10 @@ steps:
       buildConfiguration: ${{ parameters.buildConfiguration }}
   ##
   - pwsh: |
+      echo $PWD
+      Copy-Item ..\..\..\PowerDir.GetPowerDir.psd1 .
       Import-Module  .\PowerDir.GetPowerDir.psd1
       ../../../../runtime-tests.ps1
-    workingDirectory: PowerDir/bin/${{ parameters.buildConfiguration }}/${{ parameters.netVersion }}
+    workingDirectory: $(System.DefaultWorkingDirectory)/PowerDir/bin/${{ parameters.buildConfiguration }}/${{ parameters.netVersion }}
     name: RunTimeTests
+    condition:  

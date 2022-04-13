@@ -39,9 +39,16 @@
     
   <Target Name="CopyFiles" AfterTargets="PostBuildEvent">
     <ItemGroup>
-        <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1" />
+      <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1" />
     </ItemGroup>
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <Target Name="CopyFiles" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <MySourceFiles Include="$(OutDir)PowerDir.GetPowerDir.psd1;$(OutDir)PowerDir.dll-help.xml;$(OutDir)PowerDir.dll;" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)GetPowerDir.$(MSBuildProjectName)" />
   </Target>
 
 </Project>

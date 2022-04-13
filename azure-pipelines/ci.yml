@@ -14,12 +14,14 @@ trigger:
     - README.md
 
 variables:
- - template: variables/images.yml
+  - template: variables/globals.yml
+  - template: variables/images.yml
 
 stages:
-# - stage: showVar
+# - stage: DebugInfo
+#   condition:  eq(variables.debug_info, 'true')
 #   jobs:
-#     - job: tests
+#     - job: ShowVars
 #       steps:
 #         - script: |
 #             echo "*** START ***"
@@ -38,32 +40,37 @@ stages:
       parameters:
         jobName: "Windows"
         vmImage: ${{ variables.windows_image }}
+        execution: ${{ variables.ci_windows }}
+
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
-        # pre_CI_Steps:
-        #   - script: |
-        #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-        #       sudo dpkg -i packages-microsoft-prod.deb
-        #       rm packages-microsoft-prod.deb
-        #       sudo apt-get update; \
-        #       sudo apt-get install -y apt-transport-https && \
-        #       sudo apt-get update && \
-        #       sudo apt-get install -y dotnet-sdk-6.0
-        #     name: Install_NET6_0
-          # - script: |
-          #     sudo apt-get update
-          #     sudo apt-get install -y wget apt-transport-https software-properties-common
-          #     wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-          #     sudo dpkg -i packages-microsoft-prod.deb
-          #     sudo apt-get update
-          #     sudo apt-get install -y powershell
-          #   name: InstallPS7
+        execution: ${{ variables.ci_linux }}
+      # pre_CI_Steps:
+      #   - script: |
+      #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+      #       sudo dpkg -i packages-microsoft-prod.deb
+      #       rm packages-microsoft-prod.deb
+      #       sudo apt-get update; \
+      #       sudo apt-get install -y apt-transport-https && \
+      #       sudo apt-get update && \
+      #       sudo apt-get install -y dotnet-sdk-6.0
+      #     name: Install_NET6_0
+        # - script: |
+        #     sudo apt-get update
+        #     sudo apt-get install -y wget apt-transport-https software-properties-common
+        #     wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+        #     sudo dpkg -i packages-microsoft-prod.deb
+        #     sudo apt-get update
+        #     sudo apt-get install -y powershell
+        #   name: InstallPS7
+
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "MacOS"
         vmImage: ${{ variables.mac_image }}
+        execution: ${{ variables.ci_macos }}
     #     pre_CI_Steps:
     #       # - script: |
     #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
