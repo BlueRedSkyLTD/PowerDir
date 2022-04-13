@@ -25,11 +25,15 @@ parameters:
     type: stepList
     default: []
   - name: execution
-    type: boolean
+    type: string
+    values:
+      - 'true'
+      - 'false'
     # default: true
 
 jobs:
   - job: ${{ parameters.jobName }}
+    condition: eq(parameters.execution, 'true')
     pool:
       vmImage: ${{ parameters.vmImage }}
     strategy:
