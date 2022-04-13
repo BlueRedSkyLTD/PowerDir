@@ -33,4 +33,5 @@ if (Find-Module -name PowerDir.GetPowerDir -RequiredVersion $v1.toString() -Erro
     $Result++
 }
 
+echo "done."
 exit $Result
