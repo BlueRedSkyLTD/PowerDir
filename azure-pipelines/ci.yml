@@ -40,7 +40,7 @@ stages:
   pool:
     vmImage: ${{ variables.windows_image }}
   jobs:
-    - job: Windows
+    - job: Module
       steps:
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
