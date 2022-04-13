@@ -18,9 +18,9 @@ parameters:
     default: []
   - name: execution
     type: string
-    # values:
-      # - 'true'
-      # - 'false'
+    values:
+      - 'true'
+      - 'false'
     # default: true
 
 jobs:
