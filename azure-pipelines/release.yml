@@ -56,6 +56,11 @@ stages:
           contents: '*'
           targetFolder: '$(Build.ArtifactStagingDirectory)'
         # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+      - pwsh: |
+          Install-Module platyps -Force
+          Import-Module platyps
+          New-ExternalHelp -Path '$(System.DefaultWorkingDirectory)/PowerDir/doc' -OutputPath '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir' -Force
+        name: GenerateModuleHelp
 
       - task: GithubRelease@1
         displayName: 'Create GitHub Release'
