@@ -33,14 +33,14 @@ stages:
           displayName: CheckVersions
 
       # build
-      - template: steps_build.yml
+      - template: templates/steps_build.yml
         parameters:
           solution: ${{ variables.solution }}
           buildPlatform: ${{ variables.buildPlatform }}
           buildConfiguration: ${{ variables.buildPlatform }}
           useNetVersion: ${{ variables.useNetVersion }}
       # tests
-      - template: steps_tests.yml
+      - template: templates/steps_tests.yml
         parameters:
           projects: ${{ variables.projects }}
           netVersion: ${{ variables.netVersion }}

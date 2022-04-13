@@ -7,9 +7,9 @@ parameters:
       - 'Any CPU'
   - name: buildConfiguration
     type: string
-    values:
-      - 'Debug'
-      - 'Release'
+    # values:
+      # - 'Debug'
+      # - 'Release'
     # default: 'Debug'
   - name: useNetVersion
     type: string
