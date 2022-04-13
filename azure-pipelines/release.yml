@@ -21,7 +21,9 @@ stages:
   variables:
     buildConfiguration: Release
   jobs:
-    # build
+    - job: WindowsRelease
+      steps:
+      # build
       - template: steps_build.yml
         parameters:
           solution: ${{ variables.solution }}
@@ -41,7 +43,8 @@ stages:
           contents: '*.zip'
           targetFolder: '$(Build.ArtifactStagingDirectory)'
         condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
-      - task: GithubRelease@1 
+
+      - task: GithubRelease@1
         displayName: 'Create GitHub Release'
         inputs:
           gitHubConnection: BlueRedSkyLTD
