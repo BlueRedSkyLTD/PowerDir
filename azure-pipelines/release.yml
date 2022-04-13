@@ -18,6 +18,8 @@ variables:
 
 stages:
 - stage: Release
+  pool:
+    vmImage: ${{ variables.windows_image }}
   variables:
     BUILD_CONFIGURATION: Release
   jobs:
