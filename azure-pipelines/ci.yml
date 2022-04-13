@@ -40,12 +40,13 @@ stages:
       parameters:
         jobName: "Windows"
         vmImage: ${{ variables.windows_image }}
-        execution: eq(variables.ci_windows, 'true')
+        execution: ${{ variables.ci_windows }}
+
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
-        execution: eq(variables.ci_linux, 'true')
+        execution: ${{ eq(variables.ci_linux }}
       # pre_CI_Steps:
       #   - script: |
       #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -64,11 +65,12 @@ stages:
         #     sudo apt-get update
         #     sudo apt-get install -y powershell
         #   name: InstallPS7
+
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "MacOS"
         vmImage: ${{ variables.mac_image }}
-        execution: eq(variables.ci_macos, 'true')
+        execution: ${{ variables.ci_macos }}
     #     pre_CI_Steps:
     #       # - script: |
     #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
