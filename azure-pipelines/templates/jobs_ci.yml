@@ -18,6 +18,12 @@ jobs:
     condition: eq('${{ parameters.execution }}', 'true')
     pool:
       vmImage: ${{ parameters.vmImage }}
+    strategy:
+        matrix:
+          Debug:
+            buildConfiguration: 'Debug'
+          Release:
+            buildConfiguration: 'Release'
     steps:
        # pre-ci steps
       - ${{ each step in parameters.pre_CI_Steps }}:
