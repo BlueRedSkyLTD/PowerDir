@@ -3,6 +3,11 @@ trigger:
   tags:
     include:
     - '*'
+## TESTS (remove after)
+pr:
+  branches:
+    include:
+      - main
 
 variables:
   - template: variables/globals.yml
@@ -18,6 +23,11 @@ stages:
     - job: WindowsRelease
       condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       steps:
+      # checkout repo correctly
+      - script: |
+          git checkout main
+          git pull origin main --tags
+        name: checkoutMainBranchWithTags
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
         inputs:
