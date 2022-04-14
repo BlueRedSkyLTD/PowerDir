@@ -14,12 +14,13 @@ variables:
   - template: variables/globals.yml
   - template: variables/images.yml
 
-repositories:
-  - repository: PowerDirRepo
-    type: github
-    endpoint: github.com_Raffaello
-    name: PowerDirRepo
-    ref: main
+resources:
+  repositories:
+    - repository: PowerDirRepo
+      type: github
+      endpoint: github.com_Raffaello
+      name: PowerDirRepo
+      ref: main
 
 stages:
 - stage: Release
@@ -32,8 +33,8 @@ stages:
       # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       steps:
       # checkout repo correctly
-      - checkout: self
-      - checkout: PowerDirRepo # checks out the features/tools branch
+      # - checkout: self
+      # - checkout: PowerDirRepo # checks out the features/tools branch
 
       # - script: |
       #     git checkout main
