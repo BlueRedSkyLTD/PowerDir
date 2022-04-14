@@ -5,13 +5,22 @@
 
 ###
 
+
+### Due to azure pipelines checkout step
+### it is not really simple to detect the tag on witch branch belongs too
+### as the repo is in a detached head disconnected from all other branches
+
+
 $ErrorActionPreference = "Stop"
 echo $Args[0]
 echo "git log -1"
-git log -1
+git log -1 --pretty=%D
 
 echo "git rev-parse Args[0]"
 git rev-parse $Args[0]
+
+echo "git show HEAD"
+git show -s --pretty=%d HEAD
 
 git log -1 --pretty=%D | Select-String -Pattern '^HEAD -> (.+),' | ForEach-Object {
     $branch = $_.Matches[0].Groups[1].Value
