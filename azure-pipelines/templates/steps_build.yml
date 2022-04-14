@@ -1,0 +1,39 @@
+steps:
+  # prepare
+  - task: UseDotNet@2
+    inputs:
+      version: $(useNetVersion)
+      packageType: 'runtime'
+      # installationPath: $(Agent.TempDirectory)
+  - task: UseDotNet@2
+    inputs:
+      version: $(useNetVersion)
+      packageType: 'sdk'
+      # installationPath: $(Agent.TempDirectory)
+    # info
+  - pwsh: $PSVersionTable
+    name: PSVersionTable
+  - script: dotnet --info
+    name: dotnet_info
+  - script: dotnet msbuild -version
+    name: MSBuild_info
+  # build
+  - task: NuGetToolInstaller@1
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: $(solution)
+  - task: VSBuild@1
+    inputs:
+      solution: $(solution)
+      platform: $(buildPlatform)
+      configuration: $(buildConfiguration)
+    # continueOnError: true
+    condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
+  - task: MSBuild@1
+    inputs:
+      solution: $(solution)
+      platform: $(buildPlatform)
+      configuration: $(buildConfiguration)
+      # clean: true
+    continueOnError: true
+    condition: and(succeeded(), ne(variables['Agent.OS'], 'Windows_NT'))

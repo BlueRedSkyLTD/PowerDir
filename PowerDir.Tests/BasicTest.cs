@@ -26,35 +26,58 @@ namespace PowerDir.Tests
         /// Gets or sets the test context which provides
         /// information about and functionality for the current test run.
         /// </summary>
+#pragma warning disable S2292 // Trivial properties should be auto-implemented
         public TestContext TestContext
+#pragma warning restore S2292 // Trivial properties should be auto-implemented
         {
             get { return testContextInstance; }
             set { testContextInstance = value; }
         }
 
+        private readonly Type _type = typeof(GetPowerDir);
+        private readonly string _filename = typeof(GetPowerDir).Module.ToString();
+        private readonly string _parentDir = Path.GetRelativePath("../", Directory.GetCurrentDirectory());
+        private readonly string _home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        private System.Type _type = typeof(GetPowerDir);
-        private string _filename = typeof(GetPowerDir).Module.ToString();
-        private string _parentDir = Path.GetRelativePath("../", Directory.GetCurrentDirectory());
-
-
+        #region helpers
         private PowerShell createCmdLet()
         {
             return PowerShell
                 .Create()
-                .AddCommand(new CmdletInfo("Get-PowerDir", _type));
+                .AddCommand(new CmdletInfo("Get-PowerDir", _type))
+                .AddParameter("Debug")
+                .AddParameter("Verbose");
         }
         private void displayOutput(Collection<PSObject> res)
         {
             foreach (var item in res)
                 TestContext.WriteLine(item.ToString());
         }
+
+        private void onDataAdding(object? sender, DataAddingEventArgs e)
+        {
+            string prefix = "";
+            string? s;
+
+            if (sender != null && (s = sender.ToString()) != null)
+            {
+                if (s.Contains("Debug"))
+                    prefix = "[Debug] ";
+                if (s.Contains("Verbose"))
+                    prefix = "[Verbose] ";
+            }
+
+           TestContext.WriteLine(prefix + e.ItemAdded.ToString());
+        }
+
         private Collection<PSObject> execute(PowerShell ps)
         {
+            ps.Streams.Debug.DataAdding += onDataAdding;
+            ps.Streams.Verbose.DataAdding += onDataAdding;
             var output = ps.Invoke();
             displayOutput(output);
-            Assert.IsNotNull(output);
-            Assert.IsTrue(output.Count > 0);
+            Assert.IsNotNull(output, "output is null");
+            Assert.IsTrue(output.Count > 0, "output is empty");
             return output;
         }
 
@@ -68,14 +91,50 @@ namespace PowerDir.Tests
             Assert.IsTrue(o.TypeNames.Contains(type), sb.ToString());
         }
 
+        private string getRootDir()
+        {
+            string rootDir = "";
+            if (System.OperatingSystem.IsWindows())
+            {
+                string? drive = Path.GetPathRoot(Directory.GetCurrentDirectory());
+                // CI fix: run in D:
+                if (Path.GetPathRoot(Environment.SystemDirectory) == drive)
+                {
+                    // if in the same drive
+                    rootDir = "Windows"; // eg. only if in C: drive
+                }
+                else if (drive != null)
+                {
+                    string[] dirs = Directory.GetDirectories(drive);
+                    // root dir won't contain "Windows".
+                    rootDir = dirs[0].Substring(drive.Length); // always existing, cut off drive unit
+                }
+            }
+            else if (System.OperatingSystem.IsLinux())
+            {
+                rootDir = "root";
+            }
+            else if (System.OperatingSystem.IsMacOS())
+            {
+                rootDir = "System";
+            }
+            else
+            {
+                throw new PSNotImplementedException(System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            }
+            TestContext.WriteLine($"rootDir = {rootDir}");
+
+            return rootDir;
+        }
+
+        #endregion helpers
+
         [TestMethod]
         public void TestDefaultInvoke()
         {
             var output = execute(createCmdLet());
             checkType(output[0], "PowerDir.GetPowerDirInfo");
-            Assert.IsNotNull(output.Where(
-                (dynamic o) => o.Name == _filename).First()
-            );
+            Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename));
         }
 
         [TestMethod]
@@ -84,8 +143,7 @@ namespace PowerDir.Tests
             var output = execute(createCmdLet().AddParameter("d", "l"));
             checkType(output[0], "System.String");
             Assert.IsNotNull(
-                output.Where((dynamic o) => o == _filename).First()
-            );
+                output.First((dynamic o) => o == _filename));
         }
 
         [TestMethod]
@@ -93,16 +151,18 @@ namespace PowerDir.Tests
         {
             var output = execute(createCmdLet().AddParameter("d", "ld"));
             checkType(output[0], "System.String");
+            // TODO: here Linux/MacOS doesn't display 'a' attribute for files.
             Assert.IsNotNull(
-                output.Where((dynamic o) => o.StartsWith("a------- " + _filename)).First()
-            );
+                output.First((dynamic o) => o.StartsWith("a------- " + _filename) 
+                                || o.StartsWith("-------- " + _filename)
+));
         }
 
         [TestMethod]
         public void TestWideInvoke()
         {
             // This won't run due to using Host.UI.WriteLine
-            var output = execute(createCmdLet().AddParameter("d", "w").AddParameter("Debug"));
+            var output = execute(createCmdLet().AddParameter("d", "w"));
             checkType(output[0], "System.String");
             Assert.IsNotNull(
                 output.Where((dynamic o) => o.Contains(_filename).First())
@@ -117,28 +177,15 @@ namespace PowerDir.Tests
         [DataRow(".././")]
         [DataRow(".././*")]
         [DataRow("./../")]
-        public void TestParentInvoke(string path)
-        {
-            var output = execute(createCmdLet().AddParameter("Path", path));
-            checkType(output[0], "PowerDir.GetPowerDirInfo");
-            Assert.IsNotNull(output.Where(
-                (dynamic o) => o.Name == _parentDir).First()
-            );
-        }
-
-        [DataTestMethod]
         [DataRow("../*.0")]
         [DataRow("../????.0")]
         [DataRow(".././*.0")]
         [DataRow("./../*.0")]
-        public void TestParentInvokeWildCard(string path)
+        public void TestParentInvoke(string path)
         {
             var output = execute(createCmdLet().AddParameter("Path", path));
             checkType(output[0], "PowerDir.GetPowerDirInfo");
-            Assert.IsNotNull(output.Where(
-                (dynamic o) => o.Name == _parentDir).First()
-            );
-
+            Assert.IsNotNull(output.First((dynamic o) => o.Name == _parentDir));
         }
 
         [DataTestMethod]
@@ -147,42 +194,81 @@ namespace PowerDir.Tests
         {
             var output = execute(createCmdLet().AddParameter("Path", path));
             checkType(output[0], "PowerDir.GetPowerDirInfo");
-            string rootDir = "";
-            if (System.OperatingSystem.IsWindows())
-            { 
-                rootDir = "Windows";
-            } else if(System.OperatingSystem.IsLinux())
-            {
-                rootDir = "root";
-            } else if(System.OperatingSystem.IsMacOS())
-            {
-                rootDir = "root";
-            } else
-            {
-                throw new PSNotImplementedException(System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-            }
-            
-            Assert.IsNotNull(output.Where(
-                (dynamic o) => o.Name == rootDir).First());
+            string rootDir = getRootDir();
+            Assert.IsNotNull(output);
+            Assert.IsTrue(output.Count >= 1);
+
+            TestContext.WriteLine("[TEST DEBUG] " + String.Join(",", output.Select((dynamic o) => o.Name)));
+            Assert.IsNotNull(output.First((dynamic o) => o.Name == rootDir),
+                "output contains" + String.Join(",", output.Select((dynamic o) => o.Name)));
         }
 
         [DataTestMethod]
-        [DataRow("$HOME")] // $HOME looks working for real, but not substituted in the test
+        [DataRow("$HOME")] // $HOME looks working for real, but not when used in testing
+        [DataRow("$HOME/")]
         [DataRow("~")]
-        public void TestSpecialDirectories(string pathToTest)
+        [DataRow("~/")]
+        //[DataRow("~/*")] // ~/*aaa 
+        public void TestHomeDirectory(string pathToTest)
         {
-            string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string path = $"{home}/{_filename}";
-            File.Copy(_filename, path);
+            TestContext.WriteLine($"[TEST DEBUG] home = {_home}");
+            string path = $"{_home}/{_filename}";
+            File.Copy(_filename, path, true);
             Assert.IsTrue(File.Exists(path));
+            TestContext.WriteLine($"[TEST DEBUG] file copied in = {path}");
             try
             {
-                var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}/{_filename}"));
-                Assert.IsNotNull(output.Where((dynamic o) => o.Name == _filename).First());
+                var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}"));
+                Assert.IsNotNull(output.First((dynamic o) =>
+                    o.Name == _filename), $"{pathToTest}/{_filename} not found");
             }
             finally
             {
                 File.Delete(path);
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow("$HOME")] // $HOME looks working for real, but not when used in testing
+        [DataRow("~")]
+        //[DataRow("~/*")] // ~/*aaa 
+        public void TestFileInHomeDirectory(string pathToTest)
+        {
+            TestContext.WriteLine($"[TEST DEBUG] home = {_home}");
+            string path = $"{_home}/{_filename}";
+            File.Copy(_filename, path, true);
+            Assert.IsTrue(File.Exists(path));
+            TestContext.WriteLine($"[TEST DEBUG] file copied in = {path}");
+            try
+            {
+                var output = execute(createCmdLet().AddParameter("Path", $"{pathToTest}/{_filename}"));
+                Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename), $"{pathToTest}/{_filename} not found");
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+
+        [TestMethod]
+        public void TestDirInHomeDirectory()
+        {
+            TestContext.WriteLine($"[TEST DEBUG] home = {_home}");
+            const string dirName = "___power_dir_test___";
+            string dirPath = Path.Combine(_home, dirName);
+            const string filename = "_power_dir_.test";
+            string filePath = Path.Combine(dirPath, filename);
+            Directory.CreateDirectory(dirPath);
+            File.Create(filePath).Close();
+            try
+            {
+                var output = execute(createCmdLet().AddParameter("Path", $"~/{dirName}"));
+                Assert.IsNotNull(output.First((dynamic o) => o.Name == filename));
+            }
+            finally
+            {
+                File.Delete(filePath);
+                Directory.Delete(dirPath);
             }
         }
     }

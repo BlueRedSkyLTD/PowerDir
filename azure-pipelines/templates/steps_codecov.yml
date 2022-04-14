@@ -1,0 +1,21 @@
+steps:
+  - pwsh: |
+      $ProgressPreference = 'SilentlyContinue'
+      Invoke-WebRequest -Uri https://uploader.codecov.io/latest/windows/codecov.exe -Outfile codecov.exe
+      .\codecov.exe -t ${env:CODECOV_TOKEN}
+    condition: eq(variables.buildConfiguration, 'Debug')
+    env:
+      CODECOV_TOKEN: $(codecov_token)
+    name: CodeCov
+  # - ${{ if eq(variables['Agent.OS'], 'Linux') }}:
+  #   - script: |
+  #       curl -Os https://uploader.codecov.io/latest/linux/codecov
+  #       chmod +x codecov
+  #       ./codecov
+  #     name: CodeCov
+  # - ${{ if eq(variables['Agent.OS'], 'Darwin') }}:
+  #   - script: |
+  #      curl -Os https://uploader.codecov.io/latest/macos/codecov
+  #      chmod +x codecov
+  #      ./codecov
+  #     name: CodeCov

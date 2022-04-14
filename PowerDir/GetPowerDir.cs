@@ -2,7 +2,6 @@
 using System.Management.Automation.Host;
 using System.Text;
 using PowerDir.views;
-using System.IO;
 
 
 namespace PowerDir
@@ -20,7 +19,7 @@ namespace PowerDir
     public class GetPowerDir : PSCmdlet
     {
         const int MAX_NAME_LENGTH = 50;
-
+        /*
         /// <summary>
         /// convert Hex color format to RGB
         /// </summary>
@@ -34,7 +33,7 @@ namespace PowerDir
                 (byte)((hex) & 0xFF)
             );
         }
-
+        */
         #region Parameters
 
         /// <summary>
@@ -169,6 +168,18 @@ namespace PowerDir
                 _sb.Append(msg);
         }
 
+        /// <summary>
+        /// write a message using the given color.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="col"></param>
+        private void write(string msg, PowerDirTheme.ColorThemeItem col)
+        {
+            setColor(col);
+            write(msg);
+            setColor(theme.GetOriginalColor());
+        }
+
         private void writeLine(string msg = "")
         {
             if (_useUIWrite)
@@ -186,12 +197,12 @@ namespace PowerDir
         #endregion
 
         #region Colors
-        private void resetColor()
-        {
-            if (!_supportColor) return;
-            Host.UI.RawUI.ForegroundColor = fg;
-            Host.UI.RawUI.ForegroundColor = bg;
-        }
+        //private void resetColor()
+        //{
+        //    if (!_supportColor) return;
+        //    Host.UI.RawUI.ForegroundColor = fg;
+        //    Host.UI.RawUI.ForegroundColor = bg;
+        //}
 
         //private void resetColor24Bits()
         //{
@@ -229,17 +240,7 @@ namespace PowerDir
         //    write(msg, fg, bg);
         //    writeLine();
         //}
-        /// <summary>
-        /// write a message using the given color.
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="col"></param>
-        private void write(string msg, PowerDirTheme.ColorThemeItem col)
-        {
-            setColor(col);
-            write(msg);
-            setColor(theme.GetOriginalColor());
-        }
+        
         
         #endregion
 
@@ -277,44 +278,43 @@ namespace PowerDir
 
         private void processPath()
         {
+            WriteDebug($"[START] Path = {Path} --- basePath = {basePath}");
             Path = Path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
+            
             if (Path.StartsWith("$HOME"))
                 Path = Path.Replace("$HOME", "~");
             if (Path.StartsWith("~"))
-                Path = SessionState.Path.NormalizeRelativePath(Path, basePath);
-            
+            {
+                basePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                Path = Path.Substring(Path.Length >= 2 ? 2 : 1); // strip out starting of '~'
+            }
 
-            Path = System.IO.Path.GetFullPath(Path);
+            Path = System.IO.Path.Combine(basePath, Path);
+            WriteDebug($"Normalized Absolute Path = {Path}");
             basePath = System.IO.Path.GetFullPath(Path);
             var p = System.IO.Path.GetDirectoryName(Path);
             // if p == null is root dir
-            if (p!=null && Path != p)
+            if (p != null && Path != p)
             {
-                var a = SessionState.Path.NormalizeRelativePath("~", basePath);
-                var b = System.IO.Path.GetFullPath(Path);
-
                 basePath = System.IO.Path.Combine(basePath, p);
                 var split = Path.Split(p);
                 WriteDebug($"Path split = [{String.Join(',', split)}]");
-                foreach (var s in split)
-                {
-                    if (s.Length == 0) continue;
-                    if (Path.Contains(s))
-                    {
-                        int index = s.StartsWith(System.IO.Path.DirectorySeparatorChar) ? 1 : 0;
-                        Path = s.Substring(index);
-                        break;
-                    }
-                }
+                int index = split[1].StartsWith(System.IO.Path.DirectorySeparatorChar) ? 1 : 0;
+                // Sanity check
+                if(split.Length != 2 || split[0].Length > 0)
+                    throw new NotImplementedException("Path.Split(p) unexpected result");
+                Path = split[1][index..];
             }
 
-            if(Directory.Exists(Path) || Directory.Exists(System.IO.Path.Combine(basePath, Path)))
+            if (Directory.Exists(Path) || Directory.Exists(System.IO.Path.Combine(basePath, Path)))
             {
                 basePath = System.IO.Path.Combine(basePath, Path);
                 Path = "*";
             }
 
             if (string.IsNullOrEmpty(Path)) Path = "*";
+
+            WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
         }
         private void collectResults()
         {
@@ -324,23 +324,22 @@ namespace PowerDir
             enumerationOptions.IgnoreInaccessible = false;
             enumerationOptions.AttributesToSkip = 0;
 
-            dirs = Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
-            files = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
-
             // TODO: consider to process this while displaying instead.
+            dirs = Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
             foreach (string dir in dirs)
             {
                 var dirInfo = new DirectoryInfo(dir);
                 results.Add(new GetPowerDirInfo(dirInfo));
             }
-
+            
+            dirs.Clear();
+            files = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
             foreach (string file in files)
             {
                 var fileInfo = new FileInfo(file);
                 results.Add(new GetPowerDirInfo(fileInfo));
             }
 
-            dirs.Clear();
             files.Clear();
         }
 
@@ -356,14 +355,13 @@ namespace PowerDir
 
             WriteDebug($"Host Name = {Host.Name}");
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
-            WriteDebug($"basePath = {basePath} --- Path = ${Path}");
-            WriteDebug($"Host.Name = {Host.Name}");
+            WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
             checkColorSupport();
             checkWidthSupport();
 
             WriteDebug($"Color = {_supportColor}");
-            WriteDebug($"Width = {_width} --- useUIWrite(default)={_useUIWrite}");
+            WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
             WriteDebug($"Recursive = {_recursive}");
 
             processPath();
@@ -396,7 +394,8 @@ namespace PowerDir
             //      etc
             
             // TODO switch parameter for dateTime type
-            ListDetailsView ldv = new ListDetailsView(_width, MAX_NAME_LENGTH, write, write, writeLine, theme, ListDetailsView.EDateTimes.CREATION);
+            ListDetailsView ldv = new ListDetailsView(_width, MAX_NAME_LENGTH,
+                write, write, writeLine, theme, ListDetailsView.EDateTimes.CREATION);
             ldv.displayResults(results);
         }
 
@@ -437,13 +436,14 @@ namespace PowerDir
 
             base.EndProcessing();
         }
-
+        /*
         /// <summary>
         /// 
         /// </summary>
-        protected override void StopProcessing()
-        {
-            base.StopProcessing();
-        }
+        //protected override void StopProcessing()
+        //{
+        //    base.StopProcessing();
+        //}
+        */
     }
 }

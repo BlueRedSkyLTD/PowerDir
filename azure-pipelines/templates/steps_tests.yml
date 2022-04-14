@@ -1,0 +1,28 @@
+steps:
+  - task: DotNetCoreCLI@2
+    name: DisplayTests
+    inputs:
+      command: 'test'
+      projects: $(projects)
+      arguments: '-t -f $(netVersion) --configuration $(buildConfiguration)'
+      publishTestResults: false
+      testRunTitle: 'Display test'
+  - task: DotNetCoreCLI@2
+    name: RunTests
+    inputs:
+      command: 'test'
+      projects: $(projects)
+      arguments: '-f $(netVersion) --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
+      testRunTitle: 'RunTests-$(Build.BuildNumber)'
+  ## CodeCov
+  - template: steps_codecov.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+  ##
+  - pwsh: |
+      echo $PWD
+      Copy-Item ..\..\..\PowerDir.GetPowerDir.psd1 .
+      Import-Module  .\PowerDir.GetPowerDir.psd1
+      ../../../../runtime-tests.ps1
+    workingDirectory: $(System.DefaultWorkingDirectory)/PowerDir/bin/$(buildConfiguration)/$(netVersion)
+    name: RunTimeTests

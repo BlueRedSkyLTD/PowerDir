@@ -1,0 +1,77 @@
+
+trigger:
+  tags:
+    include:
+    - '*'
+
+variables:
+  - template: variables/globals.yml
+  - template: variables/images.yml
+
+stages:
+- stage: Release
+  pool:
+    vmImage: ${{ variables.windows_image }}
+  variables:
+    buildConfiguration: Release
+  jobs:
+    - job: WindowsRelease
+      condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+      steps:
+      # check if versions are matching: project, manifest, git tag
+      - task: PowerShell@2
+        inputs:
+          filePath: $(Build.SourcesDirectory)/check-versions-tag.ps1
+          targetType: filepath
+          failOnStderr: true
+          displayName: CheckVersions
+          arguments: $(Build.SourceBranch)
+        name: CheckVersionsTag
+      - task: PowerShell@2
+        inputs:
+          filePath: $(Build.SourcesDirectory)/check-versions.ps1
+          targetType: filepath
+          failOnStderr: true
+          displayName: CheckVersions
+          arguments: $(Build.SourceBranch)
+        name: CheckVersions
+
+      # build
+      - template: templates/steps_build.yml
+      # tests
+      - template: templates/steps_tests.yml
+      # package
+      - task: CopyFiles@2
+        inputs:
+          sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
+          contents: '*'
+          targetFolder: '$(Build.ArtifactStagingDirectory)'
+        # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+      - pwsh: |
+          Install-Module platyps -Force
+          Import-Module platyps
+          New-ExternalHelp -Path '$(System.DefaultWorkingDirectory)/PowerDir/doc' -OutputPath '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir' -Force
+        name: GenerateModuleHelp
+
+      - task: GithubRelease@1
+        displayName: 'Create GitHub Release'
+        inputs:
+          gitHubConnection: github.com_Raffaello
+          repositoryName: '$(Build.Repository.Name)'
+          action: 'edit'
+          target: '$(Build.SourceVersion)'
+          tagSource: auto
+          tag: $(Build.BuildNumber)
+          title: $(Build.SourceBranchName)
+          isDraft: false
+          assetUploadMode: 'replace'
+          addChangeLog: true
+          compareWith: 'lastFullRelease'
+          assets: '$(Build.ArtifactStagingDirectory)/*'
+        # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+      # Publishing to Powershell Gallery
+      - pwsh: |
+          Publish-Module -Path $(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir -NuGetApiKey ${env:PWSH_PUBLISH}
+        name: PublishModule
+        env:
+         PWSH_PUBLISH: $(pwsh_publish)

@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Copyright>(c) BlueRedSky LTD. All rights reserved.</Copyright>
     <Authors>Raffaello Bertini</Authors>
     <Company>BlueRedSky LTD</Company>
@@ -31,9 +31,24 @@
   <ItemGroup>
     <Folder Include="doc\" />
   </ItemGroup>
-
+<!--
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="COPY /Y $(ProjectDir)PowerDir.GetPowerDir.psd1 $(OutDir) " />
+    <Exec Command="COPY /Y $(ProjectDir)PowerDir.GetPowerDir.psd1 $(OutDir)" />
+  </Target>
+-->
+    
+  <Target Name="CopyFiles" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <Target Name="CopyFiles" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <MySourceFiles Include="$(ProjectDir)doc/Get-PowerDir.md;$(ProjectDir)PowerDir.GetPowerDir.psd1;$(ProjectDir)PowerDir.dll-help.xml;$(OutDir)PowerDir.dll;" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)$(MSBuildProjectName).GetPowerDir" />
   </Target>
 
 </Project>

@@ -1,0 +1,99 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+trigger: none
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+    #- .gitignore
+    - .github/*
+    - README.md
+
+variables:
+  - template: variables/globals.yml
+  - template: variables/images.yml
+
+stages:
+# - stage: DebugInfo
+#   condition:  eq(variables.debug_info, 'true')
+#   jobs:
+#     - job: ShowVars
+#       steps:
+#         - script: |
+#             echo "*** START ***"
+#             echo ${{ variables.windows_image }}
+#             echo ${{ variables.linux_image }}
+#             echo ${{ variables.mac_image }}
+#             echo .
+#             echo ${{ variables['Agent.OS'] }}
+#             echo .
+#             echo $(Agent.OS)
+#             echo "*** END ***"
+
+- stage: CheckVersions
+  pool:
+    vmImage: ${{ variables.windows_image }}
+  jobs:
+    - job: Module
+      steps:
+      # check if versions are matching: project, manifest, git tag
+      - task: PowerShell@2
+        inputs:
+          filePath: $(Build.SourcesDirectory)/check-versions.ps1
+          targetType: filepath
+          failOnStderr: true
+          displayName: CheckVersions
+          arguments: $(Build.SourceVersion)
+        name: CheckVersions
+
+- stage: CI
+  jobs:
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "Windows"
+        vmImage: ${{ variables.windows_image }}
+        execution: ${{ variables.ci_windows }}
+
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "Linux"
+        vmImage: ${{ variables.linux_image }}
+        execution: ${{ variables.ci_linux }}
+      # pre_CI_Steps:
+      #   - script: |
+      #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+      #       sudo dpkg -i packages-microsoft-prod.deb
+      #       rm packages-microsoft-prod.deb
+      #       sudo apt-get update; \
+      #       sudo apt-get install -y apt-transport-https && \
+      #       sudo apt-get update && \
+      #       sudo apt-get install -y dotnet-sdk-6.0
+      #     name: Install_NET6_0
+        # - script: |
+        #     sudo apt-get update
+        #     sudo apt-get install -y wget apt-transport-https software-properties-common
+        #     wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+        #     sudo dpkg -i packages-microsoft-prod.deb
+        #     sudo apt-get update
+        #     sudo apt-get install -y powershell
+        #   name: InstallPS7
+
+    - template: templates/jobs_ci.yml
+      parameters:
+        jobName: "MacOS"
+        vmImage: ${{ variables.mac_image }}
+        execution: ${{ variables.ci_macos }}
+    #     pre_CI_Steps:
+    #       # - script: |
+    #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    #         # name: install_HomeBrew
+    #       - script: |
+    #           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    #           brew install --cask powershell
+    #         name: InstallPS7
