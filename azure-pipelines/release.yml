@@ -14,13 +14,13 @@ variables:
   - template: variables/globals.yml
   - template: variables/images.yml
 
-resources:
-  repositories:
-    - repository: PowerDirRepo
-      type: github
-      endpoint: github.com_Raffaello
-      name: PowerDirRepo
-      ref: main
+# resources:
+#   repositories:
+#     - repository: PowerDirRepo
+#       type: github
+#       endpoint: github.com_Raffaello
+#       name: PowerDirRepo
+#       ref: main
 
 stages:
 - stage: Release
