@@ -14,13 +14,13 @@ variables:
   - template: variables/globals.yml
   - template: variables/images.yml
 
-# resources:
-#   repositories:
-#     - repository: PowerDirRepo
-#       type: github
-#       endpoint: github.com_Raffaello
-#       name: PowerDirRepo
-#       ref: main
+resources:
+  repositories:
+    - repository: PowerDirRepo
+      type: github
+      endpoint: github.com_Raffaello
+      name: BlueRedSkyLTD/PowerDir
+      ref: main
 
 stages:
 - stage: Release
@@ -34,7 +34,7 @@ stages:
       steps:
       # checkout repo correctly
       # - checkout: self
-      # - checkout: PowerDirRepo # checks out the features/tools branch
+      - checkout: PowerDirRepo # checks out the features/tools branch
 
       # - script: |
       #     git checkout main
