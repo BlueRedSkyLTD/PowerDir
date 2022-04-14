@@ -12,5 +12,5 @@ Locale: en-US
 
 ## PowerDir.GetPowerDir Cmdlets
 ### [Get-PowerDir](Get-PowerDir.md)
-{{ Fill in the Description }}
+An alternative Get-ChildItem.
 

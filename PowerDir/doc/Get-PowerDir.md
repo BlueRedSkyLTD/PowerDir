@@ -13,7 +13,8 @@ An alternative Get-ChildItem.
 ## SYNTAX
 
 ```
-Get-PowerDir [[-Path] <String>] [-Recursive] [-Level <Int32>] [-Display <DisplayOptions>] [<CommonParameters>]
+Get-PowerDir [[-Path] <String>] [-Recursive] [-NoColor] [-Level <Int32>] [-Display <DisplayOptions>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -54,18 +55,21 @@ get all items in a wide 4 columns table in the current path folder.
 ```powershell
 PS C:\> d -r -l 2 *.exe
 ```
+
 get all items ending with `.exe` recursively with a depth level of 2.
 
 ### Example 6
 ```powershell
 PS C:\> Get-PowerDir | ft
 ```
+
 get all items in the current directory in `Format-table` mode.
 
 ### Example 7
 ```powershell
 PS C:\> d \`$RecycleBin
 ```
+
 Display content in the Recycle Bin in Windows System.
 Must use the backtick char before `$`to escape it.
 
@@ -77,9 +81,8 @@ function dd() { Get-PowerDir -d ld @args }
 function dw() { Get-PowerDir -d w  @args }
 function  l() { Get-PowerDir -d l  @args }
 ```
+
 Edit your profile and add the following aliases
-
-
 
 ## PARAMETERS
 
@@ -110,6 +113,21 @@ Aliases: l
 Required: False
 Position: Named
 Default value: int.MaxValue
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoColor
+Disable colors (default: no)
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: n
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -151,12 +169,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### None
-
 ## OUTPUTS
 
 ### PowerDir.GetPowerDirInfo
-
-
 ## NOTES
 
 ## RELATED LINKS

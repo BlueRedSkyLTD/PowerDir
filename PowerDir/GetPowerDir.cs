@@ -55,7 +55,7 @@ namespace PowerDir
         //[Parameter]
         //public SwitchParameter Pagination { get { return pagination; } set { pagination = value; } }
 
-        private bool _recursive;
+        private bool _recursive = false;
         /// <summary>
         /// <para type="description">Search Recursively (default: No)</para>
         /// </summary>
@@ -67,6 +67,18 @@ namespace PowerDir
         public SwitchParameter Recursive {
             get { return _recursive; }
             set { _recursive = value; }
+        }
+
+        private bool _noColor = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        [Parameter(HelpMessage = "Disable colors (default: no)")]
+        [Alias("n")]
+        public SwitchParameter NoColor
+        {
+            get { return _noColor; }
+            set { _noColor = value; }
         }
 
         /// <summary>
@@ -131,23 +143,17 @@ namespace PowerDir
         public DisplayOptions Display { get; set; } = DisplayOptions.Object;
         #endregion Parameters
 
-        private ConsoleColor fg;
-        private ConsoleColor bg;
-
-        private List<string> dirs = new List<string>();
-        private List<string> files = new List<string>();
-
         // TODO: review this HashSet, a concurrent bag maybe btter
-        private HashSet<GetPowerDirInfo> results = new HashSet<GetPowerDirInfo>();
+        private readonly HashSet<GetPowerDirInfo> results = new HashSet<GetPowerDirInfo>();
 
         private bool _supportColor = true;
         int _width = 120;
         // TODO: consider to use just writeObject generating a string instead as it can support color with ESC[ sequence
         bool _useUIWrite = true;
-        StringBuilder _sb = new StringBuilder();
+        private readonly StringBuilder _sb = new StringBuilder();
 
         private string basePath = "./";
-        private EnumerationOptions enumerationOptions = new EnumerationOptions();
+        private readonly EnumerationOptions enumerationOptions = new EnumerationOptions();
 
         // TODO: pagination
 
@@ -248,8 +254,8 @@ namespace PowerDir
         {
             try
             {
-                fg = Host.UI.RawUI.ForegroundColor;
-                bg = Host.UI.RawUI.BackgroundColor;
+                ConsoleColor fg = Host.UI.RawUI.ForegroundColor;
+                ConsoleColor bg = Host.UI.RawUI.BackgroundColor;
                 // Loading Color Theme (only default one at the moment)
                 // TODO: load color theme from env variable or setting file
                 theme = new PowerDirTheme(fg, bg);
@@ -325,22 +331,22 @@ namespace PowerDir
             enumerationOptions.AttributesToSkip = 0;
 
             // TODO: consider to process this while displaying instead.
-            dirs = Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
-            foreach (string dir in dirs)
+            List<string> items =  Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
+            foreach (string dir in items)
             {
                 var dirInfo = new DirectoryInfo(dir);
                 results.Add(new GetPowerDirInfo(dirInfo));
             }
             
-            dirs.Clear();
-            files = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
-            foreach (string file in files)
+            items.Clear();
+            items = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
+            foreach (string file in items)
             {
                 var fileInfo = new FileInfo(file);
                 results.Add(new GetPowerDirInfo(fileInfo));
             }
 
-            files.Clear();
+            items.Clear();
         }
 
         /// <summary>
@@ -359,6 +365,12 @@ namespace PowerDir
 
             checkColorSupport();
             checkWidthSupport();
+
+            if (_noColor)
+            {
+                _useUIWrite = false;
+                _supportColor = false;
+            }
 
             WriteDebug($"Color = {_supportColor}");
             WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
