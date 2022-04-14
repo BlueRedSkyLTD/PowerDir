@@ -78,13 +78,7 @@ stages:
       parameters:
         jobName: "Linux"
         vmImage: ${{ variables.linux_image }}
-        solution: ${{ variables.solution }}
-        buildPlatform: ${{ variables.buildPlatform }}
-        projects: ${{ variables.projects }}
-        netVersion: ${{ variables.netVersion }}
-        useNetVersion: ${{ variables.useNetVersion }}
         execution: ${{ variables.ci_linux }}
-        buildConfiguration: Debug
       # pre_CI_Steps:
       #   - script: |
       #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -108,13 +102,7 @@ stages:
       parameters:
         jobName: "MacOS"
         vmImage: ${{ variables.mac_image }}
-        solution: ${{ variables.solution }}
-        buildPlatform: ${{ variables.buildPlatform }}
-        projects: ${{ variables.projects }}
-        netVersion: ${{ variables.netVersion }}
-        useNetVersion: ${{ variables.useNetVersion }}
         execution: ${{ variables.ci_macos }}
-        buildConfiguration: Debug
     #     pre_CI_Steps:
     #       # - script: |
     #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
