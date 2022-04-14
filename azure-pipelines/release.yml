@@ -57,6 +57,7 @@ stages:
           sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
           contents: '*'
           targetFolder: '$(Build.ArtifactStagingDirectory)'
+        # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       - pwsh: |
           Install-Module platyps -Force
           Import-Module platyps

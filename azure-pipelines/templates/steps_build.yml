@@ -31,7 +31,7 @@ steps:
       platform: $(buildPlatform)
       configuration: $(buildConfiguration)
     # continueOnError: true
-    condition: and(success(), eq(variables['Agent.OS'], 'Windows_NT'))
+    condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
   - task: MSBuild@1
     inputs:
       solution: $(solution)
@@ -39,4 +39,4 @@ steps:
       configuration: $(buildConfiguration)
       # clean: true
     continueOnError: true
-    condition: and(success(), ne(variables['Agent.OS'], 'Windows_NT'))
+    condition: and(succeeded(), ne(variables['Agent.OS'], 'Windows_NT'))
