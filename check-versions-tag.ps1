@@ -8,13 +8,23 @@
 $ErrorActionPreference = "Stop"
 echo $Args[0]
 
+git log -1 --pretty=%D | Select-String -Pattern '^HEAD -> (.+),' | ForEach-Object {
+    $branch = $_.Matches[0].Groups[1].Value
+}
+echo "Branch name: $branch"
+
+if ($brach -ne "main") {
+    echo "not main branch. Exit"
+    # exit 1
+}
+
 ### if doesn't found the branch will return null, that will generate an error and exit.
-$tagBranch = git branch --contains $Args[0]
+$tagBranch = git branch $branch --contains $Args[0]
 if ($tagBranch | Select-String -Pattern 'main$') {}
 else {
     $t= $tagBranch -join ', '
     echo "git tag not in main branch, but in $t"
-    exit 1
+    # exit 1
 }
 
 ### TODO: instead of [PSCustomOjbect] use [Version]
