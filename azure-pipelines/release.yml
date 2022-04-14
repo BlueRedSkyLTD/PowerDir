@@ -37,8 +37,11 @@ stages:
         persistCredentials: true
       # - checkout: PowerDirRepo # checks out the features/tools branch
       - script: |
-          git checkout main
+          git switch main
           git pull origin main --tags
+          git tag
+          git rev-parse v0.0.1
+          git rev-parse $(Build.SourceVersion)
         name: checkoutMainBranchWithTags
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
