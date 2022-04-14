@@ -34,11 +34,12 @@ stages:
       steps:
       # checkout repo correctly
       - checkout: self
+        persistCredentials: true
       # - checkout: PowerDirRepo # checks out the features/tools branch
       - script: |
-          git switch $(Build.SourceBranch)
-      #    # git pull origin main --tags
-        # name: checkoutMainBranchWithTags
+          git checkout main
+          git pull origin main --tags
+        name: checkoutMainBranchWithTags
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
         inputs:
