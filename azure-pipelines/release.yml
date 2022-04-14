@@ -16,7 +16,7 @@ stages:
     buildConfiguration: Release
   jobs:
     - job: WindowsRelease
-      # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+      condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       steps:
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
