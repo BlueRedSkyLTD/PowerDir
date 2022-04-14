@@ -14,10 +14,6 @@ steps:
       projects: $(projects)
       arguments: '-f $(netVersion) --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover'
       testRunTitle: 'RunTests-$(Build.BuildNumber)'
-  ## CodeCov
-  - template: steps_codecov.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
   ##
   - pwsh: |
       echo $PWD
