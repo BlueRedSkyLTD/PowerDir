@@ -12,7 +12,8 @@ echo $Args[0]
 $tagBranch = git branch --contains $Args[0]
 if ($tagBranch | Select-String -Pattern 'main$') {}
 else {
-    echo "git tag not in main branch, but in $tagBranch"
+    $t= $tagBranch -join ', '
+    echo "git tag not in main branch, but in $t"
     exit 1
 }
 

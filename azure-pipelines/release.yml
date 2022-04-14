@@ -14,14 +14,6 @@ variables:
   - template: variables/globals.yml
   - template: variables/images.yml
 
-resources:
-  repositories:
-    - repository: PowerDirRepo
-      type: github
-      endpoint: github.com_Raffaello
-      name: BlueRedSkyLTD/PowerDir
-      ref: main
-
 stages:
 - stage: Release
   pool:
@@ -32,24 +24,6 @@ stages:
     - job: WindowsRelease
       # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       steps:
-      # checkout repo correctly
-      - checkout: PowerDirRepo
-        persistCredentials: true
-      # - checkout: PowerDirRepo # checks out the features/tools branch
-      - pwsh: |
-          echo "build.sourceversion"
-          echo $(Build.SourceVersion)
-          echo "switch main"
-          git switch main
-          echo "pull --tags"
-          git pull origin main --tags
-          echo "tag"
-          git tag
-          echo "rev-parse v0.0.1"
-          git rev-parse v0.0.1
-          echo "rev-parse build.sourceversion"
-          git rev-parse $(Build.SourceVersion)
-        name: checkoutMainBranchWithTags
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
         inputs:
