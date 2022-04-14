@@ -2,10 +2,10 @@ variables:
   ci_windows: true
   ci_linux: false
   ci_macos: false
-  debug_info: true
+  debug_info: false
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Debug'
+  # buildConfiguration: 'Debug'
   projects: '**/*Tests/*.csproj'
   netVersion: 'net6.0'
   useNetVersion: '6.0.x'

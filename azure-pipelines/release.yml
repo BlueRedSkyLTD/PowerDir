@@ -13,7 +13,7 @@ stages:
   pool:
     vmImage: ${{ variables.windows_image }}
   variables:
-    BUILD_CONFIGURATION: Release
+    buildConfiguration: Release
   jobs:
     - job: WindowsRelease
       condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
@@ -38,17 +38,8 @@ stages:
 
       # build
       - template: templates/steps_build.yml
-        parameters:
-          solution: ${{ variables.solution }}
-          buildPlatform: ${{ variables.buildPlatform }}
-          buildConfiguration: $(BUILD_CONFIGURATION)
-          useNetVersion: ${{ variables.useNetVersion }}
       # tests
       - template: templates/steps_tests.yml
-        parameters:
-          projects: ${{ variables.projects }}
-          netVersion: ${{ variables.netVersion }}
-          buildConfiguration: $(BUILD_CONFIGURATION)
       # package
       - task: CopyFiles@2
         inputs:

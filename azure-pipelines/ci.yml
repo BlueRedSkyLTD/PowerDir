@@ -54,25 +54,11 @@ stages:
 
 - stage: CI
   jobs:
-    ### Matrix variables expansion is not working with job templates
-    ### TODO convert to steps_ci template instead of job_ci
-    ### TODO simplify the whole pipelines
     - template: templates/jobs_ci.yml
       parameters:
         jobName: "Windows"
         vmImage: ${{ variables.windows_image }}
         execution: ${{ variables.ci_windows }}
-    # - template: templates/jobs_ci.yml
-    #   parameters:
-    #     jobName: "Windows"
-    #     vmImage: ${{ variables.windows_image }}
-    #     solution: ${{ variables.solution }}
-    #     buildPlatform: ${{ variables.buildPlatform }}
-    #     projects: ${{ variables.projects }}
-    #     netVersion: ${{ variables.netVersion }}
-    #     useNetVersion: ${{ variables.useNetVersion }}
-    #     execution: ${{ variables.ci_windows }}
-    #     buildConfiguration: Release
 
     - template: templates/jobs_ci.yml
       parameters:
