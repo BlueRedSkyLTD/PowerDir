@@ -3,12 +3,6 @@ trigger:
   tags:
     include:
     - '*'
-## TESTS (remove after)
-## (restore the condition)
-pr:
-  branches:
-    include:
-      - main
 
 variables:
   - template: variables/globals.yml
