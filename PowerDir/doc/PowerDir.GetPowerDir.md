@@ -8,9 +8,10 @@ Locale: en-US
 
 # PowerDir.GetPowerDir Module
 ## Description
-{{ Fill in the Description }}
+This module is designed to work with Powershell 7.x.
+
+It is an alterntaive `Get-ChildItem` with extra features.
 
 ## PowerDir.GetPowerDir Cmdlets
 ### [Get-PowerDir](Get-PowerDir.md)
-{{ Fill in the Description }}
-
+An alternative Get-ChildItem.

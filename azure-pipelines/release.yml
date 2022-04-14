@@ -50,7 +50,10 @@ stages:
       - pwsh: |
           Install-Module platyps -Force
           Import-Module platyps
+          Import-Module 
           New-ExternalHelp -Path '$(System.DefaultWorkingDirectory)/PowerDir/doc' -OutputPath '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir' -Force
+          cd PowerDir && .\update-doc.ps1 && cp  doc/* '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir' -Force
+          dir '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
         name: GenerateModuleHelp
 
       - task: GithubRelease@1

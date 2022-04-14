@@ -49,6 +49,6 @@ Open an issue on github or send a message in Powershell gallery
 ## RoadMap / Changelog
 
 - [x] v0.1.0: publishing test, basic functionalities almost complete
-- [ ] v0.2.0: basic functionalities
+- [x] v0.2.0: basic functionalities
 - [ ] v0.3.0: using escape codes
 - [ ] v0.4.0: globbing search / advanced search patterns

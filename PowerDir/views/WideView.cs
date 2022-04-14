@@ -37,6 +37,9 @@ namespace PowerDir.views
                     c = 0;
                 }
             }
+
+            if (c!= 0)
+                _writeLine();
         }
     }
 }
