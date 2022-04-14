@@ -61,6 +61,17 @@
           </dev:type>
           <dev:defaultValue>int.MaxValue</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="n">
+          <maml:name>NoColor</maml:name>
+          <maml:description>
+            <maml:para>Disable colors (default: no)</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="r">
           <maml:name>Recursive</maml:name>
           <maml:description>
@@ -98,6 +109,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>int.MaxValue</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="n">
+        <maml:name>NoColor</maml:name>
+        <maml:description>
+          <maml:para>Disable colors (default: no)</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="none">
         <maml:name>Path</maml:name>

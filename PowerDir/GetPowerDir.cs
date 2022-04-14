@@ -326,7 +326,7 @@ namespace PowerDir
         {
             enumerationOptions.RecurseSubdirectories = _recursive;
             enumerationOptions.MaxRecursionDepth = Level;
-            //enumerationOptions.ReturnSpecialDirectories = true;
+            enumerationOptions.ReturnSpecialDirectories = true;
             enumerationOptions.IgnoreInaccessible = false;
             enumerationOptions.AttributesToSkip = 0;
 
@@ -363,14 +363,14 @@ namespace PowerDir
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
-            checkColorSupport();
-            checkWidthSupport();
-
             if (_noColor)
             {
                 _useUIWrite = false;
                 _supportColor = false;
-            }
+            } else
+                checkColorSupport();
+            
+            checkWidthSupport();
 
             WriteDebug($"Color = {_supportColor}");
             WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
@@ -404,7 +404,6 @@ namespace PowerDir
             // TODO
             //      permissions?
             //      etc
-            
             // TODO switch parameter for dateTime type
             ListDetailsView ldv = new ListDetailsView(_width, MAX_NAME_LENGTH,
                 write, write, writeLine, theme, ListDetailsView.EDateTimes.CREATION);
