@@ -33,7 +33,7 @@ stages:
       # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       steps:
       # checkout repo correctly
-      - checkout: self
+      - checkout: PowerDirRepo
         persistCredentials: true
       # - checkout: PowerDirRepo # checks out the features/tools branch
       - script: |
