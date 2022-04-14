@@ -22,6 +22,9 @@ git rev-parse $Args[0]
 echo "git show HEAD"
 git show -s --pretty=%d HEAD
 
+echo "git branch contains head"
+git branch --contains HEAD
+
 git log -1 --pretty=%D | Select-String -Pattern '^HEAD -> (.+),' | ForEach-Object {
     $branch = $_.Matches[0].Groups[1].Value
 }
