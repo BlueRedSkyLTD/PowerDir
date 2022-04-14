@@ -50,6 +50,9 @@ namespace PowerDir.Tests
         }
         private void displayOutput(Collection<PSObject> res)
         {
+            if (res is null)
+                throw new ArgumentNullException(nameof(res));
+
             foreach (var item in res)
                 TestContext.WriteLine(item.ToString());
         }
@@ -84,7 +87,7 @@ namespace PowerDir.Tests
         private void checkType(PSObject o, string type)
         {
             Assert.IsNotNull(o);
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach(var t in o.TypeNames)
                 sb.AppendLine(t);
 
@@ -270,6 +273,14 @@ namespace PowerDir.Tests
                 File.Delete(filePath);
                 Directory.Delete(dirPath);
             }
+        }
+
+        [TestMethod]
+        public void TestNoColor()
+        {
+            var output = execute(createCmdLet().AddParameter("-NoColor", null));
+            checkType(output[0], "PowerDir.GetPowerDirInfo");
+            Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename));
         }
     }
 }

@@ -39,9 +39,7 @@ namespace PowerDir.views
             }
 
             if (c!= 0)
-            {
                 _writeLine();
-            }
         }
     }
 }
