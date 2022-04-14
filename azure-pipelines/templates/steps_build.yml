@@ -1,32 +1,16 @@
-parameters:
-  - name: solution
-    type: string
-  - name: buildPlatform
-    type: string
-    values:
-      - 'Any CPU'
-  - name: buildConfiguration
-    type: string
-    values:
-      - 'Debug'
-      - 'Release'
-    # default: 'Debug'
-  - name: useNetVersion
-    type: string
-    values:
-      - 6.0.x
-
-
 steps:
+  - pwsh: echo $(buildConfiguration)
+    name: BuildBuildConfigurationInfo
+    condition: eq(variables.debug_info, 'true')
   # prepare
   - task: UseDotNet@2
     inputs:
-      version: ${{ parameters.useNetVersion }}
+      version: $(useNetVersion)
       packageType: 'runtime'
       # installationPath: $(Agent.TempDirectory)
   - task: UseDotNet@2
     inputs:
-      version: ${{ parameters.useNetVersion }}
+      version: $(useNetVersion)
       packageType: 'sdk'
       # installationPath: $(Agent.TempDirectory)
     # info
@@ -40,19 +24,19 @@ steps:
   - task: NuGetToolInstaller@1
   - task: NuGetCommand@2
     inputs:
-      restoreSolution: ${{ parameters.solution }}
+      restoreSolution: $(solution)
   - task: VSBuild@1
     inputs:
-      solution: ${{ parameters.solution }}
-      platform: ${{ parameters.buildPlatform }}
-      configuration: ${{ parameters.buildConfiguration }}
-    continueOnError: true
+      solution: $(solution)
+      platform: $(buildPlatform)
+      configuration: $(buildConfiguration)
+    # continueOnError: true
     condition: eq(variables['Agent.OS'], 'Windows_NT')
   - task: MSBuild@1
     inputs:
-      solution: ${{ parameters.solution }}
-      platform: ${{ parameters.buildPlatform }}
-      configuration: ${{ parameters.buildConfiguration }}
+      solution: $(solution)
+      platform: $(buildPlatform)
+      configuration: $(buildConfiguration)
       # clean: true
     continueOnError: true
     condition: not(eq(variables['Agent.OS'], 'Windows_NT'))

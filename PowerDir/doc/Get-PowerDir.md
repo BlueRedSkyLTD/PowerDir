@@ -94,7 +94,7 @@ Accepted values: o, Object, List, l, ListDetails, ld, Wide, w
 
 Required: False
 Position: Named
-Default value: None
+Default value: Object
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -109,7 +109,7 @@ Aliases: l
 
 Required: False
 Position: Named
-Default value: None
+Default value: int.MaxValue
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -125,7 +125,7 @@ Aliases:
 
 Required: False
 Position: 0
-Default value: None
+Default value: *
 Accept pipeline input: False
 Accept wildcard characters: True
 ```
@@ -155,6 +155,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### PowerDir.GetPowerDirInfo
+
 
 ## NOTES
 

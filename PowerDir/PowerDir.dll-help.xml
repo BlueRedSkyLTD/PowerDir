@@ -25,7 +25,7 @@
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
+          <dev:defaultValue>*</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="d">
           <maml:name>Display</maml:name>
@@ -47,7 +47,7 @@
             <maml:name>DisplayOptions</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
+          <dev:defaultValue>Object</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="l">
           <maml:name>Level</maml:name>
@@ -59,7 +59,7 @@
             <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
+          <dev:defaultValue>int.MaxValue</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="r">
           <maml:name>Recursive</maml:name>
@@ -85,7 +85,7 @@
           <maml:name>DisplayOptions</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>Object</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="l">
         <maml:name>Level</maml:name>
@@ -97,7 +97,7 @@
           <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>int.MaxValue</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="0" aliases="none">
         <maml:name>Path</maml:name>
@@ -109,7 +109,7 @@
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>*</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="r">
         <maml:name>Recursive</maml:name>

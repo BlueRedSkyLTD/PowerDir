@@ -3,32 +3,14 @@ parameters:
     type: string
   - name: vmImage
     type: string
-  - name: solution
-    type: string
-    default: '**/*.sln'
-  - name: buildPlatform
-    type: string
-    default: 'Any CPU'
-  - name: buildConfiguration
-    type: string
-    default: 'Debug'
-  - name: projects
-    type: string
-    default: '**/*Tests/*.csproj'
-  - name: netVersion
-    type: string
-    default: 'net6.0'
-  - name: useNetVersion
-    type: string 
-    default: '6.0.x'
   - name: pre_CI_Steps
     type: stepList
     default: []
   - name: execution
     type: string
-    # values:
-      # - 'true'
-      # - 'false'
+    values:
+      - 'true'
+      - 'false'
     # default: true
 
 jobs:
@@ -49,14 +31,5 @@ jobs:
             ${{ pair.key }}: ${{ pair.value }}
       # build
       - template: steps_build.yml
-        parameters:
-          solution: ${{ parameters.solution }}
-          buildPlatform: ${{ parameters.buildPlatform }}
-          buildConfiguration: ${{ parameters.buildConfiguration }}
-          useNetVersion: ${{ parameters.useNetVersion }}
       # tests
       - template: steps_tests.yml
-        parameters:
-          projects: ${{ parameters.projects }}
-          netVersion: ${{ parameters.netVersion }}
-          buildConfiguration: ${{ parameters.buildConfiguration }}
