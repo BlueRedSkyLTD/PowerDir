@@ -7,6 +7,11 @@
 
 $ErrorActionPreference = "Stop"
 echo $Args[0]
+echo "git log -1"
+git log -1
+
+echo "git rev-parse Args[0]"
+git rev-parse $Args[0]
 
 git log -1 --pretty=%D | Select-String -Pattern '^HEAD -> (.+),' | ForEach-Object {
     $branch = $_.Matches[0].Groups[1].Value
