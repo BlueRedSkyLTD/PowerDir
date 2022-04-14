@@ -80,6 +80,7 @@ namespace PowerDir
         // If not supporting color...
         public PowerDirTheme()
         {
+            colorTheme.Add(KeyColorTheme.ORIGINAL, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.Black));
             _extensions = new HashSet<string>();
         }
 
