@@ -5,15 +5,43 @@
 
 ###
 
+
+### Due to azure pipelines checkout step
+### it is not really simple to detect the tag on witch branch belongs too
+### as the repo is in a detached head disconnected from all other branches
+
+
 $ErrorActionPreference = "Stop"
 echo $Args[0]
+echo "git log -1"
+git log -1 --pretty=%D
+
+echo "git rev-parse Args[0]"
+git rev-parse $Args[0]
+
+echo "git show HEAD"
+git show -s --pretty=%d HEAD
+
+echo "git branch contains head"
+git branch --contains HEAD
+
+git log -1 --pretty=%D | Select-String -Pattern 'origin/(.+)' | ForEach-Object {
+    $branch = $_.Matches[0].Groups[1].Value
+}
+echo "Branch name: $branch"
+
+if ($brach -ne "main") {
+    echo "not main branch. Exit"
+    # exit 1
+}
 
 ### if doesn't found the branch will return null, that will generate an error and exit.
-$tagBranch = git branch --contains $Args[0]
+$tagBranch = git branch $branch --contains $Args[0]
 if ($tagBranch | Select-String -Pattern 'main$') {}
 else {
-    echo "git tag not in main branch, but in $tagBranch"
-    exit 1
+    $t = $tagBranch -join ', '
+    echo "git tag not in main branch, but in $t"
+    # exit 1
 }
 
 ### TODO: instead of [PSCustomOjbect] use [Version]
