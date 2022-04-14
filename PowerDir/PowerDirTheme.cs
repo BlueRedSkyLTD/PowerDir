@@ -57,19 +57,30 @@ namespace PowerDir
             {KeyColorTheme.READONLY_FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.DarkRed)},
         };
 
-        private readonly string[] _extensions;
-        private readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD" };
+        internal readonly HashSet<string> _extensions;
+        private readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD", ".PS1" };
 
         public PowerDirTheme(ColorThemeItem original_color)
         {
             colorTheme.Add(KeyColorTheme.ORIGINAL, original_color);
             var pathExt = Environment.GetEnvironmentVariable(PATHEXT, EnvironmentVariableTarget.Process);
-            _extensions = pathExt != null? pathExt.Split(';') : _default_extensions;
+            var s = pathExt != null ? pathExt.Split(';') : Array.Empty<string>();
+            var l = s.ToList();
+            l.AddRange(_default_extensions);
+            _extensions = new HashSet<string>(l);
+
+            //_extensions.Append(_default_extensions.ToHashSet);
         }
 
         public PowerDirTheme(ConsoleColor original_fg, ConsoleColor original_bg) :
             this(new ColorThemeItem(original_fg, original_bg))
         {
+        }
+
+        // If not supporting color...
+        public PowerDirTheme()
+        {
+            _extensions = new HashSet<string>();
         }
 
         public ColorThemeItem GetOriginalColor()

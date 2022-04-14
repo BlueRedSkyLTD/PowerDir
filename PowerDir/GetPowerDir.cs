@@ -162,7 +162,7 @@ namespace PowerDir
         // TODO: get-power-dir attributes, datetime, size, etc..
 
         // TODO to be upgraded to 24 bits
-        private PowerDirTheme theme = new PowerDirTheme(ConsoleColor.Gray, ConsoleColor.Black);
+        private PowerDirTheme theme = new PowerDirTheme();
 
         #region WriteOps
         private void write(string msg)
@@ -375,7 +375,7 @@ namespace PowerDir
             WriteDebug($"Color = {_supportColor}");
             WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
             WriteDebug($"Recursive = {_recursive}");
-
+            WriteDebug($"Extensions = {String.Join(',', theme._extensions)}");
             processPath();
             collectResults();
             
