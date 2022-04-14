@@ -1,6 +1,6 @@
 steps:
   - pwsh: echo $(buildConfiguration)
-    name: BuildConfigurationInfo
+    name: TestBuildConfigurationInfo
     condition: eq(variables.debug_info, 'true')
   - task: DotNetCoreCLI@2
     name: DisplayTests
