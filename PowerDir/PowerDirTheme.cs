@@ -68,8 +68,6 @@ namespace PowerDir
             var l = s.ToList();
             l.AddRange(_default_extensions);
             _extensions = new HashSet<string>(l);
-
-            //_extensions.Append(_default_extensions.ToHashSet);
         }
 
         public PowerDirTheme(ConsoleColor original_fg, ConsoleColor original_bg) :

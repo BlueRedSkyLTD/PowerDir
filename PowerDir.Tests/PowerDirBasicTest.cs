@@ -16,7 +16,7 @@ namespace PowerDir.Tests
     // https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/windows-powershell-host-quickstart?view=powershell-7.2
 
     [TestClass]
-    public class BasicTest
+    public class PowerDirBasicTest
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private TestContext testContextInstance;

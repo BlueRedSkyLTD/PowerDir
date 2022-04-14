@@ -51,4 +51,8 @@
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)$(MSBuildProjectName).GetPowerDir" />
   </Target>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="PowerDir.Tests" Condition="'$(Configuration)' == 'Debug'" />
+  </ItemGroup>
+
 </Project>
