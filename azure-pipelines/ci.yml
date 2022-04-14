@@ -5,16 +5,15 @@
 
 trigger: none
 
-### disabled for testing pipeline release only
-# pr:
-#   branches:
-#     include:
-#       - main
-#   paths:
-#     exclude:
-#     #- .gitignore
-#     - .github/*
-#     - README.md
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+    #- .gitignore
+    - .github/*
+    - README.md
 
 variables:
   - template: variables/globals.yml

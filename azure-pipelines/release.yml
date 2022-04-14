@@ -27,7 +27,7 @@ stages:
       # checkout repo correctly
       - script: |
           git checkout main
-          git pull origin main --tags
+         # git pull origin main --tags
         name: checkoutMainBranchWithTags
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
