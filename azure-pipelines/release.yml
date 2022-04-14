@@ -14,6 +14,13 @@ variables:
   - template: variables/globals.yml
   - template: variables/images.yml
 
+repositories:
+  - repository: PowerDirRepo
+    type: github
+    endpoint: github.com_Raffaello
+    name: PowerDirRepo
+    ref: main
+
 stages:
 - stage: Release
   pool:
@@ -25,10 +32,13 @@ stages:
       # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       steps:
       # checkout repo correctly
-      - script: |
-          git checkout main
-         # git pull origin main --tags
-        name: checkoutMainBranchWithTags
+      - checkout: self
+      - checkout: PowerDirRepo # checks out the features/tools branch
+
+      # - script: |
+      #     git checkout main
+      #    # git pull origin main --tags
+        # name: checkoutMainBranchWithTags
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
         inputs:
