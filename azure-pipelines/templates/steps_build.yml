@@ -1,7 +1,4 @@
 steps:
-  - pwsh: echo $(buildConfiguration)
-    name: BuildBuildConfigurationInfo
-    condition: eq(variables.debug_info, 'true')
   # prepare
   - task: UseDotNet@2
     inputs:

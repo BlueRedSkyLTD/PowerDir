@@ -30,19 +30,19 @@ git log -1 --pretty=%D | Select-String -Pattern 'origin/(.+)' | ForEach-Object {
 }
 echo "Branch name: $branch"
 
-if ($brach -ne "main") {
+if ($branch -ne "main") {
     echo "not main branch. Exit"
-    # exit 1
+    exit 1
 }
 
 ### if doesn't found the branch will return null, that will generate an error and exit.
-$tagBranch = git branch $branch --contains $Args[0]
-if ($tagBranch | Select-String -Pattern 'main$') {}
-else {
-    $t = $tagBranch -join ', '
-    echo "git tag not in main branch, but in $t"
-    # exit 1
-}
+# $tagBranch = git branch $branch --contains $Args[0]
+# if ($tagBranch | Select-String -Pattern 'main$') {}
+# else {
+#     $t = $tagBranch -join ', '
+#     echo "git tag not in main branch, but in $t"
+#     # exit 1
+# }
 
 ### TODO: instead of [PSCustomOjbect] use [Version]
 $v1 = Select-String -Path .\PowerDir\PowerDir.GetPowerDir.psd1 -Pattern "^ModuleVersion = '(\d).(\d).(\d)'$" | ForEach-Object {

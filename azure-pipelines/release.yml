@@ -63,7 +63,7 @@ stages:
           tagSource: auto
           tag: $(Build.BuildNumber)
           title: $(Build.SourceBranchName)
-          isDraft: true
+          isDraft: false
           assetUploadMode: 'replace'
           addChangeLog: true
           compareWith: 'lastFullRelease'
@@ -71,7 +71,7 @@ stages:
         # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       # Publishing to Powershell Gallery
       - pwsh: |
-          PublishModule -WhatIf -Path $(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir -NuGetApiKey ${env:PWSH_PUBLISH}
+          Publish-Module -Path $(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir -NuGetApiKey ${env:PWSH_PUBLISH}
         name: PublishModule
         env:
          PWSH_PUBLISH: $(pwsh_publish)

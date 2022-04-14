@@ -48,7 +48,7 @@
     <ItemGroup>
       <MySourceFiles Include="$(ProjectDir)doc/Get-PowerDir.md;$(ProjectDir)PowerDir.GetPowerDir.psd1;$(ProjectDir)PowerDir.dll-help.xml;$(OutDir)PowerDir.dll;" />
     </ItemGroup>
-    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)GetPowerDir.$(MSBuildProjectName)" />
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)$(MSBuildProjectName).GetPowerDir" />
   </Target>
 
 </Project>
