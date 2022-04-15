@@ -326,7 +326,6 @@ namespace PowerDir
         {
             enumerationOptions.RecurseSubdirectories = _recursive;
             enumerationOptions.MaxRecursionDepth = Level;
-            enumerationOptions.ReturnSpecialDirectories = true;
             enumerationOptions.IgnoreInaccessible = false;
             enumerationOptions.AttributesToSkip = 0;
 
