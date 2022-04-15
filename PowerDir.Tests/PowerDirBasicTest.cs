@@ -267,6 +267,7 @@ namespace PowerDir.Tests
             {
                 var output = execute(createCmdLet().AddParameter("Path", $"~/{dirName}"));
                 Assert.IsNotNull(output.First((dynamic o) => o.Name == filename));
+                Assert.IsTrue(output.Count == 1);
             }
             finally
             {
