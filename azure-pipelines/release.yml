@@ -70,8 +70,8 @@ stages:
           repositoryName: '$(Build.Repository.Name)'
           action: 'edit'
           target: '$(Build.SourceVersion)'
-          tagSource: auto
-          tag: $(Build.BuildNumber)
+          tagSource: manual
+          tag: $(Build.SourceBranchName)
           title: $(Build.SourceBranchName)
           isDraft: false
           assetUploadMode: 'replace'
