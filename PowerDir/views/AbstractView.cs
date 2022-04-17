@@ -21,6 +21,9 @@ namespace PowerDir.views
         protected  WriteColor _writeColor;
         protected readonly WriteLine _writeLine;
 
+        // TODO remove from the constructor, also make it optional? like "no theme"
+        //      also it might requires a setter to set a theme.
+        // TODO also try to do a zero arg constructor
         protected PowerDirTheme _theme;
        
         internal AbstractView(
