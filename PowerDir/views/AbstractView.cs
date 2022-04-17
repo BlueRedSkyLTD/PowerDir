@@ -64,12 +64,12 @@ namespace PowerDir.views
             //names(info, sb);
             //return sb.ToString();
 
-            if (info.Name.Length > NameMaxLength)
+            if (info.RelativeName.Length > NameMaxLength)
             {
-                return info.Name.Substring(0, NameMaxLength - 3) + "...";
+                return info.RelativeName.Substring(0, NameMaxLength - 3) + "...";
             }
             else
-                return String.Format(_fmt_name, info.Name);
+                return String.Format(_fmt_name, info.RelativeName);
         }
 
     }
