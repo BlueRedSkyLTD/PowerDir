@@ -283,5 +283,32 @@ namespace PowerDir.Tests
             checkType(output[0], "PowerDir.GetPowerDirInfo");
             Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename));
         }
+
+        [TestMethod]
+        public void TestRecursive()
+        {
+            const string dirName = "___power_dir_test___";
+            string dirPath = Path.Combine(Directory.GetCurrentDirectory(), dirName);
+            const string filename = "_power_dir_.test";
+            string filePath = Path.Combine(dirPath, filename);
+            Directory.CreateDirectory(dirPath);
+            File.Create(filePath).Close();
+
+            try
+            {
+                var output = execute(createCmdLet().AddParameter("-Recursive", null).AddParameter("Path", filename));
+                checkType(output[0], "PowerDir.GetPowerDirInfo");
+                var result = output.First((dynamic o) => o.Name == filename);
+                Assert.IsTrue(output.Count == 1);
+                Assert.IsNotNull(result);
+                var expResult = Path.Combine(dirName, filename);
+                Assert.IsTrue(result.RelativeName == expResult);
+            }
+            finally
+            {
+                File.Delete(filePath);
+                Directory.Delete(dirPath);
+            }
+        }
     }
 }

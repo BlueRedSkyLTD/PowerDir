@@ -84,8 +84,18 @@ namespace PowerDir
         /// <summary>
         /// 
         /// </summary>
+        public string FullName { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string RelativeName { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="info"></param>
-        public GetPowerDirInfo(FileSystemInfo info)
+        /// <param name="basePath"></param>
+        public GetPowerDirInfo(FileSystemInfo info, in string basePath)
         {
             Name = info.Name;
             Extension = info.Extension;
@@ -110,6 +120,12 @@ namespace PowerDir
             //SecurityInfo = Directory ?
             //    ((DirectoryInfo)info).GetAccessControl() :
             //    ((FileInfo)info).GetAccessControl();
+
+            FullName = info.FullName;
+
+            // TODO consider to compute this value when display the names instead.
+            //      it won't be available in the PSObject
+            RelativeName = Path.GetRelativePath(basePath, FullName);
         }
 
         /// <summary>

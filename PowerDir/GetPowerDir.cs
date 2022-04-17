@@ -334,7 +334,7 @@ namespace PowerDir
             foreach (string dir in items)
             {
                 var dirInfo = new DirectoryInfo(dir);
-                results.Add(new GetPowerDirInfo(dirInfo));
+                results.Add(new GetPowerDirInfo(dirInfo, basePath));
             }
             
             items.Clear();
@@ -342,7 +342,7 @@ namespace PowerDir
             foreach (string file in items)
             {
                 var fileInfo = new FileInfo(file);
-                results.Add(new GetPowerDirInfo(fileInfo));
+                results.Add(new GetPowerDirInfo(fileInfo, basePath));
             }
 
             items.Clear();

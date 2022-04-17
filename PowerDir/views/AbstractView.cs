@@ -21,6 +21,9 @@ namespace PowerDir.views
         protected  WriteColor _writeColor;
         protected readonly WriteLine _writeLine;
 
+        // TODO remove from the constructor, also make it optional? like "no theme"
+        //      also it might requires a setter to set a theme.
+        // TODO also try to do a zero arg constructor
         protected PowerDirTheme _theme;
        
         internal AbstractView(
@@ -64,12 +67,12 @@ namespace PowerDir.views
             //names(info, sb);
             //return sb.ToString();
 
-            if (info.Name.Length > NameMaxLength)
+            if (info.RelativeName.Length > NameMaxLength)
             {
-                return info.Name.Substring(0, NameMaxLength - 3) + "...";
+                return info.RelativeName.Substring(0, NameMaxLength - 3) + "...";
             }
             else
-                return String.Format(_fmt_name, info.Name);
+                return String.Format(_fmt_name, info.RelativeName);
         }
 
     }
