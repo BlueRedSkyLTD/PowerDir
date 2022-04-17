@@ -29,7 +29,9 @@ namespace PowerDir.Tests
             Assert.IsTrue(c.Bg == ConsoleColor.Black);
         }
 
+#pragma warning disable S1172 // Unused method parameters should be removed
         private void checkConstructor(PowerDirTheme theme, PowerDirTheme.ColorThemeItem c)
+#pragma warning restore S1172 // Unused method parameters should be removed
         {
             Assert.IsNotNull(theme);
             var tc = theme.GetOriginalColor();
