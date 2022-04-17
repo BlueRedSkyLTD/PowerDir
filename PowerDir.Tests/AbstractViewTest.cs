@@ -9,6 +9,7 @@ using System.IO;
 
 namespace PowerDir.Tests
 {
+#if DEBUG
     [TestClass]
     public class AbstractViewTest
     {
@@ -100,4 +101,5 @@ namespace PowerDir.Tests
             Assert.AreEqual(expResult, result.Trim());
         }
     }
+#endif
 }
