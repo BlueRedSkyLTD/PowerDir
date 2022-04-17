@@ -10,6 +10,7 @@ using PowerDir.Tests.helpers;
 
 namespace PowerDir.Tests
 {
+#if DEBUG
     [TestClass]
     public class ListViewTest
     {
@@ -47,4 +48,5 @@ namespace PowerDir.Tests
         }
 
     }
+#endif
 }
