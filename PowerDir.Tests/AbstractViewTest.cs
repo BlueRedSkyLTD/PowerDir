@@ -28,9 +28,6 @@ namespace PowerDir.Tests
             set { testContextInstance = value; }
         }
 
-        
-
-
         class Writers
         {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -78,10 +75,9 @@ namespace PowerDir.Tests
 
             public string testNames(GetPowerDirInfo info)
             {
-                return this.names(info);
+                return names(info);
             }
         }
-
 
         [DataTestMethod]
         [DataRow(50, "_power_dir_test.dir/_power_dir_test.file", "_power_dir_test.dir/_power_dir_test.file")]

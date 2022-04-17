@@ -124,6 +124,7 @@ namespace PowerDir
             FullName = info.FullName;
 
             // TODO consider to compute this value when display the names instead.
+            //      it won't be available in the PSObject
             RelativeName = Path.GetRelativePath(basePath, FullName);
         }
 

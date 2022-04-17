@@ -294,8 +294,6 @@ namespace PowerDir.Tests
             Directory.CreateDirectory(dirPath);
             File.Create(filePath).Close();
 
-            // TODO do the abstract view test for names method
-            // TODO do the tests for the views.
             try
             {
                 var output = execute(createCmdLet().AddParameter("-Recursive", null).AddParameter("Path", filename));
