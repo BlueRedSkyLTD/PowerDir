@@ -18,20 +18,16 @@ namespace PowerDir.Tests
     [TestClass]
     public class PowerDirBasicTest
     {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private TestContext testContextInstance;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
         /// <summary>
         /// Gets or sets the test context which provides
         /// information about and functionality for the current test run.
         /// </summary>
-#pragma warning disable S2292 // Trivial properties should be auto-implemented
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public TestContext TestContext
-#pragma warning restore S2292 // Trivial properties should be auto-implemented
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
-            get { return testContextInstance; }
-            set { testContextInstance = value; }
+            get;
+            set;
         }
 
         private readonly Type _type = typeof(GetPowerDir);

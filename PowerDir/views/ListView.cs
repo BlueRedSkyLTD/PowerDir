@@ -20,7 +20,7 @@ namespace PowerDir.views
         {
             foreach (var r in results)
             {
-                _writeColor(r.Name, _theme.GetColor(r));
+                _writeColor(r.RelativeName, _theme.GetColor(r));
                 _writeLine();
                 
             }

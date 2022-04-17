@@ -6,55 +6,25 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PowerDir.views;
 using System.IO;
+using PowerDir.Tests.helpers;
 
 namespace PowerDir.Tests
 {
 #if DEBUG
     [TestClass]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "<Pending>")]
     public class AbstractViewTest
     {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        private TestContext testContextInstance;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
         /// <summary>
         /// Gets or sets the test context which provides
         /// information about and functionality for the current test run.
         /// </summary>
-#pragma warning disable S2292 // Trivial properties should be auto-implemented
-        public TestContext TestContext
-#pragma warning restore S2292 // Trivial properties should be auto-implemented
-        {
-            get { return testContextInstance; }
-            set { testContextInstance = value; }
-        }
-
-        class Writers
-        {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-            public TestContext testContextInstance;
+        public TestContext TestContext
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
-            public void write(string msg)
-            {
-                testContextInstance.Write(msg);
-            }
-
-            public void writeColor(string msg, PowerDirTheme.ColorThemeItem col)
-            {
-                testContextInstance.Write($"[COLOR: {col.Fg},{col.Bg}] {msg}");
-            }
-
-            public void writeLine(string msg)
-            {
-                testContextInstance.WriteLine(msg);
-            }
-
-            public Writers(TestContext testContext)
-            {
-                this.testContextInstance = testContext;
-            }
-
+        {
+            get;
+            set;
         }
 
         class AbstractViewMock : AbstractView
