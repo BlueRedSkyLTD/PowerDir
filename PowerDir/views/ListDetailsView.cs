@@ -18,8 +18,18 @@ namespace PowerDir.views
             LAST_ACCESS,
             LAST_WRITE
         }
-        private EDateTimes eDateTimes = EDateTimes.CREATION;
+        private readonly EDateTimes eDateTimes;
 
+        /// <summary>
+        ///  TODO: remove the constructor
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="name_max_length"></param>
+        /// <param name="writeFunc"></param>
+        /// <param name="writeColorFunc"></param>
+        /// <param name="writeLineFunc"></param>
+        /// <param name="theme"></param>
+        /// <param name="eDateTimes"></param>
         internal ListDetailsView(
             in int width,
             in int name_max_length,

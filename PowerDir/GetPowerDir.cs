@@ -19,6 +19,7 @@ namespace PowerDir
     public class GetPowerDir : PSCmdlet
     {
         const int MAX_NAME_LENGTH = 50;
+        private bool _stop = false;
         /*
         /// <summary>
         /// convert Hex color format to RGB
@@ -143,9 +144,6 @@ namespace PowerDir
         public DisplayOptions Display { get; set; } = DisplayOptions.Object;
         #endregion Parameters
 
-        // TODO: review this HashSet, a concurrent bag maybe btter
-        private readonly HashSet<GetPowerDirInfo> results = new HashSet<GetPowerDirInfo>();
-
         private bool _supportColor = true;
         int _width = 120;
         // TODO: consider to use just writeObject generating a string instead as it can support color with ESC[ sequence
@@ -163,7 +161,7 @@ namespace PowerDir
 
         // TODO to be upgraded to 24 bits
         private PowerDirTheme theme = new PowerDirTheme();
-        private IView view;
+        private IView? view;
 
         #region WriteOps
         private void write(string msg)
@@ -374,19 +372,6 @@ namespace PowerDir
         /// </summary>
         protected override void ProcessRecord()
         {
-            // TODO: consider to process this while displaying instead.
-            foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
-            {
-                var dirInfo = new DirectoryInfo(dir);
-                results.Add(new GetPowerDirInfo(dirInfo, basePath));
-            }
-
-            foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
-            {
-                var fileInfo = new FileInfo(file);
-                results.Add(new GetPowerDirInfo(fileInfo, basePath));
-            }
-
             switch (Display)
             {
                 case DisplayOptions.Object:
@@ -403,12 +388,27 @@ namespace PowerDir
                     break;
             }
 
-            view?.displayResults(results);
+            // TODO: consider to process this while displaying instead.
+            foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
+            {
+                var dirInfo = new DirectoryInfo(dir);
+                view?.displayResult(new GetPowerDirInfo(dirInfo, basePath));
+                if (_stop)
+                    return;
+            }
+
+            foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
+            {
+                var fileInfo = new FileInfo(file);
+                view?.displayResult(new GetPowerDirInfo(fileInfo, basePath));
+                if (_stop)
+                    return;
+            }
         }
 
         private void displayObject()
         {
-            WriteObject(results, true);
+            view = new DefaultView(WriteObject);
         }
 
         private void displayList()
@@ -445,18 +445,19 @@ namespace PowerDir
         /// </summary>
         protected override void EndProcessing()
         {
-            results.Clear();
             view?.endDisplay();
             base.EndProcessing();
         }
-        /*
+        
         /// <summary>
         /// 
         /// </summary>
-        //protected override void StopProcessing()
-        //{
-        //    base.StopProcessing();
-        //}
-        */
+        protected override void StopProcessing()
+        {
+            _stop = true;
+            view?.endDisplay();
+            base.StopProcessing();
+        }
+
     }
 }

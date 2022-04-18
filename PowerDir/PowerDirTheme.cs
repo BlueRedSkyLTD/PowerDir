@@ -11,7 +11,10 @@ namespace PowerDir
     // .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
     // check if PATHEXT is a powershell env variable for executable file
     // in case integrate for the extension to highlight
-    internal class PowerDirTheme
+    /// <summary>
+    /// 
+    /// </summary>
+    public class PowerDirTheme
     {
         const string PATHEXT = "PATHEXT";
         /// <summary>
@@ -31,10 +34,18 @@ namespace PowerDir
             READONLY_FILE,
             ORIGINAL,
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public struct ColorThemeItem
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public ConsoleColor Fg { get; }
+            /// <summary>
+            /// 
+            /// </summary>
             public ConsoleColor Bg { get; }
             internal ColorThemeItem(ConsoleColor fg, ConsoleColor bg)
             {
@@ -43,7 +54,7 @@ namespace PowerDir
             }
         }
 
-        Dictionary<KeyColorTheme, ColorThemeItem> colorTheme = new Dictionary<KeyColorTheme, ColorThemeItem>()
+        readonly Dictionary<KeyColorTheme, ColorThemeItem> colorTheme = new Dictionary<KeyColorTheme, ColorThemeItem>()
         {
             {KeyColorTheme.DIRECTORY, new ColorThemeItem(ConsoleColor.Blue, ConsoleColor.Black)},
             {KeyColorTheme.FILE, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.Black)},
@@ -59,7 +70,10 @@ namespace PowerDir
 
         internal readonly HashSet<string> _extensions;
         private readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD", ".PS1" };
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="original_color"></param>
         public PowerDirTheme(ColorThemeItem original_color)
         {
             colorTheme.Add(KeyColorTheme.ORIGINAL, original_color);
@@ -69,23 +83,37 @@ namespace PowerDir
             l.AddRange(_default_extensions);
             _extensions = new HashSet<string>(l);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="original_fg"></param>
+        /// <param name="original_bg"></param>
         public PowerDirTheme(ConsoleColor original_fg, ConsoleColor original_bg) :
             this(new ColorThemeItem(original_fg, original_bg))
         {
         }
 
-        // If not supporting color...
+        /// <summary>
+        /// If not supporting color
+        /// </summary>
         public PowerDirTheme()
         {
             colorTheme.Add(KeyColorTheme.ORIGINAL, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.Black));
             _extensions = new HashSet<string>();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ColorThemeItem GetOriginalColor()
         {
             return colorTheme[KeyColorTheme.ORIGINAL];
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
         public ColorThemeItem GetColor(GetPowerDirInfo info)
         {
             // TODO review the colors as those are not mutual exclusive
