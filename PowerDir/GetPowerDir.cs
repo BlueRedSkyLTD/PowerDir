@@ -162,7 +162,7 @@ namespace PowerDir
         // TODO to be upgraded to 24 bits
         private PowerDirTheme theme = new PowerDirTheme();
         private IView? view;
-
+        
         #region WriteOps
         private void write(string msg)
         {
@@ -230,7 +230,6 @@ namespace PowerDir
         //}
 
         #endregion
-
 
         #region Colored WriteOps
         //private void write(string msg, int fg, int bg)
@@ -364,14 +363,6 @@ namespace PowerDir
             //    WriteDebug(PagingParameters.ToString());
             //}
 
-            base.BeginProcessing();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected override void ProcessRecord()
-        {
             switch (Display)
             {
                 case DisplayOptions.Object:
@@ -387,22 +378,46 @@ namespace PowerDir
                     displayWide();
                     break;
             }
+        }
 
-            // TODO: consider to process this while displaying instead.
-            foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void ProcessRecord()
+        {
+            // TODO: not sure if it is nice this branch, but don't know how to visualize the directory first,
+            //       unless i am going to implement my recursive method to discover direcories and files with in it.
+            //       at the moment this is the quickest way. I don't want yet to implement my own search recursive method.
+            if (Recursive)
             {
-                var dirInfo = new DirectoryInfo(dir);
-                view?.displayResult(new GetPowerDirInfo(dirInfo, basePath));
-                if (_stop)
-                    return;
+                foreach (string fileSys in Directory.EnumerateFileSystemEntries(basePath, Path, enumerationOptions))
+                {
+                    FileSystemInfo info = Directory.Exists(fileSys) ?
+                        new DirectoryInfo(fileSys) :
+                        new FileInfo(fileSys);
+
+                    view?.displayResult(new GetPowerDirInfo(info, basePath));
+                    if (_stop)
+                        return;
+                }
             }
-
-            foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
+            else
             {
-                var fileInfo = new FileInfo(file);
-                view?.displayResult(new GetPowerDirInfo(fileInfo, basePath));
-                if (_stop)
-                    return;
+                foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
+                {
+                    var dirInfo = new DirectoryInfo(dir);
+                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath));
+                    if (_stop)
+                        return;
+                }
+
+                foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
+                {
+                    var fileInfo = new FileInfo(file);
+                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath));
+                    if (_stop)
+                        return;
+                }
             }
         }
 
@@ -438,7 +453,6 @@ namespace PowerDir
 
             view = new WideView(_width, num_columns, write, write, writeLine, theme);
         }
-        
 
         /// <summary>
         /// 
@@ -446,7 +460,6 @@ namespace PowerDir
         protected override void EndProcessing()
         {
             view?.endDisplay();
-            base.EndProcessing();
         }
         
         /// <summary>
@@ -456,7 +469,6 @@ namespace PowerDir
         {
             _stop = true;
             view?.endDisplay();
-            base.StopProcessing();
         }
 
     }
