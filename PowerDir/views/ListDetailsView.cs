@@ -2,7 +2,7 @@
 
 namespace PowerDir.views
 {
-    internal class ListDetailsView : AbstractView, IView
+    internal class ListDetailsView : AbstractView
     {
         private const string _fmt_size = "{0,6}{1,1}";
         private const string _fmt_date = "s"; //"yy/MM/dd HH:mm:ss";
@@ -18,8 +18,18 @@ namespace PowerDir.views
             LAST_ACCESS,
             LAST_WRITE
         }
-        private EDateTimes eDateTimes = EDateTimes.CREATION;
+        private readonly EDateTimes eDateTimes;
 
+        /// <summary>
+        ///  TODO: remove the constructor
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="name_max_length"></param>
+        /// <param name="writeFunc"></param>
+        /// <param name="writeColorFunc"></param>
+        /// <param name="writeLineFunc"></param>
+        /// <param name="theme"></param>
+        /// <param name="eDateTimes"></param>
         internal ListDetailsView(
             in int width,
             in int name_max_length,
@@ -82,21 +92,25 @@ namespace PowerDir.views
             return string.Format(_fmt_size, _size.ToString(fmt), _suffixes[exp]);
         }
 
-        public void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
+        public override void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
         {
             foreach (var r in results)
             {
-                _writeColor(attributes(r), _theme.GetOriginalColor());
-                _write(" ");
-
-                _writeColor(names(r), _theme.GetColor(r));
-                
-                _write(" ");
-                _write(normalizeSize(r));
-                _write(" ");
-                _writeLine(dateTimes(r));
+                displayResult(r);
             }
         }
 
+        public override void displayResult(GetPowerDirInfo result)
+        {
+            _writeColor(attributes(result), _theme.GetOriginalColor());
+            _write(" ");
+
+            _writeColor(names(result), _theme.GetColor(result));
+
+            _write(" ");
+            _write(normalizeSize(result));
+            _write(" ");
+            _writeLine(dateTimes(result));
+        }
     }
 }
