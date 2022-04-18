@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+  <ViewDefinitions>
+    <View>
+      <Name>PowerDir.GetPowerDirInfo</Name>
+      <ViewSelectedBy>
+        <TypeName>PowerDir.GetPowerDirInfo</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Width>12</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Width>50</Width>
+          </TableColumnHeader>
+          <TableColumnHeader />
+        </TableHeaders>
+
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Attributes</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>RelativeName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Size</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+        
+      </TableControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>
