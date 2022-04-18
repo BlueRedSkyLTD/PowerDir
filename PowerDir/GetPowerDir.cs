@@ -322,31 +322,6 @@ namespace PowerDir
 
             WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
         }
-        private void collectResults()
-        {
-            enumerationOptions.RecurseSubdirectories = _recursive;
-            enumerationOptions.MaxRecursionDepth = Level;
-            enumerationOptions.IgnoreInaccessible = false;
-            enumerationOptions.AttributesToSkip = 0;
-
-            // TODO: consider to process this while displaying instead.
-            List<string> items =  Directory.EnumerateDirectories(basePath, Path, enumerationOptions).ToList();
-            foreach (string dir in items)
-            {
-                var dirInfo = new DirectoryInfo(dir);
-                results.Add(new GetPowerDirInfo(dirInfo, basePath));
-            }
-            
-            items.Clear();
-            items = Directory.EnumerateFiles(basePath, Path, enumerationOptions).ToList();
-            foreach (string file in items)
-            {
-                var fileInfo = new FileInfo(file);
-                results.Add(new GetPowerDirInfo(fileInfo, basePath));
-            }
-
-            items.Clear();
-        }
 
         /// <summary>
         /// 
@@ -376,8 +351,13 @@ namespace PowerDir
             WriteDebug($"Recursive = {_recursive}");
             WriteDebug($"Extensions = {String.Join(',', theme._extensions)}");
             processPath();
-            collectResults();
-            
+
+            enumerationOptions.RecurseSubdirectories = _recursive;
+            enumerationOptions.MaxRecursionDepth = Level;
+            enumerationOptions.IgnoreInaccessible = true;
+            enumerationOptions.MatchCasing = MatchCasing.PlatformDefault;
+            enumerationOptions.AttributesToSkip = 0;
+
             // TODO
             //if (pagination)
             //{
@@ -386,6 +366,41 @@ namespace PowerDir
             //}
 
             base.BeginProcessing();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected override void ProcessRecord()
+        {
+            // TODO: consider to process this while displaying instead.
+            foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
+            {
+                var dirInfo = new DirectoryInfo(dir);
+                results.Add(new GetPowerDirInfo(dirInfo, basePath));
+            }
+
+            foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
+            {
+                var fileInfo = new FileInfo(file);
+                results.Add(new GetPowerDirInfo(fileInfo, basePath));
+            }
+
+            switch (Display)
+            {
+                case DisplayOptions.Object:
+                    displayObject();
+                    break;
+                case DisplayOptions.List:
+                    displayList();
+                    break;
+                case DisplayOptions.ListDetails:
+                    displayListDetails();
+                    break;
+                case DisplayOptions.Wide:
+                    displayWide();
+                    break;
+            }
         }
 
         private void displayObject()
@@ -423,27 +438,14 @@ namespace PowerDir
             WideView view = new WideView(_width, num_columns, write, write, writeLine, theme);
             view.displayResults(results);
         }
+        
+
         /// <summary>
         /// 
         /// </summary>
         protected override void EndProcessing()
         {
-            switch (Display)
-            {
-                case DisplayOptions.Object:
-                    displayObject();
-                    break;
-                case DisplayOptions.List:
-                    displayList();
-                    break;
-                case DisplayOptions.ListDetails:
-                    displayListDetails();
-                    break;
-                case DisplayOptions.Wide:
-                    displayWide();
-                    break;
-            }
-
+            results.Clear();
             base.EndProcessing();
         }
         /*
