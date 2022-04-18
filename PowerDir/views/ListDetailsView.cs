@@ -2,7 +2,7 @@
 
 namespace PowerDir.views
 {
-    internal class ListDetailsView : AbstractView, IView
+    internal class ListDetailsView : AbstractView
     {
         private const string _fmt_size = "{0,6}{1,1}";
         private const string _fmt_date = "s"; //"yy/MM/dd HH:mm:ss";
@@ -82,21 +82,25 @@ namespace PowerDir.views
             return string.Format(_fmt_size, _size.ToString(fmt), _suffixes[exp]);
         }
 
-        public void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
+        public override void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
         {
             foreach (var r in results)
             {
-                _writeColor(attributes(r), _theme.GetOriginalColor());
-                _write(" ");
-
-                _writeColor(names(r), _theme.GetColor(r));
-                
-                _write(" ");
-                _write(normalizeSize(r));
-                _write(" ");
-                _writeLine(dateTimes(r));
+                displayResult(r);
             }
         }
 
+        public override void displayResult(GetPowerDirInfo result)
+        {
+            _writeColor(attributes(result), _theme.GetOriginalColor());
+            _write(" ");
+
+            _writeColor(names(result), _theme.GetColor(result));
+
+            _write(" ");
+            _write(normalizeSize(result));
+            _write(" ");
+            _writeLine(dateTimes(result));
+        }
     }
 }

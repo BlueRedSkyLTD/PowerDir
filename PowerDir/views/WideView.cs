@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace PowerDir.views
 {
-    internal class WideView : AbstractView, IView
+    internal class WideView : AbstractView
     {
         //private readonly int _width;
         private readonly int _num_columns;
+
+        private int current_column = 0;
 
         internal WideView(in int width, in int num_columns,
             in Action<string> writeFunc,
@@ -22,23 +24,39 @@ namespace PowerDir.views
             _num_columns = num_columns;
         }
 
-        public void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
+        public override void displayResult(GetPowerDirInfo result)
+        {
+            _writeColor(names(result), _theme.GetColor(result));
+            _write(" ");
+
+            current_column++;
+            if (current_column >= _num_columns)
+            {
+                _writeLine();
+                current_column = 0;
+            }
+        }
+
+
+        public override void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
         {
             int c = 0;
             foreach (var r in results)
             {
-                _writeColor(names(r), _theme.GetColor(r));
-                _write(" ");
-
-                c++;
-                if (c >= _num_columns)
-                {
-                    _writeLine();
-                    c = 0;
-                }
+                displayResult(r);
             }
 
+            // todo move at the end processing
             if (c!= 0)
+                _writeLine();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void endDisplay()
+        {
+            if (current_column != 0)
                 _writeLine();
         }
     }

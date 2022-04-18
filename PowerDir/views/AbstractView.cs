@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace PowerDir.views
 {
     // TODO instead of delegate functions, could use events
-    internal class AbstractView
+    internal abstract class AbstractView : IView
     {
         const int MAX_NAME_LENGTH = 50;
         public int NameMaxLength { get; } = MAX_NAME_LENGTH;
@@ -75,5 +75,8 @@ namespace PowerDir.views
                 return String.Format(_fmt_name, info.RelativeName);
         }
 
+        public virtual void endDisplay() { }
+        public abstract void displayResults(IReadOnlyCollection<GetPowerDirInfo> results);
+        public abstract void displayResult(GetPowerDirInfo result);
     }
 }

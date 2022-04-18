@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PowerDir.views
 {
-    internal class ListView : AbstractView, IView
+    internal class ListView : AbstractView
     {
         internal ListView(
             in Action<string> writeFunc,
@@ -16,14 +16,16 @@ namespace PowerDir.views
         {
         }
 
-        public void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
+        public override void displayResult(GetPowerDirInfo result)
+        {
+            _writeColor(result.RelativeName, _theme.GetColor(result));
+            _writeLine();
+        }
+
+        public override void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
         {
             foreach (var r in results)
-            {
-                _writeColor(r.RelativeName, _theme.GetColor(r));
-                _writeLine();
-                
-            }
+                displayResult(r);
         }
     }
 }

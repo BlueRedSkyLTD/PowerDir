@@ -163,6 +163,7 @@ namespace PowerDir
 
         // TODO to be upgraded to 24 bits
         private PowerDirTheme theme = new PowerDirTheme();
+        private IView view;
 
         #region WriteOps
         private void write(string msg)
@@ -401,6 +402,8 @@ namespace PowerDir
                     displayWide();
                     break;
             }
+
+            view?.displayResults(results);
         }
 
         private void displayObject()
@@ -410,8 +413,7 @@ namespace PowerDir
 
         private void displayList()
         {
-            var l = new ListView(write, write, writeLine, theme);
-            l.displayResults(results);
+            view = new ListView(write, write, writeLine, theme);
         }
         private void displayListDetails()
         {
@@ -419,9 +421,8 @@ namespace PowerDir
             //      permissions?
             //      etc
             // TODO switch parameter for dateTime type
-            ListDetailsView ldv = new ListDetailsView(_width, MAX_NAME_LENGTH,
+            view = new ListDetailsView(_width, MAX_NAME_LENGTH,
                 write, write, writeLine, theme, ListDetailsView.EDateTimes.CREATION);
-            ldv.displayResults(results);
         }
 
         private void displayWide()
@@ -435,8 +436,7 @@ namespace PowerDir
 
             WriteDebug($"width = {_width} --- col_size = {col_size} --- num_columns = {num_columns}");
 
-            WideView view = new WideView(_width, num_columns, write, write, writeLine, theme);
-            view.displayResults(results);
+            view = new WideView(_width, num_columns, write, write, writeLine, theme);
         }
         
 
@@ -446,6 +446,7 @@ namespace PowerDir
         protected override void EndProcessing()
         {
             results.Clear();
+            view?.endDisplay();
             base.EndProcessing();
         }
         /*
