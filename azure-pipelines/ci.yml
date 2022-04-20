@@ -54,11 +54,10 @@ stages:
 
 - stage: CI
   jobs:
-    - job:
-      name: Windows
+    - job: Windows
       condition: eq('${{ variables.ci_windows }}', 'true')
       pool:
-      vmImage: ${{ variables.windows_image }}
+        vmImage: ${{ variables.windows_image }}
       strategy:
         matrix:
           Debug:
@@ -68,11 +67,10 @@ stages:
       steps:
         - template: templates/steps_ci.yml
 
-    - job:
-      name: Linux
+    - job: Linux
       condition: eq('${{ variables.ci_linux }}', 'true')
       pool:
-      vmImage: ${{ variables.linux_image }}
+        vmImage: ${{ variables.linux_image }}
       strategy:
         matrix:
           Debug:
@@ -82,11 +80,10 @@ stages:
       steps:
         - template: templates/steps_ci.yml
 
-    - job:
-      name: MacOS
+    - job: MacOS
       condition: eq('${{ variables.ci_macos }}', 'true')
       pool:
-      vmImage: ${{ variables.macos_image }}
+        vmImage: ${{ variables.macos_image }}
       strategy:
         matrix:
           Debug:
