@@ -74,10 +74,10 @@ stages:
           inputs:
             sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
             contents: '*'
-            targetFolder: '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir'
+            targetFolder: '$(Build.ArtifactStagingDirectory)'
           condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/'),eq(variables.buildConfiguration, 'Release'))
         # publish artifact
-        - publish: '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir'
+        - publish: '$(Build.ArtifactStagingDirectory)'
           displayName: 'Publish to Stage Release'
           artifact: ${{ variables.artifactName }}
 
@@ -142,15 +142,15 @@ stages:
           Import-Module platyps
 
           echo "Import PowerDir"
-          Import-Module $(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir/PowerDir.GetPowerDir.psd1
+          Import-Module $(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir.psd1
 
           echo "Update Markdown"
-          cd PowerDir && ./update-doc.ps1 && cp doc/* ''$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir' -Force
+          cd PowerDir && ./update-doc.ps1 && cp doc/* '$(Build.ArtifactStagingDirectory)' -Force
 
           echo "Module Help"
-          New-ExternalHelp -Path '$(System.DefaultWorkingDirectory)/PowerDir/doc' -OutputPath '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir' -Force
+          New-ExternalHelp -Path '$(System.DefaultWorkingDirectory)/PowerDir/doc' -OutputPath '$(Build.ArtifactStagingDirectory)' -Force
           echo "Display package directory"
-          dir '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir'
+          dir '$(Build.ArtifactStagingDirectory)'
         name: GenerateModuleHelp
 
       - task: GithubRelease@1
@@ -167,11 +167,11 @@ stages:
           assetUploadMode: 'replace'
           addChangeLog: true
           compareWith: 'lastFullRelease'
-          assets: '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir/*'
+          assets: '$(Build.ArtifactStagingDirectory)/*'
         # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       # Publishing to Powershell Gallery
       - pwsh: |
-          Publish-Module -Path '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir' -NuGetApiKey ${env:PWSH_PUBLISH}
+          Publish-Module -Path '$(Build.ArtifactStagingDirectory)' -NuGetApiKey ${env:PWSH_PUBLISH}
         name: PublishModule
         env:
          PWSH_PUBLISH: $(pwsh_publish)
