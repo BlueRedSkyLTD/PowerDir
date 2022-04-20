@@ -1,0 +1,18 @@
+parameters:
+    # default: true
+  - name: buildConfiguration
+    type: string
+    values:
+      - Debug
+      - Release
+
+
+steps:
+  # build
+  - template: steps_build.yml
+  # tests
+  - template: steps_tests.yml
+  ## CodeCov
+  - template: steps_codecov.yml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
