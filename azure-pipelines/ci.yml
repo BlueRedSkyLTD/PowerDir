@@ -3,8 +3,10 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
-trigger: none
-
+trigger:
+  tags:
+    include:
+    - '*'
 pr:
   branches:
     include:
@@ -14,6 +16,7 @@ pr:
     #- .gitignore
     - .github/*
     - README.md
+
 
 variables:
   - template: variables/globals.yml
@@ -71,10 +74,10 @@ stages:
           inputs:
             sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
             contents: '*'
-            targetFolder: '$(Build.ArtifactStagingDirectory)'
+            targetFolder: '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir'
           condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/'),eq(variables.buildConfiguration, 'Release'))
         # publish artifact
-        - publish: '$(Build.ArtifactStagingDirectory)/scripts'
+        - publish: '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir'
           displayName: 'Publish to Stage Release'
           artifact: ${{ variables.artifactName }}
 
@@ -105,13 +108,13 @@ stages:
         - template: templates/steps_ci.yml
 
 - stage: Release
+  condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
   pool:
     vmImage: ${{ variables.windows_image }}
   variables:
     buildConfiguration: Release
   jobs:
     - job: WindowsRelease
-      condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       steps:
       # check if versions are matching: project, manifest, git tag
       - task: PowerShell@2
@@ -133,27 +136,21 @@ stages:
 
       - download: current
         artifact:  ${{ variables.artifactName }}
-      # package
-      - task: CopyFiles@2
-        inputs:
-          sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
-          contents: '*'
-          targetFolder: '$(Build.ArtifactStagingDirectory)'
-        # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+
       - pwsh: |
           Install-Module platyps -Force
           Import-Module platyps
 
           echo "Import PowerDir"
-          Import-Module $(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir/PowerDir.GetPowerDir.psd1
+          Import-Module $(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir/PowerDir.GetPowerDir.psd1
 
           echo "Update Markdown"
-          cd PowerDir && ./update-doc.ps1 && cp doc/* '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir' -Force
+          cd PowerDir && ./update-doc.ps1 && cp doc/* ''$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir' -Force
 
           echo "Module Help"
-          New-ExternalHelp -Path '$(System.DefaultWorkingDirectory)/PowerDir/doc' -OutputPath '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir' -Force
+          New-ExternalHelp -Path '$(System.DefaultWorkingDirectory)/PowerDir/doc' -OutputPath '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir' -Force
           echo "Display package directory"
-          dir '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
+          dir '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir'
         name: GenerateModuleHelp
 
       - task: GithubRelease@1
@@ -170,11 +167,11 @@ stages:
           assetUploadMode: 'replace'
           addChangeLog: true
           compareWith: 'lastFullRelease'
-          assets: '$(Build.ArtifactStagingDirectory)/*'
+          assets: '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir/*'
         # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       # Publishing to Powershell Gallery
       - pwsh: |
-          Publish-Module -Path $(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir -NuGetApiKey ${env:PWSH_PUBLISH}
+          Publish-Module -Path '$(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir' -NuGetApiKey ${env:PWSH_PUBLISH}
         name: PublishModule
         env:
          PWSH_PUBLISH: $(pwsh_publish)
