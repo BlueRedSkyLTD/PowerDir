@@ -1,0 +1,7 @@
+steps:
+  # build
+  - template: steps_build.yml
+  # tests
+  - template: steps_tests.yml
+  ## CodeCov
+  - template: steps_codecov.yml
