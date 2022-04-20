@@ -53,18 +53,18 @@ stages:
         name: CheckVersions
 
 - stage: CI
-  strategy:
-        matrix:
-          Debug:
-            buildConfiguration: 'Debug'
-          Release:
-            buildConfiguration: 'Release'
   jobs:
     - job:
       name: Windows
       condition: eq('${{ variables.ci_windows }}', 'true')
       pool:
       vmImage: ${{ variables.windows_image }}
+      strategy:
+        matrix:
+          Debug:
+            buildConfiguration: 'Debug'
+          Release:
+            buildConfiguration: 'Release'
       steps:
         - template: templates/steps_ci.yml
 
@@ -73,6 +73,12 @@ stages:
       condition: eq('${{ variables.ci_linux }}', 'true')
       pool:
       vmImage: ${{ variables.linux_image }}
+      strategy:
+        matrix:
+          Debug:
+            buildConfiguration: 'Debug'
+          Release:
+            buildConfiguration: 'Release'
       steps:
         - template: templates/steps_ci.yml
 
@@ -81,6 +87,12 @@ stages:
       condition: eq('${{ variables.ci_macos }}', 'true')
       pool:
       vmImage: ${{ variables.macos_image }}
+      strategy:
+        matrix:
+          Debug:
+            buildConfiguration: 'Debug'
+          Release:
+            buildConfiguration: 'Release'
       steps:
         - template: templates/steps_ci.yml
 
