@@ -66,6 +66,17 @@ stages:
             buildConfiguration: 'Release'
       steps:
         - template: templates/steps_ci.yml
+        # package
+        - task: CopyFiles@2
+          inputs:
+            sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
+            contents: '*'
+            targetFolder: '$(Build.ArtifactStagingDirectory)'
+          condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/'),eq(variables.buildConfiguration, 'Release'))
+        # publish artifact
+        - publish: '$(Build.ArtifactStagingDirectory)/scripts'
+          displayName: 'Publish to Stage Release'
+          artifact: ${{ variables.artifactName }}
 
     - job: Linux
       condition: eq('${{ variables.ci_linux }}', 'true')
@@ -120,8 +131,8 @@ stages:
           arguments: $(Build.SourceBranch)
         name: CheckVersions
 
-      ## TODO upload the artifact from the previous stage and use instead.
-      - template: templates/steps_ci.yml
+      - download: current
+        artifact:  ${{ variables.artifactName }}
       # package
       - task: CopyFiles@2
         inputs:
