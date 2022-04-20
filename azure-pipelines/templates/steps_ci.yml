@@ -14,5 +14,3 @@ steps:
   - template: steps_tests.yml
   ## CodeCov
   - template: steps_codecov.yml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
