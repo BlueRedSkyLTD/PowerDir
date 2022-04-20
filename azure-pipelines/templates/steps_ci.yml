@@ -1,12 +1,3 @@
-parameters:
-    # default: true
-  - name: buildConfiguration
-    type: string
-    values:
-      - Debug
-      - Release
-
-
 steps:
   # build
   - template: steps_build.yml
