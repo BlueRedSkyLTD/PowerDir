@@ -80,6 +80,7 @@ stages:
         - publish: '$(Build.ArtifactStagingDirectory)'
           displayName: 'Publish to Stage Release'
           artifact: ${{ variables.artifactName }}
+          condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/'),eq(variables.buildConfiguration, 'Release'))
 
     - job: Linux
       condition: eq('${{ variables.ci_linux }}', 'true')
