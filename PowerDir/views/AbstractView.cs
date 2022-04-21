@@ -141,11 +141,6 @@ namespace PowerDir.views
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="results"></param>
-        public abstract void displayResults(IReadOnlyCollection<GetPowerDirInfo> results);
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="result"></param>
         public abstract void displayResult(GetPowerDirInfo result);
     }

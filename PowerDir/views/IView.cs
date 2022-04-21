@@ -8,7 +8,6 @@ namespace PowerDir.views
 {
     internal interface IView
     {
-        public void displayResults(IReadOnlyCollection<GetPowerDirInfo> results);
         public void displayResult(GetPowerDirInfo result);
         public void endDisplay();
     }

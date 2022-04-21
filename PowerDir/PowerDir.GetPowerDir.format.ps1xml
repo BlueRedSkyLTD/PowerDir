@@ -2,37 +2,48 @@
 <Configuration>
   <ViewDefinitions>
     <View>
-      <Name>PowerDir.GetPowerDirInfo</Name>
+      <Name>PowerDir.GetPowerDir</Name>
       <ViewSelectedBy>
         <TypeName>PowerDir.GetPowerDirInfo</TypeName>
       </ViewSelectedBy>
       <TableControl>
+        <AutoSize />
         <TableHeaders>
           <TableColumnHeader>
-            <Width>12</Width>
+            <Label>Mode</Label>
+            <Width>8</Width>
           </TableColumnHeader>
           <TableColumnHeader>
+            <Label>Name</Label>
             <Width>50</Width>
           </TableColumnHeader>
-          <TableColumnHeader />
+          <TableColumnHeader>
+            <Label>Size</Label>
+            <Width>15</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Width>15</Width>
+          </TableColumnHeader>
         </TableHeaders>
 
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
               <TableColumnItem>
-                <PropertyName>Attributes</PropertyName>
+                <PropertyName>Attr</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>RelativeName</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>Size</PropertyName>
+                <PropertyName>NormalizedSize</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>CreationTime</PropertyName>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
-        
       </TableControl>
     </View>
   </ViewDefinitions>

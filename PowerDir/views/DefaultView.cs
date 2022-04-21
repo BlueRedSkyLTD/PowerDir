@@ -28,15 +28,5 @@ namespace PowerDir.views
         {
             _writeObject(result);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="results"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public override void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
-        {
-            foreach(var r in results)
-                displayResult(r);
-        }
     }
 }

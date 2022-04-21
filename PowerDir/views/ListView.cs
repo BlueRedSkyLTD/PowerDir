@@ -21,11 +21,5 @@ namespace PowerDir.views
             _writeColor(result.RelativeName, _theme.GetColor(result));
             _writeLine();
         }
-
-        public override void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
-        {
-            foreach (var r in results)
-                displayResult(r);
-        }
     }
 }

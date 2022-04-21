@@ -12,6 +12,10 @@ namespace PowerDir
     /// </summary>
     public class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
     {
+        private const string _fmt_size = "{0,6}{1,1}";
+        private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
+
+
         // TODO: evaluate to further elabore on link attribute
         // ref: http://www.flexhex.com/docs/articles/hard-links.phtml#hardlinks
         // (eg hard links are not detected, because not supported by .NET, but where is the power of this tool then?)
@@ -93,6 +97,15 @@ namespace PowerDir
         /// <summary>
         /// 
         /// </summary>
+        public string Attr { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string NormalizedSize { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="info"></param>
         /// <param name="basePath"></param>
         public GetPowerDirInfo(FileSystemInfo info, in string basePath)
@@ -126,6 +139,41 @@ namespace PowerDir
             // TODO consider to compute this value when display the names instead.
             //      it won't be available in the PSObject
             RelativeName = Path.GetRelativePath(basePath, FullName);
+            Attr = attributes();
+            NormalizedSize = normalizeSize();
+        }
+
+        private string attributes()
+        {
+            return new StringBuilder(10)
+                .Append(Directory ? 'd' : Archive ? 'a' : '-')
+                .Append(Link ? 'l' : '-')
+                //.Append(info.Archive ? 'a' : '-')
+                .Append(Compressed ? 'c' : '-')
+                .Append(ReadOnly ? 'r' : '-')
+                .Append(Hidden ? 'h' : '-')
+                .Append(System ? 's' : '-')
+                .Append(Encrypted ? 'e' : '-')
+                .Append('-')
+                .ToString();
+        }
+
+        private string normalizeSize()
+        {
+            if (Directory)
+                return String.Format(_fmt_size, "-", "");
+
+            int exp = 0;
+            decimal _size = (decimal)size; // double could not contain a long (int64)
+            while (_size >= 1024)
+            {
+                _size /= 1024;
+                exp++;
+            }
+            exp %= _suffixes.Length; // just to avoid errors
+            string fmt = exp == 0 ? "0" : "0.00";
+
+            return string.Format(_fmt_size, _size.ToString(fmt), _suffixes[exp]);
         }
 
         /// <summary>

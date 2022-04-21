@@ -37,20 +37,6 @@ namespace PowerDir.views
             }
         }
 
-
-        public override void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
-        {
-            int c = 0;
-            foreach (var r in results)
-            {
-                displayResult(r);
-            }
-
-            // todo move at the end processing
-            if (c!= 0)
-                _writeLine();
-        }
-
         /// <summary>
         /// 
         /// </summary>
