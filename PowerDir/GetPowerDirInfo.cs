@@ -138,8 +138,6 @@ namespace PowerDir
 
             FullName = info.FullName;
 
-            // TODO consider to compute this value when display the names instead.
-            //      it won't be available in the PSObject
             RelativeName = Path.GetRelativePath(basePath, FullName);
             Attr = attributes();
             NormalizedSize = normalizeSize();
@@ -147,6 +145,7 @@ namespace PowerDir
 
         private string attributes()
         {
+#pragma warning disable S3358 // Ternary operators should not be nested
             return new StringBuilder(10)
                 .Append(Directory ? 'd' : Archive ? 'a' : '-')
                 .Append(Link ? 'l' : '-')
@@ -158,6 +157,7 @@ namespace PowerDir
                 .Append(Encrypted ? 'e' : '-')
                 .Append('-')
                 .ToString();
+#pragma warning restore S3358 // Ternary operators should not be nested
         }
 
         private string normalizeSize()
@@ -199,7 +199,5 @@ namespace PowerDir
         {
             return (FullName).GetHashCode();
         }
-
-        
     }
 }
