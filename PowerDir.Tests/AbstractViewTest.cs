@@ -49,11 +49,6 @@ namespace PowerDir.Tests
                 return names(info);
             }
 
-            public override void displayResults(IReadOnlyCollection<GetPowerDirInfo> results)
-            {
-                throw new NotImplementedException();
-            }
-
             public override void displayResult(GetPowerDirInfo result)
             {
                 throw new NotImplementedException();

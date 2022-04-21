@@ -42,7 +42,7 @@ namespace PowerDir.Tests
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);
             FileInfo finfo = new(filePath);
             GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
-            lv.displayResults(new List<GetPowerDirInfo> { info });
+            lv.displayResult(info);
             Assert.IsTrue(sb.Length > 0);
             Assert.AreEqual(string.Concat(input, Environment.NewLine), sb.ToString());
         }

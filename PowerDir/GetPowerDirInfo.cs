@@ -10,7 +10,9 @@ namespace PowerDir
     /// <summary>
     /// 
     /// </summary>
-    public class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
+#pragma warning disable S1206 // "Equals(Object)" and "GetHashCode()" should be overridden in pairs
+    sealed public class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
+#pragma warning restore S1206 // "Equals(Object)" and "GetHashCode()" should be overridden in pairs
     {
         private const string _fmt_size = "{0,6}{1,1}";
         private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
@@ -186,11 +188,7 @@ namespace PowerDir
             if (other == null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return Name == other.Name 
-                && Extension == other.Extension
-                && Directory == other.Directory
-                && Link == other.Link
-                && Attributes == other.Attributes;
+            return FullName == other.FullName;
         }
 
         /// <summary>
@@ -199,7 +197,9 @@ namespace PowerDir
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return (Name, Extension, Directory, Link, Attributes).GetHashCode();
+            return (FullName).GetHashCode();
         }
+
+        
     }
 }
