@@ -8,6 +8,9 @@ namespace PowerDir.themes
 {
     internal class NoColorTheme : IPowerDirTheme
     {
-
+        public string colorize(string str)
+        {
+            return str;
+        }
     }
 }

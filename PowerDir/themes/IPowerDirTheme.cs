@@ -25,5 +25,7 @@ namespace PowerDir.themes
             READONLY_FILE,
             ORIGINAL,
         }
+
+        //public string colorize(string str);
     }
 }

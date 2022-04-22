@@ -24,19 +24,15 @@ namespace PowerDir.views
         /// <param name="width"></param>
         /// <param name="name_max_length"></param>
         /// <param name="writeFunc"></param>
-        /// <param name="writeColorFunc"></param>
         /// <param name="writeLineFunc"></param>
-        /// <param name="theme"></param>
         /// <param name="eDateTimes"></param>
         internal ListDetailsView(
             in int width,
             in int name_max_length,
             in Action<string> writeFunc,
-            in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in PowerDirThemeClassic theme,
             in EDateTimes eDateTimes
-        ) : base(name_max_length, writeFunc, writeColorFunc, writeLineFunc, theme)
+        ) : base(name_max_length, writeFunc, writeLineFunc)
         {
             this.eDateTimes = eDateTimes;
             _sb = new StringBuilder(" -", width);
@@ -61,10 +57,10 @@ namespace PowerDir.views
 
         public override void displayResult(GetPowerDirInfo result)
         {
-            _writeColor(result.Attr, _theme.GetOriginalColor());
+            _write(result.Attr);
             _write(" ");
 
-            _writeColor(names(result), _theme.GetColor(result));
+            _write(result.RelativeName);
 
             _write(" ");
             _write(result.NormalizedSize);

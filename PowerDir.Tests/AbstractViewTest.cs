@@ -30,25 +30,20 @@ namespace PowerDir.Tests
 
         class AbstractViewMock : AbstractView
         {
-            internal AbstractViewMock(in Action<string> writeFunc, in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc, in Action<string> writeLineFunc, in PowerDirThemeClassic theme) : base(writeFunc, writeColorFunc, writeLineFunc, theme)
+            internal AbstractViewMock(in Action<string> writeFunc, in Action<string> writeLineFunc) : base(writeFunc, writeLineFunc)
             {
             }
 
-            internal AbstractViewMock(int nameMaxLength, in Action<string> writeFunc, in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc, in Action<string> writeLineFunc, in PowerDirThemeClassic theme) : base(nameMaxLength, writeFunc, writeColorFunc, writeLineFunc, theme)
+            internal AbstractViewMock(int nameMaxLength, in Action<string> writeFunc , in Action<string> writeLineFunc) : base(nameMaxLength, writeFunc, writeLineFunc)
             {
             }
 
-            public AbstractViewMock(Writers writers) : this(writers.write, writers.writeColor, writers.writeLine, new PowerDirThemeClassic())
+            public AbstractViewMock(Writers writers) : this(writers.write, writers.writeLine)
             {
             }
 
-            public AbstractViewMock(Writers writers, int max_length): this(max_length,writers.write, writers.writeColor, writers.writeLine, new PowerDirThemeClassic())
+            public AbstractViewMock(Writers writers, int max_length): this(max_length,writers.write, writers.writeLine)
             { }
-
-            public string testNames(GetPowerDirInfo info)
-            {
-                return names(info);
-            }
 
             public override void displayResult(GetPowerDirInfo result)
             {
@@ -56,6 +51,7 @@ namespace PowerDir.Tests
             }
         }
 
+        // TODO this should be moved in GetPowerDirInfoTest
         [DataTestMethod]
         [DataRow(50, "_power_dir_test.dir/_power_dir_test.file", "_power_dir_test.dir/_power_dir_test.file")]
         [DataRow(50, "_power_dir_test.dir.very_long_dir_name/_power_dir_test.file", "_power_dir_test.dir.very_long_dir_name/_power_d...")]
@@ -71,8 +67,8 @@ namespace PowerDir.Tests
             Assert.IsTrue(avm.NameMaxLength == names_max_length);
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);
             FileInfo finfo = new(filePath);
-            GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
-            string result = avm.testNames(info);
+            GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory(), avm.NameMaxLength);
+            string result = info.RelativeName;
             Assert.AreEqual(names_max_length, result.Length);
             Assert.AreEqual(expResult, result.Trim());
         }

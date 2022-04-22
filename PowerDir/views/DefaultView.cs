@@ -9,7 +9,7 @@ namespace PowerDir.views
     /// <summary>
     /// 
     /// </summary>
-    public class DefaultView : AbstractView
+    internal class DefaultView : AbstractView
     {
         // TODO to use string when using escape codes...
         protected delegate void WriteObject(object msg);

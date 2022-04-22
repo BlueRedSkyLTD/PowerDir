@@ -11,16 +11,14 @@ namespace PowerDir.views
     {
         internal ListView(
             in Action<string> writeFunc,
-            in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc,
-            in Action<string> writeLineFunc,
-            in PowerDirThemeClassic theme) : base(writeFunc, writeColorFunc, writeLineFunc, theme)
+            in Action<string> writeLineFunc
+            ) : base(writeFunc, writeLineFunc)
         {
         }
 
         public override void displayResult(GetPowerDirInfo result)
         {
-            _writeColor(result.RelativeName, _theme.GetColor(result));
-            _writeLine();
+            _writeLine(result.RelativeName);
         }
     }
 }

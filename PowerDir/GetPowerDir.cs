@@ -396,7 +396,7 @@ namespace PowerDir
                         new DirectoryInfo(fileSys) :
                         new FileInfo(fileSys);
 
-                    view?.displayResult(new GetPowerDirInfo(info, basePath));
+                    view?.displayResult(new GetPowerDirInfo(info, basePath, view.NameMaxLength));
                     if (_stop)
                         return;
                 }
@@ -406,7 +406,7 @@ namespace PowerDir
                 foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
                 {
                     var dirInfo = new DirectoryInfo(dir);
-                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath));
+                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath,view.NameMaxLength));
                     if (_stop)
                         return;
                 }
@@ -414,7 +414,7 @@ namespace PowerDir
                 foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
                 {
                     var fileInfo = new FileInfo(file);
-                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath));
+                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath, view.NameMaxLength));
                     if (_stop)
                         return;
                 }
@@ -428,7 +428,7 @@ namespace PowerDir
 
         private void displayList()
         {
-            view = new ListView(write, write, writeLine, theme);
+            view = new ListView(write, writeLine);
         }
         private void displayListDetails()
         {
@@ -437,7 +437,7 @@ namespace PowerDir
             //      etc
             // TODO switch parameter for dateTime type
             view = new ListDetailsView(_width, MAX_NAME_LENGTH,
-                write, write, writeLine, theme, ListDetailsView.EDateTimes.CREATION);
+                write, writeLine, ListDetailsView.EDateTimes.CREATION);
         }
 
         private void displayWide()
@@ -451,7 +451,7 @@ namespace PowerDir
 
             WriteDebug($"width = {_width} --- col_size = {col_size} --- num_columns = {num_columns}");
 
-            view = new WideView(_width, num_columns, write, write, writeLine, theme);
+            view = new WideView(_width, num_columns, write, writeLine);
         }
 
         /// <summary>

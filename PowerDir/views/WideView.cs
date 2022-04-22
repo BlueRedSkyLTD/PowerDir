@@ -10,24 +10,21 @@ namespace PowerDir.views
 {
     internal class WideView : AbstractView
     {
-        //private readonly int _width;
         private readonly int _num_columns;
 
         private int current_column = 0;
 
         internal WideView(in int width, in int num_columns,
             in Action<string> writeFunc,
-            in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc,
-            in Action<string> writeLineFunc,
-            in PowerDirThemeClassic theme) : base((width / num_columns) - 1, writeFunc, writeColorFunc, writeLineFunc, theme)
+            in Action<string> writeLineFunc
+            ) : base((width / num_columns) - 1, writeFunc, writeLineFunc)
         {
-            //_width = width;
             _num_columns = num_columns;
         }
 
         public override void displayResult(GetPowerDirInfo result)
         {
-            _writeColor(names(result), _theme.GetColor(result));
+            _write(result.RelativeName);
             _write(" ");
 
             current_column++;

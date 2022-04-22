@@ -16,7 +16,6 @@ namespace PowerDir
         private const string _fmt_size = "{0,6}{1,1}";
         private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
 
-
         // TODO: evaluate to further elabore on link attribute
         // ref: http://www.flexhex.com/docs/articles/hard-links.phtml#hardlinks
         // (eg hard links are not detected, because not supported by .NET, but where is the power of this tool then?)
@@ -33,7 +32,7 @@ namespace PowerDir
         /// <summary>
         /// 
         /// </summary>
-        public long size { get; }
+        public long Size { get; }
         /// <summary>
         /// 
         /// </summary>
@@ -109,7 +108,8 @@ namespace PowerDir
         /// </summary>
         /// <param name="info"></param>
         /// <param name="basePath"></param>
-        public GetPowerDirInfo(FileSystemInfo info, in string basePath)
+        /// <param name="nameMaxLength"></param>
+        public GetPowerDirInfo(FileSystemInfo info, in string basePath, int nameMaxLength)
         {
             Name = info.Name;
             Extension = info.Extension;
@@ -124,7 +124,7 @@ namespace PowerDir
             Compressed = info.Attributes.HasFlag(FileAttributes.Compressed);
             Encrypted = info.Attributes.HasFlag(FileAttributes.Encrypted);
 
-            size = Directory? 0 : ((FileInfo) info).Length; // not available for directory
+            Size = Directory? 0 : ((FileInfo) info).Length; // not available for directory
 
             CreationTime = info.CreationTime;
             LastAccessTime = info.LastAccessTime;
@@ -137,11 +137,21 @@ namespace PowerDir
 
             FullName = info.FullName;
 
-            RelativeName = Path.GetRelativePath(basePath, FullName);
+            // TODO remove, this is just a test.
+            RelativeName = "\x1B[38;2;255;128;64m" + names(Path.GetRelativePath(basePath, FullName), nameMaxLength) + "\x1B[0m";
             Attr = attributes();
             NormalizedSize = normalizeSize();
         }
 
+        static internal string names(string relativeName, int NameMaxLength)
+        {
+            if (NameMaxLength == -1)
+                return relativeName;
+            if (relativeName.Length > NameMaxLength)
+                return relativeName.Substring(0, NameMaxLength - 3) + "...";
+            
+            return String.Format("{0," + -NameMaxLength + "}", relativeName);
+        }
         private string attributes()
         {
 #pragma warning disable S3358 // Ternary operators should not be nested
@@ -165,7 +175,7 @@ namespace PowerDir
                 return String.Format(_fmt_size, "-", "");
 
             int exp = 0;
-            decimal _size = (decimal)size; // double could not contain a long (int64)
+            decimal _size = (decimal)Size; // double could not contain a long (int64)
             while (_size >= 1024)
             {
                 _size /= 1024;
