@@ -8,9 +8,14 @@ namespace PowerDir.themes
 {
     internal class NoColorTheme : IPowerDirTheme
     {
-        public string colorize(string str)
+        public GetPowerDirInfo colorize(GetPowerDirInfo info)
         {
-            return str;
+            return info;
+        }
+
+        public string colorizeRelativeName(GetPowerDirInfo info)
+        {
+            return info.RelativeName;
         }
     }
 }

@@ -14,34 +14,33 @@ namespace PowerDir.views
 
         private int current_column = 0;
 
+        private readonly StringBuilder _sb;
+
         internal WideView(in int width, in int num_columns,
-            in Action<string> writeFunc,
-            in Action<string> writeLineFunc
-            ) : base((width / num_columns) - 1, writeFunc, writeLineFunc)
+            in Action<object> writeObject
+            ) : base((width / num_columns) - 1, writeObject)
         {
             _num_columns = num_columns;
+            _sb = new StringBuilder();
         }
 
-        public override void displayResult(GetPowerDirInfo result)
+        public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
         {
-            _write(result.RelativeName);
-            _write(" ");
+            _sb.Append(names(theme.colorizeRelativeName(result)))
+                .Append(" ");
 
             current_column++;
             if (current_column >= _num_columns)
             {
-                _writeLine();
+                _writeObject(_sb.ToString());
                 current_column = 0;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override void endDisplay()
         {
             if (current_column != 0)
-                _writeLine();
+                _writeObject(_sb.ToString());
         }
     }
 }

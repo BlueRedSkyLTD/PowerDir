@@ -16,20 +16,10 @@ namespace PowerDir.Tests.helpers
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         private readonly StringBuilder? _sb;
-        public void write(string msg)
+       
+        public void writeObject(object obj)
         {
-            testContextInstance.Write(msg);
-            _sb?.Append(msg);
-        }
-
-        public void writeColor(string msg, PowerDirThemeClassic.ColorThemeItem col)
-        {
-            testContextInstance.Write($"[COLOR: {col.Fg},{col.Bg}] {msg}");
-            _sb?.Append(msg);
-        }
-
-        public void writeLine(string msg)
-        {
+            string msg = obj.ToString() ?? "";
             testContextInstance.WriteLine(msg);
             _sb?.Append(msg).AppendLine();
         }

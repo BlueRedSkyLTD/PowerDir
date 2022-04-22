@@ -144,61 +144,46 @@ namespace PowerDir
         public DisplayOptions Display { get; set; } = DisplayOptions.Object;
         #endregion Parameters
 
-        private bool _supportColor = true;
         int _width = 120;
         // TODO: consider to use just writeObject generating a string instead as it can support color with ESC[ sequence
-        bool _useUIWrite = true;
-        private readonly StringBuilder _sb = new StringBuilder();
 
         private string basePath = "./";
         private readonly EnumerationOptions enumerationOptions = new EnumerationOptions();
 
         // TODO: pagination
 
-        // TODO: get-power-dir | format-wide
-
         // TODO: get-power-dir attributes, datetime, size, etc..
 
         // TODO to be upgraded to 24 bits
-        private PowerDirThemeClassic theme = new PowerDirThemeClassic();
+        //private PowerDirThemeClassic theme = new PowerDirThemeClassic();
+        private IPowerDirTheme _theme = new NoColorTheme();
         private IView? view;
         
         #region WriteOps
-        private void write(string msg)
-        {
-            // TODO consider to use just writeObject generating a string instead.
-            if (_useUIWrite)
-                Host.UI.Write(msg);
-            else
-                _sb.Append(msg);
-        }
+        //private void write(string msg)
+        //{
+        //    // TODO consider to use just writeObject generating a string instead.
+        //    if (_useUIWrite)
+        //        Host.UI.Write(msg);
+        //    else
+        //        _sb.Append(msg);
+        //}
 
-        /// <summary>
-        /// write a message using the given color.
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="col"></param>
-        private void write(string msg, PowerDirThemeClassic.ColorThemeItem col)
-        {
-            setColor(col);
-            write(msg);
-            setColor(theme.GetOriginalColor());
-        }
 
-        private void writeLine(string msg = "")
-        {
-            if (_useUIWrite)
-            {
-                Host.UI.Write(msg);
-                Host.UI.WriteLine();
-            }
-            else
-            {
-                _sb.Append(msg);
-                WriteObject(_sb.ToString());
-                _sb.Clear();
-            }
-        }
+        //private void writeLine(string msg = "")
+        //{
+        //    if (_useUIWrite)
+        //    {
+        //        Host.UI.Write(msg);
+        //        Host.UI.WriteLine();
+        //    }
+        //    else
+        //    {
+        //        _sb.Append(msg);
+        //        WriteObject(_sb.ToString());
+        //        _sb.Clear();
+        //    }
+        //}
         #endregion
 
         #region Colors
@@ -213,13 +198,6 @@ namespace PowerDir
         //{
         //    write("\x1B[0m");
         //}
-
-        private void setColor(PowerDirThemeClassic.ColorThemeItem color)
-        {
-            if (!_supportColor) return;
-            Host.UI.RawUI.ForegroundColor = color.Fg;
-            Host.UI.RawUI.BackgroundColor = color.Bg;
-        }
 
         //private void setColor(int fg_col, int bg_col)
         //{
@@ -248,23 +226,6 @@ namespace PowerDir
         
         #endregion
 
-        private void checkColorSupport()
-        {
-            try
-            {
-                ConsoleColor fg = Host.UI.RawUI.ForegroundColor;
-                ConsoleColor bg = Host.UI.RawUI.BackgroundColor;
-                // Loading Color Theme (only default one at the moment)
-                // TODO: load color theme from env variable or setting file
-                theme = new PowerDirThemeClassic(fg, bg);
-            }
-            catch (HostException ex)
-            {
-                _supportColor = false;
-                WriteError(ex.ErrorRecord);
-            }
-        }
-
         // TODO: this can be merged in checkColorSupport method
         //       as if there is no color there won't be no with neither i guess... 
         private void checkWidthSupport()
@@ -275,7 +236,6 @@ namespace PowerDir
             }
             catch (HostException e)
             {
-                _useUIWrite = false;
                 WriteError(e.ErrorRecord);
             }
         }
@@ -337,17 +297,19 @@ namespace PowerDir
 
             if (_noColor)
             {
-                _useUIWrite = false;
-                _supportColor = false;
-            } else
-                checkColorSupport();
+                //_theme = new NoColorTheme();
+            }
+            else
+                _theme = new EscapeCodesTheme();
             
             checkWidthSupport();
 
-            WriteDebug($"Color = {_supportColor}");
-            WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
+            //WriteDebug($"Color = {_supportColor}");
+            //WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
+            WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {_recursive}");
-            WriteDebug($"Extensions = {String.Join(',', theme._extensions)}");
+            // TODO:
+            //WriteDebug($"Extensions = {String.Join(',', theme._extensions)}");
             processPath();
 
             enumerationOptions.RecurseSubdirectories = _recursive;
@@ -396,7 +358,7 @@ namespace PowerDir
                         new DirectoryInfo(fileSys) :
                         new FileInfo(fileSys);
 
-                    view?.displayResult(new GetPowerDirInfo(info, basePath, view.NameMaxLength));
+                    view?.displayResult(new GetPowerDirInfo(info, basePath), _theme);
                     if (_stop)
                         return;
                 }
@@ -406,7 +368,7 @@ namespace PowerDir
                 foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
                 {
                     var dirInfo = new DirectoryInfo(dir);
-                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath,view.NameMaxLength));
+                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath), _theme);
                     if (_stop)
                         return;
                 }
@@ -414,7 +376,7 @@ namespace PowerDir
                 foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
                 {
                     var fileInfo = new FileInfo(file);
-                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath, view.NameMaxLength));
+                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath), _theme);
                     if (_stop)
                         return;
                 }
@@ -428,7 +390,7 @@ namespace PowerDir
 
         private void displayList()
         {
-            view = new ListView(write, writeLine);
+            view = new ListView(WriteObject);
         }
         private void displayListDetails()
         {
@@ -437,7 +399,7 @@ namespace PowerDir
             //      etc
             // TODO switch parameter for dateTime type
             view = new ListDetailsView(_width, MAX_NAME_LENGTH,
-                write, writeLine, ListDetailsView.EDateTimes.CREATION);
+                WriteObject, ListDetailsView.EDateTimes.CREATION);
         }
 
         private void displayWide()
@@ -451,7 +413,7 @@ namespace PowerDir
 
             WriteDebug($"width = {_width} --- col_size = {col_size} --- num_columns = {num_columns}");
 
-            view = new WideView(_width, num_columns, write, writeLine);
+            view = new WideView(_width, num_columns, WriteObject);
         }
 
         /// <summary>

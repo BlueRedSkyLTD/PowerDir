@@ -10,15 +10,14 @@ namespace PowerDir.views
     internal class ListView : AbstractView
     {
         internal ListView(
-            in Action<string> writeFunc,
-            in Action<string> writeLineFunc
-            ) : base(writeFunc, writeLineFunc)
+            in Action<object> writeObject
+            ) : base(writeObject)
         {
         }
 
-        public override void displayResult(GetPowerDirInfo result)
+        public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
         {
-            _writeLine(result.RelativeName);
+            _writeObject(theme.colorizeRelativeName(result));
         }
     }
 }

@@ -108,8 +108,7 @@ namespace PowerDir
         /// </summary>
         /// <param name="info"></param>
         /// <param name="basePath"></param>
-        /// <param name="nameMaxLength"></param>
-        public GetPowerDirInfo(FileSystemInfo info, in string basePath, int nameMaxLength)
+        public GetPowerDirInfo(FileSystemInfo info, in string basePath)
         {
             Name = info.Name;
             Extension = info.Extension;
@@ -138,20 +137,12 @@ namespace PowerDir
             FullName = info.FullName;
 
             // TODO remove, this is just a test.
-            RelativeName = "\x1B[38;2;255;128;64m" + names(Path.GetRelativePath(basePath, FullName), nameMaxLength) + "\x1B[0m";
+            RelativeName = Path.GetRelativePath(basePath, FullName);
             Attr = attributes();
             NormalizedSize = normalizeSize();
         }
 
-        static internal string names(string relativeName, int NameMaxLength)
-        {
-            if (NameMaxLength == -1)
-                return relativeName;
-            if (relativeName.Length > NameMaxLength)
-                return relativeName.Substring(0, NameMaxLength - 3) + "...";
-            
-            return String.Format("{0," + -NameMaxLength + "}", relativeName);
-        }
+        
         private string attributes()
         {
 #pragma warning disable S3358 // Ternary operators should not be nested
@@ -204,7 +195,7 @@ namespace PowerDir
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as GetPowerDirInfo);
         }

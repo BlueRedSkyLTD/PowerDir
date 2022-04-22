@@ -16,52 +16,32 @@ namespace PowerDir.views
     {
         public int NameMaxLength { get; } = -1;
 
-        protected delegate void Write(string msg);
-        protected delegate void WriteLine(string msg = "");
-        protected readonly Write _write;
-        protected readonly WriteLine _writeLine;
-
-        protected AbstractView() {}
-
-        protected AbstractView(
-            in Action<string> writeFunc,
-            in Action<string> writeLineFunc
-        ) {
-            _write = new Write(writeFunc);
-            _writeLine = new WriteLine(writeLineFunc);
+        protected delegate void WriteObject(object msg);
+        protected readonly WriteObject _writeObject;
+        protected AbstractView(in Action<object> writeObject)
+        {
+            _writeObject = new WriteObject(writeObject);
         }
 
         protected AbstractView(
             int nameMaxLength,
-            in Action<string> writeFunc,
-            in Action<string> writeLineFunc
-        ) : this(writeFunc, writeLineFunc)
+            in Action<object> writeObject
+        ) : this(writeObject)
         {
             NameMaxLength = nameMaxLength;
         }
 
-        //protected void names(GetPowerDirInfo info, StringBuilder sb)
-        //{
-        //    if (info.Name.Length > NameMaxLength)
-        //    {
-        //        sb.Append(info.Name.Substring(0, NameMaxLength - 3));
-        //        sb.Append("...");
-        //    }
-        //    else
-        //        sb.Append(String.Format(_fmt_name, info.Name));
-        //}
-     
-        //protected string names(GetPowerDirInfo info)
-        //{
-        //    if (info.RelativeName.Length > NameMaxLength)
-        //    {
-        //        return info.RelativeName.Substring(0, NameMaxLength - 3) + "...";
-        //    }
-        //    else
-        //        return String.Format(_fmt_name, info.RelativeName);
-        //}
         public virtual void endDisplay() { }
-        public abstract void displayResult(GetPowerDirInfo result);
-        //public abstract void displayResult(GetPowerDirInfo result, IPowerDirTheme theme);
+        public abstract void displayResult(GetPowerDirInfo result, IPowerDirTheme theme);
+
+        internal string names(string relativeName)
+        {
+            if (NameMaxLength == -1)
+                return relativeName;
+            if (relativeName.Length > NameMaxLength)
+                return relativeName.Substring(0, NameMaxLength - 3) + "...";
+
+            return String.Format("{0," + -NameMaxLength + "}", relativeName);
+        }
     }
 }

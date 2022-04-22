@@ -37,13 +37,13 @@ namespace PowerDir.Tests
             // TODO check the color too?
             StringBuilder sb = new StringBuilder();
             Writers w = new(TestContext, sb);
-            ListView lv = new ListView(w.write, w.writeLine);
+            ListView lv = new ListView(w.writeObject);
             input = input.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);
             FileInfo finfo = new(filePath);
-            GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory(), lv.NameMaxLength);
-            lv.displayResult(info);
+            GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
+            lv.displayResult(info, new NoColorTheme());
             Assert.IsTrue(sb.Length > 0);
             Assert.AreEqual(string.Concat(input, Environment.NewLine), sb.ToString());
         }

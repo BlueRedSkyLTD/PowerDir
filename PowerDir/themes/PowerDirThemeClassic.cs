@@ -15,7 +15,7 @@ namespace PowerDir.themes
     /// <summary>
     /// @deprecated
     /// </summary>
-    public class PowerDirThemeClassic : IPowerDirTheme
+    public class PowerDirThemeClassic
     {
         /// <summary>
         /// Mapping colors

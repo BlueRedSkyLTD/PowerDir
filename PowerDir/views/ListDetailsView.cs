@@ -18,21 +18,12 @@ namespace PowerDir.views
         }
         private readonly EDateTimes eDateTimes;
 
-        /// <summary>
-        ///  TODO: remove the constructor
-        /// </summary>
-        /// <param name="width"></param>
-        /// <param name="name_max_length"></param>
-        /// <param name="writeFunc"></param>
-        /// <param name="writeLineFunc"></param>
-        /// <param name="eDateTimes"></param>
         internal ListDetailsView(
             in int width,
             in int name_max_length,
-            in Action<string> writeFunc,
-            in Action<string> writeLineFunc,
+            in Action<object> writeObject,
             in EDateTimes eDateTimes
-        ) : base(name_max_length, writeFunc, writeLineFunc)
+        ) : base(name_max_length, writeObject)
         {
             this.eDateTimes = eDateTimes;
             _sb = new StringBuilder(" -", width);
@@ -55,17 +46,19 @@ namespace PowerDir.views
             throw new NotImplementedException();
         }
 
-        public override void displayResult(GetPowerDirInfo result)
+        public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
         {
-            _write(result.Attr);
-            _write(" ");
+            StringBuilder sb = new StringBuilder();
+            sb.Append(result.Attr)
+                .Append(" ")
+                .Append(names(theme.colorizeRelativeName(result)))
+                .Append(" ")
+                .Append(result.NormalizedSize)
+                .Append(" ")
+                .Append(dateTimes(result))
+            ;
 
-            _write(result.RelativeName);
-
-            _write(" ");
-            _write(result.NormalizedSize);
-            _write(" ");
-            _writeLine(dateTimes(result));
+            _writeObject(sb.ToString());
         }
     }
 }

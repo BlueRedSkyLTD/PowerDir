@@ -26,6 +26,18 @@ namespace PowerDir.themes
             ORIGINAL,
         }
 
-        //public string colorize(string str);
+        /// <summary>
+        /// Process all fields and return a colorized GetPowerDirInfo object
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public GetPowerDirInfo colorize(GetPowerDirInfo info);
+
+        /// <summary>
+        /// process RelativeName and return it colorized
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public string colorizeRelativeName(GetPowerDirInfo info);
     }
 }

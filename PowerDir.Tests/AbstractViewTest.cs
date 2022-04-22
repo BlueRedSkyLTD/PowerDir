@@ -30,22 +30,16 @@ namespace PowerDir.Tests
 
         class AbstractViewMock : AbstractView
         {
-            internal AbstractViewMock(in Action<string> writeFunc, in Action<string> writeLineFunc) : base(writeFunc, writeLineFunc)
+            public AbstractViewMock(in Writers w, int names_max_length): base(names_max_length, w.writeObject)
             {
             }
 
-            internal AbstractViewMock(int nameMaxLength, in Action<string> writeFunc , in Action<string> writeLineFunc) : base(nameMaxLength, writeFunc, writeLineFunc)
+            public string testNames(string relativeNames)
             {
+                return this.names(relativeNames);
             }
 
-            public AbstractViewMock(Writers writers) : this(writers.write, writers.writeLine)
-            {
-            }
-
-            public AbstractViewMock(Writers writers, int max_length): this(max_length,writers.write, writers.writeLine)
-            { }
-
-            public override void displayResult(GetPowerDirInfo result)
+            public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
             {
                 throw new NotImplementedException();
             }
@@ -67,8 +61,8 @@ namespace PowerDir.Tests
             Assert.IsTrue(avm.NameMaxLength == names_max_length);
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);
             FileInfo finfo = new(filePath);
-            GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory(), avm.NameMaxLength);
-            string result = info.RelativeName;
+            GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
+            string result = avm.testNames(info.RelativeName);
             Assert.AreEqual(names_max_length, result.Length);
             Assert.AreEqual(expResult, result.Trim());
         }
