@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PowerDir.themes;
 
 namespace PowerDir.views
 {
@@ -16,9 +17,9 @@ namespace PowerDir.views
 
         internal WideView(in int width, in int num_columns,
             in Action<string> writeFunc,
-            in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc,
+            in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in PowerDirTheme theme) : base((width / num_columns) - 1, writeFunc, writeColorFunc, writeLineFunc, theme)
+            in PowerDirThemeClassic theme) : base((width / num_columns) - 1, writeFunc, writeColorFunc, writeLineFunc, theme)
         {
             //_width = width;
             _num_columns = num_columns;

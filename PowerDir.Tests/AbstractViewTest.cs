@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PowerDir.views;
 using System.IO;
 using PowerDir.Tests.helpers;
+using PowerDir.themes;
 
 namespace PowerDir.Tests
 {
@@ -29,19 +30,19 @@ namespace PowerDir.Tests
 
         class AbstractViewMock : AbstractView
         {
-            internal AbstractViewMock(in Action<string> writeFunc, in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc, in Action<string> writeLineFunc, in PowerDirTheme theme) : base(writeFunc, writeColorFunc, writeLineFunc, theme)
+            internal AbstractViewMock(in Action<string> writeFunc, in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc, in Action<string> writeLineFunc, in PowerDirThemeClassic theme) : base(writeFunc, writeColorFunc, writeLineFunc, theme)
             {
             }
 
-            internal AbstractViewMock(int nameMaxLength, in Action<string> writeFunc, in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc, in Action<string> writeLineFunc, in PowerDirTheme theme) : base(nameMaxLength, writeFunc, writeColorFunc, writeLineFunc, theme)
+            internal AbstractViewMock(int nameMaxLength, in Action<string> writeFunc, in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc, in Action<string> writeLineFunc, in PowerDirThemeClassic theme) : base(nameMaxLength, writeFunc, writeColorFunc, writeLineFunc, theme)
             {
             }
 
-            public AbstractViewMock(Writers writers) : this(writers.write, writers.writeColor, writers.writeLine, new PowerDirTheme())
+            public AbstractViewMock(Writers writers) : this(writers.write, writers.writeColor, writers.writeLine, new PowerDirThemeClassic())
             {
             }
 
-            public AbstractViewMock(Writers writers, int max_length): this(max_length,writers.write, writers.writeColor, writers.writeLine, new PowerDirTheme())
+            public AbstractViewMock(Writers writers, int max_length): this(max_length,writers.write, writers.writeColor, writers.writeLine, new PowerDirThemeClassic())
             { }
 
             public string testNames(GetPowerDirInfo info)

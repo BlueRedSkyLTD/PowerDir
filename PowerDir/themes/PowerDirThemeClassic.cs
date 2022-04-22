@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PowerDir
+
+namespace PowerDir.themes
 {
     // TODOS:
     // - echo $env:PATHEXT
@@ -12,11 +13,10 @@ namespace PowerDir
     // check if PATHEXT is a powershell env variable for executable file
     // in case integrate for the extension to highlight
     /// <summary>
-    /// 
+    /// @deprecated
     /// </summary>
-    public class PowerDirTheme
+    public class PowerDirThemeClassic : IPowerDirTheme
     {
-        const string PATHEXT = "PATHEXT";
         /// <summary>
         /// Mapping colors
         /// </summary>
@@ -34,6 +34,8 @@ namespace PowerDir
             READONLY_FILE,
             ORIGINAL,
         }
+
+        const string PATHEXT = "PATHEXT";
         /// <summary>
         /// 
         /// </summary>
@@ -74,7 +76,7 @@ namespace PowerDir
         /// 
         /// </summary>
         /// <param name="original_color"></param>
-        public PowerDirTheme(ColorThemeItem original_color)
+        public PowerDirThemeClassic(ColorThemeItem original_color)
         {
             colorTheme.Add(KeyColorTheme.ORIGINAL, original_color);
             var pathExt = Environment.GetEnvironmentVariable(PATHEXT, EnvironmentVariableTarget.Process);
@@ -88,7 +90,7 @@ namespace PowerDir
         /// </summary>
         /// <param name="original_fg"></param>
         /// <param name="original_bg"></param>
-        public PowerDirTheme(ConsoleColor original_fg, ConsoleColor original_bg) :
+        public PowerDirThemeClassic(ConsoleColor original_fg, ConsoleColor original_bg) :
             this(new ColorThemeItem(original_fg, original_bg))
         {
         }
@@ -96,7 +98,7 @@ namespace PowerDir
         /// <summary>
         /// If not supporting color
         /// </summary>
-        public PowerDirTheme()
+        public PowerDirThemeClassic()
         {
             colorTheme.Add(KeyColorTheme.ORIGINAL, new ColorThemeItem(ConsoleColor.Gray, ConsoleColor.Black));
             _extensions = new HashSet<string>();

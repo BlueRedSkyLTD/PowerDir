@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using PowerDir.themes;
 
 namespace PowerDir.views
 {
@@ -31,9 +32,9 @@ namespace PowerDir.views
             in int width,
             in int name_max_length,
             in Action<string> writeFunc,
-            in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc,
+            in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in PowerDirTheme theme,
+            in PowerDirThemeClassic theme,
             in EDateTimes eDateTimes
         ) : base(name_max_length, writeFunc, writeColorFunc, writeLineFunc, theme)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PowerDir.themes;
 
 namespace PowerDir.views
 {
@@ -10,9 +11,9 @@ namespace PowerDir.views
     {
         internal ListView(
             in Action<string> writeFunc,
-            in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc,
+            in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in PowerDirTheme theme) : base(writeFunc, writeColorFunc, writeLineFunc, theme)
+            in PowerDirThemeClassic theme) : base(writeFunc, writeColorFunc, writeLineFunc, theme)
         {
         }
 

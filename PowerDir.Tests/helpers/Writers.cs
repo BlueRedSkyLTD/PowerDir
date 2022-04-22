@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PowerDir.themes;
 
 namespace PowerDir.Tests.helpers
 {
@@ -21,7 +22,7 @@ namespace PowerDir.Tests.helpers
             _sb?.Append(msg);
         }
 
-        public void writeColor(string msg, PowerDirTheme.ColorThemeItem col)
+        public void writeColor(string msg, PowerDirThemeClassic.ColorThemeItem col)
         {
             testContextInstance.Write($"[COLOR: {col.Fg},{col.Bg}] {msg}");
             _sb?.Append(msg);

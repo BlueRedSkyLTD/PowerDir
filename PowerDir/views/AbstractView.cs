@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PowerDir.themes;
 
 namespace PowerDir.views
 { 
@@ -33,7 +34,7 @@ namespace PowerDir.views
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="color"></param>
-        protected delegate void WriteColor(string msg, PowerDirTheme.ColorThemeItem color);
+        protected delegate void WriteColor(string msg, PowerDirThemeClassic.ColorThemeItem color);
         /// <summary>
         /// 
         /// </summary>
@@ -58,7 +59,7 @@ namespace PowerDir.views
         /// <summary>
         /// 
         /// </summary>
-        protected PowerDirTheme _theme;
+        protected PowerDirThemeClassic _theme;
         /// <summary>
         /// 
         /// </summary>
@@ -73,9 +74,9 @@ namespace PowerDir.views
         /// <param name="theme"></param>
         protected AbstractView(
             in Action<string> writeFunc,
-            in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc,
+            in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in PowerDirTheme theme
+            in PowerDirThemeClassic theme
         ) {
             _write = new Write(writeFunc);
             _writeColor = new WriteColor(writeColorFunc);
@@ -93,9 +94,9 @@ namespace PowerDir.views
         protected AbstractView(
             int nameMaxLength,
             in Action<string> writeFunc,
-            in Action<string, PowerDirTheme.ColorThemeItem> writeColorFunc,
+            in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc,
             in Action<string> writeLineFunc,
-            in PowerDirTheme theme
+            in PowerDirThemeClassic theme
         ) : this(writeFunc, writeColorFunc, writeLineFunc, theme)
         {
             NameMaxLength = nameMaxLength;

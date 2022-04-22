@@ -4,15 +4,14 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using PowerDir.themes;
 
 namespace PowerDir
 {
     /// <summary>
     /// 
     /// </summary>
-#pragma warning disable S1206 // "Equals(Object)" and "GetHashCode()" should be overridden in pairs
     sealed public class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
-#pragma warning restore S1206 // "Equals(Object)" and "GetHashCode()" should be overridden in pairs
     {
         private const string _fmt_size = "{0,6}{1,1}";
         private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
@@ -190,7 +189,15 @@ namespace PowerDir
 
             return FullName == other.FullName;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as GetPowerDirInfo);
+        }
         /// <summary>
         /// 
         /// </summary>

@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using PowerDir.views;
 using PowerDir.Tests.helpers;
+using PowerDir.themes;
 
 namespace PowerDir.Tests
 {
@@ -36,7 +37,7 @@ namespace PowerDir.Tests
             // TODO check the color too?
             StringBuilder sb = new StringBuilder();
             Writers w = new(TestContext, sb);
-            ListView lv = new ListView(w.write,w.writeColor, w.writeLine, new PowerDirTheme());
+            ListView lv = new ListView(w.write,w.writeColor, w.writeLine, new PowerDirThemeClassic());
             input = input.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);

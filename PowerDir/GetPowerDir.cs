@@ -2,7 +2,7 @@
 using System.Management.Automation.Host;
 using System.Text;
 using PowerDir.views;
-
+using PowerDir.themes;
 
 namespace PowerDir
 {
@@ -160,7 +160,7 @@ namespace PowerDir
         // TODO: get-power-dir attributes, datetime, size, etc..
 
         // TODO to be upgraded to 24 bits
-        private PowerDirTheme theme = new PowerDirTheme();
+        private PowerDirThemeClassic theme = new PowerDirThemeClassic();
         private IView? view;
         
         #region WriteOps
@@ -178,7 +178,7 @@ namespace PowerDir
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="col"></param>
-        private void write(string msg, PowerDirTheme.ColorThemeItem col)
+        private void write(string msg, PowerDirThemeClassic.ColorThemeItem col)
         {
             setColor(col);
             write(msg);
@@ -214,7 +214,7 @@ namespace PowerDir
         //    write("\x1B[0m");
         //}
 
-        private void setColor(PowerDirTheme.ColorThemeItem color)
+        private void setColor(PowerDirThemeClassic.ColorThemeItem color)
         {
             if (!_supportColor) return;
             Host.UI.RawUI.ForegroundColor = color.Fg;
@@ -256,7 +256,7 @@ namespace PowerDir
                 ConsoleColor bg = Host.UI.RawUI.BackgroundColor;
                 // Loading Color Theme (only default one at the moment)
                 // TODO: load color theme from env variable or setting file
-                theme = new PowerDirTheme(fg, bg);
+                theme = new PowerDirThemeClassic(fg, bg);
             }
             catch (HostException ex)
             {
