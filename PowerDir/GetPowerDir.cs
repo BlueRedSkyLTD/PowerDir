@@ -20,21 +20,7 @@ namespace PowerDir
     {
         const int MAX_NAME_LENGTH = 50;
         private bool _stop = false;
-        /*
-        /// <summary>
-        /// convert Hex color format to RGB
-        /// </summary>
-        /// <param name="hex"></param>
-        /// <returns>(r,g,b)</returns>
-        private (byte,byte,byte) hexToRgb(int hex)
-        {
-            return (
-                (byte)((hex >> 16) & 0xFF),
-                (byte)((hex >> 8) & 0xFF),
-                (byte)((hex) & 0xFF)
-            );
-        }
-        */
+       
         #region Parameters
 
         /// <summary>
@@ -154,77 +140,8 @@ namespace PowerDir
 
         // TODO: get-power-dir attributes, datetime, size, etc..
 
-        // TODO to be upgraded to 24 bits
-        //private PowerDirThemeClassic theme = new PowerDirThemeClassic();
         private IPowerDirTheme _theme = new NoColorTheme();
         private IView? view;
-        
-        #region WriteOps
-        //private void write(string msg)
-        //{
-        //    // TODO consider to use just writeObject generating a string instead.
-        //    if (_useUIWrite)
-        //        Host.UI.Write(msg);
-        //    else
-        //        _sb.Append(msg);
-        //}
-
-
-        //private void writeLine(string msg = "")
-        //{
-        //    if (_useUIWrite)
-        //    {
-        //        Host.UI.Write(msg);
-        //        Host.UI.WriteLine();
-        //    }
-        //    else
-        //    {
-        //        _sb.Append(msg);
-        //        WriteObject(_sb.ToString());
-        //        _sb.Clear();
-        //    }
-        //}
-        #endregion
-
-        #region Colors
-        //private void resetColor()
-        //{
-        //    if (!_supportColor) return;
-        //    Host.UI.RawUI.ForegroundColor = fg;
-        //    Host.UI.RawUI.ForegroundColor = bg;
-        //}
-
-        //private void resetColor24Bits()
-        //{
-        //    write("\x1B[0m");
-        //}
-
-        //private void setColor(int fg_col, int bg_col)
-        //{
-        //    if (!_supportColor) return;
-        //    var (fr, fg, fb) = hexToRgb(fg_col);
-        //    var (br, bg, bb) = hexToRgb(bg_col);
-        //    write($"\x1B[38;2;{fr};{fg};{fb}m\x1B[48;2;{br};{bg};{bb}m");
-        //}
-
-        #endregion
-
-        #region Colored WriteOps
-        //private void write(string msg, int fg, int bg)
-        //{
-        //    setColor(fg, bg);
-        //    write(msg);
-        //    resetColor24Bits();
-        //}
-
-        //private void writeLine(string msg, int fg, int bg)
-        //{
-        //    write(msg, fg, bg);
-        //    writeLine();
-        //}
-        
-        
-        #endregion
 
         // TODO: this can be merged in checkColorSupport method
         //       as if there is no color there won't be no with neither i guess... 
@@ -281,9 +198,6 @@ namespace PowerDir
             WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         protected override void BeginProcessing()
         {
             //write("Power", 0xFF0000, 0x00FFFF);
@@ -296,20 +210,16 @@ namespace PowerDir
             WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
             if (_noColor)
-            {
-                //_theme = new NoColorTheme();
-            }
+                _theme = new NoColorTheme();
             else
-                _theme = new EscapeCodesTheme();
+                _theme = new AnsiEscapeCodesTheme();
             
             checkWidthSupport();
 
-            //WriteDebug($"Color = {_supportColor}");
-            //WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
             WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {_recursive}");
             // TODO:
-            //WriteDebug($"Extensions = {String.Join(',', theme._extensions)}");
+            //WriteDebug($"Extensions = {String.Join(',', _theme._extensions)}");
             processPath();
 
             enumerationOptions.RecurseSubdirectories = _recursive;

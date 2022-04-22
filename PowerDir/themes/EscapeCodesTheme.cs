@@ -8,6 +8,38 @@ namespace PowerDir.themes
 {
     internal class EscapeCodesTheme : IPowerDirTheme
     {
+        const char ESC = '\x1B';
+        const string RESET = "\x1B[0m";
+
+        private readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD", ".PS1" };
+        private readonly HashSet<string> _extensions;
+
+        public EscapeCodesTheme()
+        {
+            _extensions = new HashSet<string>(_default_extensions.ToList());
+        }
+
+        /// <summary>
+        /// convert Hex color format to RGB
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns>(r,g,b)</returns>
+        private (byte, byte, byte) hexToRgb(int hex)
+        {
+            return (
+                (byte)((hex >> 16) & 0xFF),
+                (byte)((hex >> 8) & 0xFF),
+                (byte)((hex) & 0xFF)
+            );
+        }
+
+        private string setColor(int fg_col, int bg_col)
+        {
+            var (fr, fg, fb) = hexToRgb(fg_col);
+            var (br, bg, bb) = hexToRgb(bg_col);
+            return $"{ESC}[38;2{fr};{fg};{fb}m{ESC}[48;2;{br};{bg};{bb}m";
+        }
+
         public GetPowerDirInfo colorize(GetPowerDirInfo info)
         {
             return info;
@@ -15,46 +47,83 @@ namespace PowerDir.themes
 
         public string colorizeRelativeName(GetPowerDirInfo info)
         {
-            //if(info.Link)
-            //{
-            //    return colorTheme[KeyColorTheme.LINK];
-            //}
-            //else if (info.System)
-            //{
-            //    return info.Directory ?
-            //        colorTheme[KeyColorTheme.SYSTEM_DIR] :
-            //        colorTheme[KeyColorTheme.SYSTEM_FILE];
-            //}
-            //else if (info.Hidden)
-            //{
-            //    return info.Directory ?
-            //        colorTheme[KeyColorTheme.HIDDEN_DIR] :
-            //        colorTheme[KeyColorTheme.HIDDEN_FILE];
-            //}
-            //else if (info.ReadOnly)
-            //{
-            //    return info.Directory ?
-            //        colorTheme[KeyColorTheme.READONLY_DIR] :
-            //        colorTheme[KeyColorTheme.READONLY_FILE];
-            //}
-            //else if (info.Directory)
-            //{
-            //    return colorTheme[KeyColorTheme.DIRECTORY];
-            //}
-            //// FILES Only from here
-            //else if (
-            //    _extensions.Any((x) => x == info.Extension.ToUpper())
-            //    )
-            //{
-            //    return colorTheme[KeyColorTheme.EXE];
-            //}
-            //else
-            //{
-            //    // generic FILE
-            //    return colorTheme[KeyColorTheme.FILE];
-            //}
-            
-            return info.RelativeName;
+            int fg_col = 0;
+            int bg_col = 0;
+            if (info.Link)
+            {
+                fg_col = 0xF0F0FF;
+                bg_col = 0;
+            }
+            else if (info.System)
+            {
+                if (info.Directory)
+                {
+                    //colorTheme[KeyColorTheme.SYSTEM_DIR] :
+                    fg_col = 0xFFFFFF;
+                    bg_col = 0x000000;
+                }
+                else
+                {
+                    //colorTheme[KeyColorTheme.SYSTEM_FILE];
+                    fg_col += 0x000000;
+                    bg_col += 0x000000;
+                }
+
+            }
+            else if (info.Hidden)
+            {
+                if (info.Directory)
+                {
+                    //colorTheme[KeyColorTheme.HIDDEN_DIR] :
+                    fg_col += 0x000000;
+                    bg_col += 0x000000;
+                }
+                else
+                {
+                    //colorTheme[KeyColorTheme.HIDDEN_FILE];
+                    fg_col += 0x000000;
+                    bg_col += 0x000000;
+                }
+            }
+            else if (info.ReadOnly)
+            {
+                if (info.Directory)
+                {
+                    //colorTheme[KeyColorTheme.READONLY_DIR] :
+                    fg_col += 0x000000;
+                    bg_col += 0x000000;
+                }
+                else
+                {
+                    //colorTheme[KeyColorTheme.READONLY_FILE];
+                    fg_col += 0x000000;
+                    bg_col += 0x000000;
+                }
+            }
+            else if (info.Directory)
+            {
+                //return colorTheme[KeyColorTheme.DIRECTORY];
+                fg_col += 0x000000;
+                bg_col += 0x000000;
+            }
+            // FILES Only from here
+            else if (
+                _extensions.Any((x) => x == info.Extension.ToUpper())
+                )
+            {
+                //return colorTheme[KeyColorTheme.EXE];
+                fg_col += 0x000000;
+                bg_col += 0x000000;
+            }
+            else
+            {
+                // generic FILE
+                //return colorTheme[KeyColorTheme.FILE];
+                fg_col += 0x000000;
+                bg_col += 0x000000;
+            }
+
+            return setColor(fg_col,bg_col) + info.RelativeName + RESET;
         }
     }
 }
