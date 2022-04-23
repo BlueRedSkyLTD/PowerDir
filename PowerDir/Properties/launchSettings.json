@@ -14,6 +14,11 @@
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
       "commandLineArgs": "-NoExit -c \"Import-Module .\\PowerDir.GetPowerDir.psd1 && Import-Module platyps && New-ExternalHelp -Path  '$(ProjectDir)doc'  -OutputPath '$(TargetDir)' -Force  && cp '$(TargetDir)PowerDir.dll-help.xml' '$(ProjectDir)' -verbose\" "
+    },
+    "WT": {
+      "commandName": "Executable",
+      "executablePath": "wt.exe",
+      "commandLineArgs": "nt -d $(TargetDir) -p \"Powershell 7\" pwsh.exe -NoExit -c \"Import-Module .\\PowerDir.GetPowerDir.psd1 && Import-Module platyps && New-ExternalHelp -Path  '$(ProjectDir)doc'  -OutputPath '$(TargetDir)' -Force  && cp '$(TargetDir)PowerDir.dll-help.xml' '$(ProjectDir)' -verbose\" "
     }
   }
 }

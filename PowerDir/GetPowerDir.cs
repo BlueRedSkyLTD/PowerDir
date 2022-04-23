@@ -253,6 +253,9 @@ namespace PowerDir
             else
                 _theme = new AnsiEscapeCodesTheme();
 
+            WriteObject("\x1B[5mPowerDir\x1b[0m");
+
+
             WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {_recursive}");
             // TODO:

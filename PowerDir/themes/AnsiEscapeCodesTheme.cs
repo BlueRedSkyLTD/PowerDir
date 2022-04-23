@@ -116,5 +116,24 @@ namespace PowerDir.themes
                 return colorize(_colorTheme[KeyColorTheme.FILE], str);
             }
         }
+
+        protected override string setBold(bool bold)
+        {
+            return bold ? $"{ESC}[1m" : "";
+        }
+
+        protected override string setItalic(bool italic)
+        {
+            return italic ? $"{ESC}[3m" : "";
+        }
+
+        protected override string setBlink(bool blink)
+        {
+            return blink ? $"{ESC}[5m" : "";
+        }
+        protected override string setColor(int fg, int bg)
+        {
+            return $"{ESC}[38;5;{fg}m{ESC}[48;5;{bg}m";
+        }
     }
 }

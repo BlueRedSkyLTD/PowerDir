@@ -16,7 +16,13 @@ namespace PowerDir.themes
 
         abstract public GetPowerDirInfo colorize(GetPowerDirInfo info);
         abstract public string colorizeProperty(GetPowerDirInfo info, string str);
-        
+        abstract protected string setColor(int fg, int bg);
+        abstract protected string setBold(bool bold);
+        //abstract protected string setDim(bool dim);
+        abstract protected string setItalic(bool italic);
+        //abstract protected string setUnderline(bool underline);
+        abstract protected string setBlink(bool blink);
+
 
         protected AbstractEscapeCodesTheme()
         {
@@ -33,11 +39,6 @@ namespace PowerDir.themes
             return $"{ESC}[?1;0c";
         }
 
-        protected string setColor(int fg, int bg)
-        {
-            return $"{ESC}[38;5;{fg}m{ESC}[48;5;{bg}m";
-        }
-
         protected string setColor(ColorThemeItem col)
         {
             return setColor(col.Fg, col.Bg);
@@ -45,7 +46,8 @@ namespace PowerDir.themes
 
         protected string colorize(ColorThemeItem col, string str)
         {
-            return setColor(col) + str + RESET;
+            string s = setBold(col.Bold) + setItalic(col.Italic) + setBlink(col.Blink) + setColor(col) + str + RESET;
+            return s;
         }
     }
 }
