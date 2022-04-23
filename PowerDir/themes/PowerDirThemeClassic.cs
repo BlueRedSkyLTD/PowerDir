@@ -15,6 +15,7 @@ namespace PowerDir.themes
     /// <summary>
     /// @deprecated
     /// </summary>
+    [Obsolete("Not used anymore, to be removed")]
     public class PowerDirThemeClassic
     {
         /// <summary>

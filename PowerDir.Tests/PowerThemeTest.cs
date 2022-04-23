@@ -14,6 +14,7 @@ namespace PowerDir.Tests
     /// TODO: to be removed and replaced with escape codes colors
     /// </summary>
     [TestClass]
+    [Obsolete("To be removed")]
     public class PowerThemeTest
     {
         private PowerDirThemeClassic.ColorThemeItem original()

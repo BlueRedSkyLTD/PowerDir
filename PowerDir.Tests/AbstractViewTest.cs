@@ -45,7 +45,6 @@ namespace PowerDir.Tests
             }
         }
 
-        // TODO this should be moved in GetPowerDirInfoTest
         [DataTestMethod]
         [DataRow(50, "_power_dir_test.dir/_power_dir_test.file", "_power_dir_test.dir/_power_dir_test.file")]
         [DataRow(50, "_power_dir_test.dir.very_long_dir_name/_power_dir_test.file", "_power_dir_test.dir.very_long_dir_name/_power_d...")]
