@@ -30,27 +30,16 @@ namespace PowerDir.Tests
 
         class AbstractViewMock : AbstractView
         {
-            internal AbstractViewMock(in Action<string> writeFunc, in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc, in Action<string> writeLineFunc, in PowerDirThemeClassic theme) : base(writeFunc, writeColorFunc, writeLineFunc, theme)
+            public AbstractViewMock(in Writers w, int names_max_length): base(names_max_length, w.writeObject)
             {
             }
 
-            internal AbstractViewMock(int nameMaxLength, in Action<string> writeFunc, in Action<string, PowerDirThemeClassic.ColorThemeItem> writeColorFunc, in Action<string> writeLineFunc, in PowerDirThemeClassic theme) : base(nameMaxLength, writeFunc, writeColorFunc, writeLineFunc, theme)
+            public string testNames(string relativeNames)
             {
+                return this.names(relativeNames);
             }
 
-            public AbstractViewMock(Writers writers) : this(writers.write, writers.writeColor, writers.writeLine, new PowerDirThemeClassic())
-            {
-            }
-
-            public AbstractViewMock(Writers writers, int max_length): this(max_length,writers.write, writers.writeColor, writers.writeLine, new PowerDirThemeClassic())
-            { }
-
-            public string testNames(GetPowerDirInfo info)
-            {
-                return names(info);
-            }
-
-            public override void displayResult(GetPowerDirInfo result)
+            public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
             {
                 throw new NotImplementedException();
             }
@@ -72,7 +61,7 @@ namespace PowerDir.Tests
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);
             FileInfo finfo = new(filePath);
             GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
-            string result = avm.testNames(info);
+            string result = avm.testNames(info.RelativeName);
             Assert.AreEqual(names_max_length, result.Length);
             Assert.AreEqual(expResult, result.Trim());
         }

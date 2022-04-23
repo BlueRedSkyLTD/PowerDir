@@ -7,6 +7,7 @@ using PowerDir.themes;
 namespace PowerDir
 {
     /// <summary>
+    /// TODO: Pipeline inputs!
     /// <para type="synopsis">Get-PowerDir an alternate Get-ChildItem.</para>
     /// <para type="description">Get-PowerDir is used to display files and directories</para>
     /// <para type="description">search for them in a user-friendly way, alsosupporting colors.</para>
@@ -20,21 +21,7 @@ namespace PowerDir
     {
         const int MAX_NAME_LENGTH = 50;
         private bool _stop = false;
-        /*
-        /// <summary>
-        /// convert Hex color format to RGB
-        /// </summary>
-        /// <param name="hex"></param>
-        /// <returns>(r,g,b)</returns>
-        private (byte,byte,byte) hexToRgb(int hex)
-        {
-            return (
-                (byte)((hex >> 16) & 0xFF),
-                (byte)((hex >> 8) & 0xFF),
-                (byte)((hex) & 0xFF)
-            );
-        }
-        */
+       
         #region Parameters
 
         /// <summary>
@@ -144,129 +131,19 @@ namespace PowerDir
         public DisplayOptions Display { get; set; } = DisplayOptions.Object;
         #endregion Parameters
 
-        private bool _supportColor = true;
         int _width = 120;
         // TODO: consider to use just writeObject generating a string instead as it can support color with ESC[ sequence
-        bool _useUIWrite = true;
-        private readonly StringBuilder _sb = new StringBuilder();
 
         private string basePath = "./";
         private readonly EnumerationOptions enumerationOptions = new EnumerationOptions();
 
         // TODO: pagination
 
-        // TODO: get-power-dir | format-wide
-
         // TODO: get-power-dir attributes, datetime, size, etc..
 
-        // TODO to be upgraded to 24 bits
-        private PowerDirThemeClassic theme = new PowerDirThemeClassic();
+        private IPowerDirTheme? _theme;
         private IView? view;
-        
-        #region WriteOps
-        private void write(string msg)
-        {
-            // TODO consider to use just writeObject generating a string instead.
-            if (_useUIWrite)
-                Host.UI.Write(msg);
-            else
-                _sb.Append(msg);
-        }
 
-        /// <summary>
-        /// write a message using the given color.
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="col"></param>
-        private void write(string msg, PowerDirThemeClassic.ColorThemeItem col)
-        {
-            setColor(col);
-            write(msg);
-            setColor(theme.GetOriginalColor());
-        }
-
-        private void writeLine(string msg = "")
-        {
-            if (_useUIWrite)
-            {
-                Host.UI.Write(msg);
-                Host.UI.WriteLine();
-            }
-            else
-            {
-                _sb.Append(msg);
-                WriteObject(_sb.ToString());
-                _sb.Clear();
-            }
-        }
-        #endregion
-
-        #region Colors
-        //private void resetColor()
-        //{
-        //    if (!_supportColor) return;
-        //    Host.UI.RawUI.ForegroundColor = fg;
-        //    Host.UI.RawUI.ForegroundColor = bg;
-        //}
-
-        //private void resetColor24Bits()
-        //{
-        //    write("\x1B[0m");
-        //}
-
-        private void setColor(PowerDirThemeClassic.ColorThemeItem color)
-        {
-            if (!_supportColor) return;
-            Host.UI.RawUI.ForegroundColor = color.Fg;
-            Host.UI.RawUI.BackgroundColor = color.Bg;
-        }
-
-        //private void setColor(int fg_col, int bg_col)
-        //{
-        //    if (!_supportColor) return;
-        //    var (fr, fg, fb) = hexToRgb(fg_col);
-        //    var (br, bg, bb) = hexToRgb(bg_col);
-        //    write($"\x1B[38;2;{fr};{fg};{fb}m\x1B[48;2;{br};{bg};{bb}m");
-        //}
-
-        #endregion
-
-        #region Colored WriteOps
-        //private void write(string msg, int fg, int bg)
-        //{
-        //    setColor(fg, bg);
-        //    write(msg);
-        //    resetColor24Bits();
-        //}
-
-        //private void writeLine(string msg, int fg, int bg)
-        //{
-        //    write(msg, fg, bg);
-        //    writeLine();
-        //}
-        
-        
-        #endregion
-
-        private void checkColorSupport()
-        {
-            try
-            {
-                ConsoleColor fg = Host.UI.RawUI.ForegroundColor;
-                ConsoleColor bg = Host.UI.RawUI.BackgroundColor;
-                // Loading Color Theme (only default one at the moment)
-                // TODO: load color theme from env variable or setting file
-                theme = new PowerDirThemeClassic(fg, bg);
-            }
-            catch (HostException ex)
-            {
-                _supportColor = false;
-                WriteError(ex.ErrorRecord);
-            }
-        }
-
-        // TODO: this can be merged in checkColorSupport method
-        //       as if there is no color there won't be no with neither i guess... 
         private void checkWidthSupport()
         {
             try
@@ -275,9 +152,34 @@ namespace PowerDir
             }
             catch (HostException e)
             {
-                _useUIWrite = false;
                 WriteError(e.ErrorRecord);
             }
+        }
+
+        private bool supportEscapeCodes()
+        {
+            try
+            {
+                string expectedResponse = AbstractEscapeCodesTheme.ResponseDevice();
+                int i = 0;
+                WriteObject(AbstractEscapeCodesTheme.QueryDevice());
+                
+                while (Host.UI.RawUI.KeyAvailable)
+                {
+                    var key = Host.UI.RawUI.ReadKey();
+                    if (expectedResponse[i] != key.Character)
+                        break;
+
+                    i++;
+                    if (i >= expectedResponse.Length)
+                        return true;
+                }
+            } catch(HostException e)
+            {
+                WriteError(e.ErrorRecord);
+            }
+
+            return false;
         }
 
         private void processPath()
@@ -321,33 +223,29 @@ namespace PowerDir
             WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         protected override void BeginProcessing()
         {
-            //write("Power", 0xFF0000, 0x00FFFF);
-            //write("Dir", 0x00FF00, 0xFF00FF);
-            //write("terminal color test", 0x0000FF, 0xFFFF00);
-            //writeLine();
-
             WriteDebug($"Host Name = {Host.Name}");
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
-            if (_noColor)
-            {
-                _useUIWrite = false;
-                _supportColor = false;
-            } else
-                checkColorSupport();
-            
             checkWidthSupport();
+            bool supportEscCode = supportEscapeCodes();
+            WriteDebug($"Escape codes support: {(supportEscCode ? "y" : "n")}");
 
-            WriteDebug($"Color = {_supportColor}");
-            WriteDebug($"Width = {_width} --- useUIWrite={_useUIWrite}");
+            // no escape codes support, no color support
+            if (!supportEscCode)
+                _noColor = true;
+
+            if (_noColor)
+                _theme = new NoColorTheme();
+            else
+                _theme = new AnsiEscapeCodesTheme();
+
+            WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {_recursive}");
-            WriteDebug($"Extensions = {String.Join(',', theme._extensions)}");
+            // TODO:
+            //WriteDebug($"Extensions = {String.Join(',', _theme._extensions)}");
             processPath();
 
             enumerationOptions.RecurseSubdirectories = _recursive;
@@ -396,7 +294,7 @@ namespace PowerDir
                         new DirectoryInfo(fileSys) :
                         new FileInfo(fileSys);
 
-                    view?.displayResult(new GetPowerDirInfo(info, basePath));
+                    view?.displayResult(new GetPowerDirInfo(info, basePath), _theme!);
                     if (_stop)
                         return;
                 }
@@ -406,7 +304,7 @@ namespace PowerDir
                 foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
                 {
                     var dirInfo = new DirectoryInfo(dir);
-                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath));
+                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath), _theme!);
                     if (_stop)
                         return;
                 }
@@ -414,7 +312,7 @@ namespace PowerDir
                 foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
                 {
                     var fileInfo = new FileInfo(file);
-                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath));
+                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath), _theme!);
                     if (_stop)
                         return;
                 }
@@ -428,7 +326,7 @@ namespace PowerDir
 
         private void displayList()
         {
-            view = new ListView(write, write, writeLine, theme);
+            view = new ListView(WriteObject);
         }
         private void displayListDetails()
         {
@@ -437,7 +335,7 @@ namespace PowerDir
             //      etc
             // TODO switch parameter for dateTime type
             view = new ListDetailsView(_width, MAX_NAME_LENGTH,
-                write, write, writeLine, theme, ListDetailsView.EDateTimes.CREATION);
+                WriteObject, ListDetailsView.EDateTimes.CREATION);
         }
 
         private void displayWide()
@@ -451,7 +349,7 @@ namespace PowerDir
 
             WriteDebug($"width = {_width} --- col_size = {col_size} --- num_columns = {num_columns}");
 
-            view = new WideView(_width, num_columns, write, write, writeLine, theme);
+            view = new WideView(_width, num_columns, WriteObject);
         }
 
         /// <summary>

@@ -37,17 +37,40 @@ namespace PowerDir.Tests
             // TODO check the color too?
             StringBuilder sb = new StringBuilder();
             Writers w = new(TestContext, sb);
-            ListView lv = new ListView(w.write,w.writeColor, w.writeLine, new PowerDirThemeClassic());
+            ListView lv = new ListView(w.writeObject);
             input = input.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);
             FileInfo finfo = new(filePath);
             GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
-            lv.displayResult(info);
+            lv.displayResult(info, new NoColorTheme());
             Assert.IsTrue(sb.Length > 0);
-            Assert.AreEqual(string.Concat(input, Environment.NewLine), sb.ToString());
+            Assert.AreEqual(sb.ToString(), string.Concat(input, Environment.NewLine));
         }
 
+        [DataTestMethod]
+        [DataRow("_power_dir_test.dir/_power_dir_test.file")]
+        [DataRow("_power_dir_test.dir.very_long_dir_name/_power_dir_test.file")]
+        [DataRow("../_power_dir_test.file")]
+        [DataRow("../_power_dir_test.file")]
+        public void TestDisplayResultsAnsiColor(string input)
+        {
+            // TODO check the color too?
+            StringBuilder sb = new StringBuilder();
+            Writers w = new(TestContext, sb);
+            ListView lv = new ListView(w.writeObject);
+            input = input.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);
+            FileInfo finfo = new(filePath);
+            GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
+            lv.displayResult(info, new themes.AnsiEscapeCodesTheme());
+            Assert.IsTrue(sb.Length > 0);
+
+            Assert.IsTrue(sb.ToString().Contains(input));
+            Assert.IsTrue(sb.ToString().EndsWith("\x1B[0m" + Environment.NewLine)); // RESET ESCape Code
+            Assert.IsTrue(sb.ToString().StartsWith("\x1B[")); // a generic ESCape Code
+        }
     }
 #endif
 }

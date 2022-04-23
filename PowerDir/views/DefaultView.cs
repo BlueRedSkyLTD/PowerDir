@@ -3,30 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PowerDir.themes;
 
 namespace PowerDir.views
 {
     /// <summary>
     /// 
     /// </summary>
-    public class DefaultView : AbstractView
+    internal class DefaultView : AbstractView
     {
-        // TODO to use string when using escape codes...
-        protected delegate void WriteObject(object msg);
-        protected readonly WriteObject _writeObject;
-        public DefaultView(Action<object> writeObject)
-        {
-            _writeObject = new WriteObject(writeObject);
-        }
+        public DefaultView(in Action<object> writeObject) : base(writeObject)
+        {}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="result"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public override void displayResult(GetPowerDirInfo result)
+        public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
         {
-            _writeObject(result);
+            _writeObject(theme.colorize(result));
         }
     }
 }

@@ -15,6 +15,10 @@ namespace PowerDir.Tests
     // https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/creating-an-initialsessionstate?view=powershell-7.2
     // https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/windows-powershell-host-quickstart?view=powershell-7.2
 
+    /// <summary>
+    /// Note that the Cmdlet will always output QueryStatus Escape Code,
+    /// so for testing purposes apart that test itself, first output line should be discarded.
+    /// </summary>
     [TestClass]
     public class PowerDirBasicTest
     {
@@ -132,15 +136,31 @@ namespace PowerDir.Tests
         public void TestDefaultInvoke()
         {
             var output = execute(createCmdLet());
-            checkType(output[0], "PowerDir.GetPowerDirInfo");
+            checkType(output[1], "PowerDir.GetPowerDirInfo");
             Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename));
+        }
+
+        [TestMethod]
+        public void TestDefaultInvokeNoColorParam()
+        {
+            var output = execute(createCmdLet().AddParameter("NoColor", null));
+            checkType(output[1], "PowerDir.GetPowerDirInfo");
+            Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename));
+        }
+
+        [TestMethod]
+        public void TestEscapeCodeQueryDevice()
+        {
+            var output = execute(createCmdLet());
+            checkType(output[0], "System.String");
+            Assert.IsNotNull(output.First((dynamic s) => s == "\x1B[0c"));
         }
 
         [TestMethod]
         public void TestListInvoke()
         {
             var output = execute(createCmdLet().AddParameter("d", "l"));
-            checkType(output[0], "System.String");
+            checkType(output[1], "System.String");
             Assert.IsNotNull(
                 output.First((dynamic o) => o == _filename));
         }
@@ -149,7 +169,7 @@ namespace PowerDir.Tests
         public void TestListDetailsInvoke()
         {
             var output = execute(createCmdLet().AddParameter("d", "ld"));
-            checkType(output[0], "System.String");
+            checkType(output[1], "System.String");
             // TODO: here Linux/MacOS doesn't display 'a' attribute for files.
             Assert.IsNotNull(
                 output.First((dynamic o) => o.StartsWith("a------- " + _filename) 
@@ -162,7 +182,7 @@ namespace PowerDir.Tests
         {
             // This won't run due to using Host.UI.WriteLine
             var output = execute(createCmdLet().AddParameter("d", "w"));
-            checkType(output[0], "System.String");
+            checkType(output[1], "System.String");
             Assert.IsNotNull(
                 output.Where((dynamic o) => o.Contains(_filename).First())
             );
@@ -183,7 +203,7 @@ namespace PowerDir.Tests
         public void TestParentInvoke(string path)
         {
             var output = execute(createCmdLet().AddParameter("Path", path));
-            checkType(output[0], "PowerDir.GetPowerDirInfo");
+            checkType(output[1], "PowerDir.GetPowerDirInfo");
             Assert.IsNotNull(output.First((dynamic o) => o.Name == _parentDir));
         }
 
@@ -192,7 +212,7 @@ namespace PowerDir.Tests
         public void TestRootInvoke(string path)
         {
             var output = execute(createCmdLet().AddParameter("Path", path));
-            checkType(output[0], "PowerDir.GetPowerDirInfo");
+            checkType(output[1], "PowerDir.GetPowerDirInfo");
             string rootDir = getRootDir();
             Assert.IsNotNull(output);
             Assert.IsTrue(output.Count >= 1);
@@ -263,7 +283,7 @@ namespace PowerDir.Tests
             {
                 var output = execute(createCmdLet().AddParameter("Path", $"~/{dirName}"));
                 Assert.IsNotNull(output.First((dynamic o) => o.Name == filename));
-                Assert.IsTrue(output.Count == 1);
+                Assert.IsTrue(output.Count == 2);
             }
             finally
             {
@@ -276,7 +296,7 @@ namespace PowerDir.Tests
         public void TestNoColor()
         {
             var output = execute(createCmdLet().AddParameter("-NoColor", null));
-            checkType(output[0], "PowerDir.GetPowerDirInfo");
+            checkType(output[1], "PowerDir.GetPowerDirInfo");
             Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename));
         }
 
@@ -293,9 +313,9 @@ namespace PowerDir.Tests
             try
             {
                 var output = execute(createCmdLet().AddParameter("-Recursive", null).AddParameter("Path", filename));
-                checkType(output[0], "PowerDir.GetPowerDirInfo");
+                checkType(output[1], "PowerDir.GetPowerDirInfo");
                 var result = output.First((dynamic o) => o.Name == filename);
-                Assert.IsTrue(output.Count == 1);
+                Assert.IsTrue(output.Count == 2);
                 Assert.IsNotNull(result);
                 var expResult = Path.Combine(dirName, filename);
                 Assert.IsTrue(result.RelativeName == expResult);

@@ -25,5 +25,22 @@ namespace PowerDir.themes
             READONLY_FILE,
             ORIGINAL,
         }
+
+        const string PATHEXT = "PATHEXT";
+
+        /// <summary>
+        /// Process all fields and return a colorized GetPowerDirInfo object
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public GetPowerDirInfo colorize(GetPowerDirInfo info);
+
+        /// <summary>
+        /// process RelativeName and return it colorized
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public string colorizeProperty(GetPowerDirInfo info, string str);
     }
 }

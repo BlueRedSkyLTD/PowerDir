@@ -13,9 +13,9 @@ namespace PowerDir
     /// </summary>
     sealed public class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
     {
+        // TODO: This should be in a util class static method instead? 
         private const string _fmt_size = "{0,6}{1,1}";
         private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
-
 
         // TODO: evaluate to further elabore on link attribute
         // ref: http://www.flexhex.com/docs/articles/hard-links.phtml#hardlinks
@@ -33,7 +33,7 @@ namespace PowerDir
         /// <summary>
         /// 
         /// </summary>
-        public long size { get; }
+        public long Size { get; }
         /// <summary>
         /// 
         /// </summary>
@@ -90,10 +90,11 @@ namespace PowerDir
         /// 
         /// </summary>
         public string FullName { get; }
+
         /// <summary>
         /// 
         /// </summary>
-        public string RelativeName { get; }
+        public string RelativeName { get; internal set; }
 
         /// <summary>
         /// 
@@ -124,7 +125,7 @@ namespace PowerDir
             Compressed = info.Attributes.HasFlag(FileAttributes.Compressed);
             Encrypted = info.Attributes.HasFlag(FileAttributes.Encrypted);
 
-            size = Directory? 0 : ((FileInfo) info).Length; // not available for directory
+            Size = Directory? 0 : ((FileInfo) info).Length; // not available for directory
 
             CreationTime = info.CreationTime;
             LastAccessTime = info.LastAccessTime;
@@ -165,7 +166,7 @@ namespace PowerDir
                 return String.Format(_fmt_size, "-", "");
 
             int exp = 0;
-            decimal _size = (decimal)size; // double could not contain a long (int64)
+            decimal _size = (decimal)Size; // double could not contain a long (int64)
             while (_size >= 1024)
             {
                 _size /= 1024;
@@ -194,7 +195,7 @@ namespace PowerDir
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as GetPowerDirInfo);
         }
