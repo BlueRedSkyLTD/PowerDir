@@ -45,7 +45,7 @@ namespace PowerDir.themes
             return info;
         }
 
-        public string colorizeRelativeName(GetPowerDirInfo info)
+        public string colorizeProperty(GetPowerDirInfo info, string str)
         {
             int fg_col = 0;
             int bg_col = 0;
@@ -123,7 +123,7 @@ namespace PowerDir.themes
                 bg_col += 0x000000;
             }
 
-            return setColor(fg_col,bg_col) + info.RelativeName + RESET;
+            return setColor(fg_col,bg_col) + str + RESET;
         }
     }
 }

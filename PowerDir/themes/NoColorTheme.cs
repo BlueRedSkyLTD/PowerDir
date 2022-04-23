@@ -13,9 +13,9 @@ namespace PowerDir.themes
             return info;
         }
 
-        public string colorizeRelativeName(GetPowerDirInfo info)
+        public string colorizeProperty(GetPowerDirInfo info, string str)
         {
-            return info.RelativeName;
+            return str;
         }
     }
 }

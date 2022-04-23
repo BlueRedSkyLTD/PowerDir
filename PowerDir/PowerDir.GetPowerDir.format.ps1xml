@@ -33,7 +33,8 @@
                 <PropertyName>Attr</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <!--<PropertyName>RelativeName</PropertyName>-->
+                <PropertyName>RelativeName</PropertyName>
+                <!--
                 <ScriptBlock>
                   switch($_.Extension)
                   {
@@ -44,6 +45,7 @@
                   $e = [char]27
                   "$e[${c}m$($_.RelativeName)${e}[0m"
                 </ScriptBlock>
+                -->
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>NormalizedSize</PropertyName>

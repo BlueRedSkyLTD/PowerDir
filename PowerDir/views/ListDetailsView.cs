@@ -51,7 +51,7 @@ namespace PowerDir.views
             StringBuilder sb = new StringBuilder();
             sb.Append(result.Attr)
                 .Append(" ")
-                .Append(names(theme.colorizeRelativeName(result)))
+                .Append(theme.colorizeProperty(result, names(result.RelativeName)))
                 .Append(" ")
                 .Append(result.NormalizedSize)
                 .Append(" ")

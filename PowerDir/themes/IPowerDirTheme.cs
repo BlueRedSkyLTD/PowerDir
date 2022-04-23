@@ -37,7 +37,8 @@ namespace PowerDir.themes
         /// process RelativeName and return it colorized
         /// </summary>
         /// <param name="info"></param>
+        /// <param name="str"></param>
         /// <returns></returns>
-        public string colorizeRelativeName(GetPowerDirInfo info);
+        public string colorizeProperty(GetPowerDirInfo info, string str);
     }
 }

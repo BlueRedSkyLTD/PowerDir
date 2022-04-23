@@ -14,6 +14,18 @@ namespace PowerDir.themes
         private readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD", ".PS1" };
         private readonly HashSet<string> _extensions;
 
+
+        // TODO refactor / restrucutre later on
+        public static string QueryDevice()
+        {
+            return $"{ESC}[0c";
+        }
+
+        public static string ResponseDevice()
+        {
+            return $"{ESC}[?1;0c";
+        }
+
         enum KeyColorTheme
         {
             DIRECTORY = 0,
@@ -95,10 +107,12 @@ namespace PowerDir.themes
 
         public GetPowerDirInfo colorize(GetPowerDirInfo info)
         {
+            // TOOD should overwrite RelativeName here
+            info.setRelativeName(colorizeProperty(info, info.RelativeName));
             return info;
         }
 
-        public string colorizeRelativeName(GetPowerDirInfo info)
+        public string colorizeProperty(GetPowerDirInfo info, string str)
         {
             ColorThemeItem c;
 
@@ -145,7 +159,7 @@ namespace PowerDir.themes
                 c = _colorTheme[KeyColorTheme.FILE];
             }
 
-            return setColor(c) + info.RelativeName + RESET;
+            return setColor(c) + str + RESET;
         }
     }
 }

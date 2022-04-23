@@ -7,6 +7,7 @@ using PowerDir.themes;
 namespace PowerDir
 {
     /// <summary>
+    /// TODO: Pipeline inputs!
     /// <para type="synopsis">Get-PowerDir an alternate Get-ChildItem.</para>
     /// <para type="description">Get-PowerDir is used to display files and directories</para>
     /// <para type="description">search for them in a user-friendly way, alsosupporting colors.</para>
@@ -157,6 +158,32 @@ namespace PowerDir
             }
         }
 
+        private bool supportEscapeCodes()
+        {
+            try
+            {
+                string expectedResponse = AnsiEscapeCodesTheme.ResponseDevice();
+                int i = 0;
+                WriteObject(AnsiEscapeCodesTheme.QueryDevice());
+                while (Host.UI.RawUI.KeyAvailable)
+                {
+                    //keys.Add(Host.UI.RawUI.ReadKey());
+                    var key = Host.UI.RawUI.ReadKey();
+                    if (expectedResponse[i] != key.Character)
+                        break;
+
+                    i++;
+                    if (i >= expectedResponse.Length)
+                        return true;
+                }
+            } catch(HostException e)
+            {
+                WriteError(e.ErrorRecord);
+            }
+
+            return false;
+        }
+
         private void processPath()
         {
             WriteDebug($"[START] Path = {Path} --- basePath = {basePath}");
@@ -209,12 +236,21 @@ namespace PowerDir
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
+            // TODO check Color support by query Escape codes ?
+            checkWidthSupport();
+            bool supportEscCode = supportEscapeCodes();
+            WriteDebug($"Escape codes support: {(supportEscCode ? "y" : "n")}");
+
+            // no escape codes support, no color support
+            if (!supportEscCode)
+                _noColor = true;
+
             if (_noColor)
                 _theme = new NoColorTheme();
             else
                 _theme = new AnsiEscapeCodesTheme();
             
-            checkWidthSupport();
+            
 
             WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {_recursive}");

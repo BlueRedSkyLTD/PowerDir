@@ -17,7 +17,7 @@ namespace PowerDir.views
 
         public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
         {
-            _writeObject(theme.colorizeRelativeName(result));
+            _writeObject(theme.colorizeProperty(result, result.RelativeName));
         }
     }
 }
