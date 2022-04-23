@@ -6,43 +6,35 @@ using System.Threading.Tasks;
 
 namespace PowerDir.themes
 {
-    internal class AnsiEscapeCodesTheme : IPowerDirTheme
+    using KeyColorTheme = IPowerDirTheme.KeyColorTheme;
+    //using ColorThemeItem = ColorThemeItem<Color>;
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "<Pending>")]
+    internal class AnsiEscapeCodesTheme : AbstractEscapeCodesTheme
     {
-        const char ESC = '\x1B';
-        const string RESET = "\x1B[0m";
+        ///  This instead of enum to avoid explicit casting or using Generics
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "<Pending>")]
+        //static class Color
+        //{
+        //    public const int Black = 0;
+        //    public const int DarkRed = 1;
+        //    public const int DargGreen = 2;
+        //    public const int DarkYellow = 3;
+        //    public const int DarkBlue = 4;
+        //    public const int DarkMagenta = 5;
+        //    public const int DarkCyan = 6;
+        //    public const int Gray = 7;
+        //    public const int DarkGray = 8;
+        //    public const int Red = 9;
+        //    public const int Green = 10;
+        //    public const int Yellow = 11;
+        //    public const int Blue = 12;
+        //    public const int Magenta = 13;
+        //    public const int Cyan = 14;
+        //    public const int White = 15;
+        //}
 
-        private readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD", ".PS1" };
-        private readonly HashSet<string> _extensions;
-
-
-        // TODO refactor / restrucutre later on
-        public static string QueryDevice()
-        {
-            return $"{ESC}[0c";
-        }
-
-        public static string ResponseDevice()
-        {
-            return $"{ESC}[?1;0c";
-        }
-
-        enum KeyColorTheme
-        {
-            DIRECTORY = 0,
-            FILE,
-            EXE,
-            LINK,
-            HIDDEN_DIR,
-            HIDDEN_FILE,
-            SYSTEM_DIR,
-            SYSTEM_FILE,
-            READONLY_DIR,
-            READONLY_FILE,
-            ORIGINAL,
-        }
-
-        enum Color
-        {
+        enum Color {
             Black = 0,
             DarkRed = 1,
             DargGreen = 2,
@@ -60,106 +52,69 @@ namespace PowerDir.themes
             Cyan = 14,
             White = 15,
         }
-        
-        struct ColorThemeItem
+
+        static readonly Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme = new()
         {
-            public Color Fg { get; }
-            public Color Bg { get; }
-
-
-            public ColorThemeItem(Color fg, Color bg)
-            {
-                Fg = fg;
-                Bg = bg;
-            }
-        }
-
-
-        readonly Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme = new()
-        {
-            { KeyColorTheme.DIRECTORY, new ColorThemeItem(Color.Blue, Color.Black) },
-            { KeyColorTheme.FILE, new ColorThemeItem(Color.Gray, Color.Black) },
-            { KeyColorTheme.EXE, new ColorThemeItem(Color.Green, Color.Black) },
-            { KeyColorTheme.LINK, new ColorThemeItem(Color.Cyan, Color.Black) },
-            { KeyColorTheme.HIDDEN_DIR, new ColorThemeItem(Color.White, Color.DarkMagenta) },
-            { KeyColorTheme.HIDDEN_FILE, new ColorThemeItem(Color.Gray, Color.DarkMagenta) },
-            { KeyColorTheme.SYSTEM_DIR, new ColorThemeItem(Color.White, Color.DarkYellow) },
-            { KeyColorTheme.SYSTEM_FILE, new ColorThemeItem(Color.Gray, Color.DarkYellow) },
-            { KeyColorTheme.READONLY_DIR, new ColorThemeItem(Color.White, Color.DarkRed) },
-            { KeyColorTheme.READONLY_FILE, new ColorThemeItem(Color.Gray, Color.DarkRed) },
+            { KeyColorTheme.DIRECTORY,     new ColorThemeItem((int) Color.Blue,  (int) Color.Black) },
+            { KeyColorTheme.FILE,          new ColorThemeItem((int) Color.Gray,  (int) Color.Black) },
+            { KeyColorTheme.EXE,           new ColorThemeItem((int) Color.Green, (int) Color.Black) },
+            { KeyColorTheme.LINK,          new ColorThemeItem((int) Color.Cyan,  (int) Color.Black) },
+            { KeyColorTheme.HIDDEN_DIR,    new ColorThemeItem((int) Color.White, (int) Color.DarkMagenta) },
+            { KeyColorTheme.HIDDEN_FILE,   new ColorThemeItem((int) Color.Gray,  (int) Color.DarkMagenta) },
+            { KeyColorTheme.SYSTEM_DIR,    new ColorThemeItem((int) Color.White, (int) Color.DarkYellow) },
+            { KeyColorTheme.SYSTEM_FILE,   new ColorThemeItem((int) Color.Gray,  (int) Color.DarkYellow) },
+            { KeyColorTheme.READONLY_DIR,  new ColorThemeItem((int) Color.White, (int) Color.DarkRed) },
+            { KeyColorTheme.READONLY_FILE, new ColorThemeItem((int) Color.Gray,  (int) Color.DarkRed) },
         };
 
-
-        public AnsiEscapeCodesTheme()
+        public override GetPowerDirInfo colorize(GetPowerDirInfo info)
         {
-            _extensions = new HashSet<string>(_default_extensions.ToList());
-        }
-
-        private string setColor(Color fg, Color bg)
-        {
-            return $"{ESC}[38;5;{(int)fg}m{ESC}[48;5;{(int)bg}m";
-        }
-
-        private string setColor(ColorThemeItem col)
-        {
-            return setColor(col.Fg, col.Bg);
-        }
-
-        public GetPowerDirInfo colorize(GetPowerDirInfo info)
-        {
-            // TOOD should overwrite RelativeName here
-            info.setRelativeName(colorizeProperty(info, info.RelativeName));
+            info.RelativeName = colorizeProperty(info, info.RelativeName);
             return info;
         }
 
-        public string colorizeProperty(GetPowerDirInfo info, string str)
+        public override string colorizeProperty(GetPowerDirInfo info, string str)
         {
-            ColorThemeItem c;
-
             if (info.Link)
             {
-                c = _colorTheme[KeyColorTheme.LINK];
+                return colorize(_colorTheme[KeyColorTheme.LINK], str);
             }
             else if (info.System)
             {
-                if (info.Directory)
-                    c = _colorTheme[KeyColorTheme.SYSTEM_DIR];
-                else
-                    c = _colorTheme[KeyColorTheme.SYSTEM_FILE];
-
+                return colorize(info.Directory ?
+                            _colorTheme[KeyColorTheme.SYSTEM_DIR] :
+                            _colorTheme[KeyColorTheme.SYSTEM_FILE],
+                        str);
             }
             else if (info.Hidden)
             {
-                if (info.Directory)
-                    c = _colorTheme[KeyColorTheme.HIDDEN_DIR];
-                else
-                    c = _colorTheme[KeyColorTheme.HIDDEN_FILE];
+                return colorize(info.Directory ?
+                            _colorTheme[KeyColorTheme.HIDDEN_DIR] :
+                            _colorTheme[KeyColorTheme.HIDDEN_FILE],
+                        str);
             }
             else if (info.ReadOnly)
             {
-                if (info.Directory)
-                    c = _colorTheme[KeyColorTheme.READONLY_DIR];
-                else
-                    c = _colorTheme[KeyColorTheme.READONLY_FILE];
+                return colorize(info.Directory ?
+                            _colorTheme[KeyColorTheme.READONLY_DIR] :
+                            _colorTheme[KeyColorTheme.READONLY_FILE],
+                        str);
             }
             else if (info.Directory)
             {
-                c = _colorTheme[KeyColorTheme.DIRECTORY];
+                return colorize(_colorTheme[KeyColorTheme.DIRECTORY], str);
             }
             // FILES Only from here
-            else if (
-                _extensions.Any((x) => x == info.Extension.ToUpper())
-                )
+            else if (_extensions.Any((x) =>
+                x.Equals(info.Extension, StringComparison.OrdinalIgnoreCase)))
             {
-                c = _colorTheme[KeyColorTheme.EXE];
+                return colorize(_colorTheme[KeyColorTheme.EXE], str);
             }
             else
             {
                 // generic FILE
-                c = _colorTheme[KeyColorTheme.FILE];
+                return colorize(_colorTheme[KeyColorTheme.FILE], str);
             }
-
-            return setColor(c) + str + RESET;
         }
     }
 }

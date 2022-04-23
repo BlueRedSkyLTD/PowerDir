@@ -90,11 +90,10 @@ namespace PowerDir
         /// </summary>
         public string FullName { get; }
 
-        private string _relativeName;
         /// <summary>
         /// 
         /// </summary>
-        public string RelativeName { get { return _relativeName; } }
+        public string RelativeName { get; internal set; }
 
         /// <summary>
         /// 
@@ -138,16 +137,11 @@ namespace PowerDir
 
             FullName = info.FullName;
 
-            setRelativeName(Path.GetRelativePath(basePath, FullName));
-            //RelativeName = Path.GetRelativePath(basePath, FullName);
+            RelativeName = Path.GetRelativePath(basePath, FullName);
             Attr = attributes();
             NormalizedSize = normalizeSize();
         }
 
-        internal void setRelativeName(string relativeName)
-        {
-            _relativeName = relativeName;
-        }
         private string attributes()
         {
 #pragma warning disable S3358 // Ternary operators should not be nested

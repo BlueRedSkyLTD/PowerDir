@@ -162,9 +162,9 @@ namespace PowerDir
         {
             try
             {
-                string expectedResponse = AnsiEscapeCodesTheme.ResponseDevice();
+                string expectedResponse = AbstractEscapeCodesTheme.ResponseDevice();
                 int i = 0;
-                WriteObject(AnsiEscapeCodesTheme.QueryDevice());
+                WriteObject(AbstractEscapeCodesTheme.QueryDevice());
                 
                 while (Host.UI.RawUI.KeyAvailable)
                 //while (Console.KeyAvailable)

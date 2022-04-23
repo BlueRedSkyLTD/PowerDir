@@ -26,6 +26,8 @@ namespace PowerDir.themes
             ORIGINAL,
         }
 
+        const string PATHEXT = "PATHEXT";
+
         /// <summary>
         /// Process all fields and return a colorized GetPowerDirInfo object
         /// </summary>
