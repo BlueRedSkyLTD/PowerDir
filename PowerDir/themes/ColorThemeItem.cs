@@ -28,7 +28,7 @@ namespace PowerDir.themes
         //    Bold = Italic = Underline = Inverse = false;
         //}
 
-        public ColorThemeItem(int fg, int bg, bool bold = false, bool dim=false, bool italic = false, bool underline = false, bool blink=false, bool inverse = false)
+        public ColorThemeItem(int fg, int bg, bool bold = false, bool dim = false, bool italic = false, bool underline = false, bool blink = false, bool inverse = false)
         {
             Fg = fg;
             Bg = bg;

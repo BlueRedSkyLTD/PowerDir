@@ -18,11 +18,11 @@ namespace PowerDir.themes
         abstract public string colorizeProperty(GetPowerDirInfo info, string str);
         abstract protected string setColor(int fg, int bg);
         abstract protected string setBold(bool bold);
-        //abstract protected string setDim(bool dim);
+        abstract protected string setDim(bool dim);
         abstract protected string setItalic(bool italic);
-        //abstract protected string setUnderline(bool underline);
+        abstract protected string setUnderline(bool underline);
         abstract protected string setBlink(bool blink);
-
+        abstract protected string setInverse(bool inverse);
 
         protected AbstractEscapeCodesTheme()
         {
@@ -46,8 +46,9 @@ namespace PowerDir.themes
 
         protected string colorize(ColorThemeItem col, string str)
         {
-            string s = setBold(col.Bold) + setItalic(col.Italic) + setBlink(col.Blink) + setColor(col) + str + RESET;
-            return s;
+            return setBold(col.Bold) + setDim(col.Dim) + setItalic(col.Italic)
+                + setUnderline(col.Underline) + setBlink(col.Blink) + setInverse(col.Inverse)
+                + setColor(col) + str + RESET;
         }
     }
 }

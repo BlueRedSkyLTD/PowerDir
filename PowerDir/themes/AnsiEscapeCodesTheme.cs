@@ -35,6 +35,7 @@ namespace PowerDir.themes
         //}
 
         enum Color {
+            Original = -1,
             Black = 0,
             DarkRed = 1,
             DargGreen = 2,
@@ -55,10 +56,10 @@ namespace PowerDir.themes
 
         static readonly Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme = new()
         {
-            { KeyColorTheme.DIRECTORY,     new ColorThemeItem((int) Color.Blue,  (int) Color.Black) },
-            { KeyColorTheme.FILE,          new ColorThemeItem((int) Color.Gray,  (int) Color.Black) },
-            { KeyColorTheme.EXE,           new ColorThemeItem((int) Color.Green, (int) Color.Black) },
-            { KeyColorTheme.LINK,          new ColorThemeItem((int) Color.Cyan,  (int) Color.Black) },
+            { KeyColorTheme.DIRECTORY,     new ColorThemeItem((int) Color.Blue,  (int) Color.Original) },
+            { KeyColorTheme.FILE,          new ColorThemeItem((int) Color.Gray,  (int) Color.Original) },
+            { KeyColorTheme.EXE,           new ColorThemeItem((int) Color.Green, (int) Color.Original, bold:true) },
+            { KeyColorTheme.LINK,          new ColorThemeItem((int) Color.Cyan,  (int) Color.Original) },
             { KeyColorTheme.HIDDEN_DIR,    new ColorThemeItem((int) Color.White, (int) Color.DarkMagenta) },
             { KeyColorTheme.HIDDEN_FILE,   new ColorThemeItem((int) Color.Gray,  (int) Color.DarkMagenta) },
             { KeyColorTheme.SYSTEM_DIR,    new ColorThemeItem((int) Color.White, (int) Color.DarkYellow) },
@@ -121,19 +122,40 @@ namespace PowerDir.themes
         {
             return bold ? $"{ESC}[1m" : "";
         }
+        protected override string setDim(bool dim)
+        {
+            return dim ? $"{ESC}[2m" : "";
+        }
 
         protected override string setItalic(bool italic)
         {
             return italic ? $"{ESC}[3m" : "";
         }
 
+        protected override string setUnderline(bool underline)
+        {
+            return underline ? $"{ESC}[4m" : "";
+        }
+
         protected override string setBlink(bool blink)
         {
             return blink ? $"{ESC}[5m" : "";
         }
+        
+        protected override string setInverse(bool inverse)
+        {
+            return inverse ? $"{ESC}[7m" : "";
+        }
+        
         protected override string setColor(int fg, int bg)
         {
-            return $"{ESC}[38;5;{fg}m{ESC}[48;5;{bg}m";
+            string s = "";
+            if (fg != -1)
+                s += $"{ESC}[38;5;{fg}m";
+            if (bg != -1)
+                s += $"{ESC}[48;5;{bg}m";
+
+            return s;
         }
     }
 }
