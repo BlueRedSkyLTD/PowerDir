@@ -25,6 +25,11 @@ namespace PowerDir.themes
             );
         }
 
+        private int rgbToHex(byte r, byte g, byte b)
+        {
+            return (r << 16) + (g << 8) + b;
+        }
+
         enum Color
         {
             Original = -1,
@@ -67,18 +72,26 @@ namespace PowerDir.themes
             else if (c2 == -1)
                 return c1;
             else
-                return (c1 + c2) / 2;
+            {
+                //return (c1 & c2);
+
+                var (r1, g1, b1) = hexToRgb(c1);
+                var (r2, g2, b2) = hexToRgb(c2);
+                //return rgbToHex((byte)(r1 + r2 / 2), (byte)(g1 + g2 / 2), (byte)(b1 + b2 / 2));
+                return rgbToHex((byte)(r1 & r2), (byte)(g1 & g2), (byte)(b1 & b2));
+            }
         }
+
         private ColorThemeItem mixColors(ColorThemeItem c1, ColorThemeItem c2)
         {
             return new ColorThemeItem(
                  mixSingleColor(c1.Fg, c2.Fg), mixSingleColor(c1.Bg, c2.Bg),
-                c1.Bold || c2.Bold,
-                c1.Dim || c2.Dim,
-                c1.Italic || c2.Italic,
-                c1.Underline || c2.Underline,
-                c1.Blink || c2.Blink,
-                c1.Inverse || c2.Inverse
+                c1.Bold ^ c2.Bold,
+                c1.Dim ^ c2.Dim,
+                c1.Italic ^ c2.Italic,
+                c1.Underline ^ c2.Underline,
+                c1.Blink ^ c2.Blink,
+                c1.Inverse ^ c2.Inverse
             );
         }
 
