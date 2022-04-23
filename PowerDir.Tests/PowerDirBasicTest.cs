@@ -133,6 +133,14 @@ namespace PowerDir.Tests
         #endregion helpers
 
         [TestMethod]
+        public void TestEscapeCodeQueryDevice()
+        {
+            var output = execute(createCmdLet());
+            checkType(output[0], "System.String");
+            Assert.IsNotNull(output.First((dynamic s) => s == "\x1B[0c"));
+        }
+
+        [TestMethod]
         public void TestDefaultInvoke()
         {
             var output = execute(createCmdLet());

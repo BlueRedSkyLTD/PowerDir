@@ -165,11 +165,14 @@ namespace PowerDir
                 string expectedResponse = AnsiEscapeCodesTheme.ResponseDevice();
                 int i = 0;
                 WriteObject(AnsiEscapeCodesTheme.QueryDevice());
+                
                 while (Host.UI.RawUI.KeyAvailable)
+                //while (Console.KeyAvailable)
                 {
-                    //keys.Add(Host.UI.RawUI.ReadKey());
                     var key = Host.UI.RawUI.ReadKey();
+                    //var key = Console.ReadKey();
                     if (expectedResponse[i] != key.Character)
+                    //if (expectedResponse[i] != key.KeyChar)
                         break;
 
                     i++;
@@ -249,8 +252,6 @@ namespace PowerDir
                 _theme = new NoColorTheme();
             else
                 _theme = new AnsiEscapeCodesTheme();
-            
-            
 
             WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {_recursive}");
