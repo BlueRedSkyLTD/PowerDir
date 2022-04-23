@@ -4,6 +4,6 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>WT</ActiveDebugProfile>
+    <ActiveDebugProfile>Generate Help</ActiveDebugProfile>
   </PropertyGroup>
 </Project>

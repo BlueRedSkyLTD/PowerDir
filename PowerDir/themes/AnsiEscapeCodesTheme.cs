@@ -68,14 +68,6 @@ namespace PowerDir.themes
             { KeyColorTheme.READONLY_FILE, new ColorThemeItem((int) Color.Gray,  (int) Color.DarkRed) },
         };
 
-        public override GetPowerDirInfo colorize(GetPowerDirInfo info)
-        {
-            
-            info.RelativeName = colorizeProperty(info, info.RelativeName);
-            // TODO Size colorized?
-            return info;
-        }
-
         public override string colorizeProperty(GetPowerDirInfo info, string str)
         {
             if (info.Link)
@@ -120,35 +112,6 @@ namespace PowerDir.themes
             }
         }
 
-        protected override string setBold(bool bold)
-        {
-            return bold ? $"{ESC}[1m" : "";
-        }
-        protected override string setDim(bool dim)
-        {
-            return dim ? $"{ESC}[2m" : "";
-        }
-
-        protected override string setItalic(bool italic)
-        {
-            return italic ? $"{ESC}[3m" : "";
-        }
-
-        protected override string setUnderline(bool underline)
-        {
-            return underline ? $"{ESC}[4m" : "";
-        }
-
-        protected override string setBlink(bool blink)
-        {
-            return blink ? $"{ESC}[5m" : "";
-        }
-        
-        protected override string setInverse(bool inverse)
-        {
-            return inverse ? $"{ESC}[7m" : "";
-        }
-        
         protected override string setColor(int fg, int bg)
         {
             string s = "";

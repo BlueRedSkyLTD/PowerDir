@@ -222,7 +222,9 @@ namespace PowerDir
 
             WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
         }
-
+        /// <summary>
+        ///
+        /// </summary>
         protected override void BeginProcessing()
         {
             WriteDebug($"Host Name = {Host.Name}");
@@ -240,7 +242,8 @@ namespace PowerDir
             if (_noColor)
                 _theme = new NoColorTheme();
             else
-                _theme = new AnsiEscapeCodesTheme();
+                //_theme = new AnsiEscapeCodesTheme();
+                _theme = new EscapeCodesTheme();
 
             WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {_recursive}");

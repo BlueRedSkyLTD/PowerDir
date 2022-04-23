@@ -14,15 +14,44 @@ namespace PowerDir.themes
         protected readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD", ".PS1" };
         protected readonly HashSet<string> _extensions;
 
-        abstract public GetPowerDirInfo colorize(GetPowerDirInfo info);
+        public GetPowerDirInfo colorize(GetPowerDirInfo info)
+        {
+            info.RelativeName = colorizeProperty(info, info.RelativeName);
+            // TODO Size colorized?
+            return info;
+        }
+      
         abstract public string colorizeProperty(GetPowerDirInfo info, string str);
         abstract protected string setColor(int fg, int bg);
-        abstract protected string setBold(bool bold);
-        abstract protected string setDim(bool dim);
-        abstract protected string setItalic(bool italic);
-        abstract protected string setUnderline(bool underline);
-        abstract protected string setBlink(bool blink);
-        abstract protected string setInverse(bool inverse);
+
+        protected string setBold(bool bold)
+        {
+            return bold ? $"{ESC}[1m" : "";
+        }
+        protected string setDim(bool dim)
+        {
+            return dim ? $"{ESC}[2m" : "";
+        }
+
+        protected string setItalic(bool italic)
+        {
+            return italic ? $"{ESC}[3m" : "";
+        }
+
+        protected string setUnderline(bool underline)
+        {
+            return underline ? $"{ESC}[4m" : "";
+        }
+
+        protected string setBlink(bool blink)
+        {
+            return blink ? $"{ESC}[5m" : "";
+        }
+
+        protected string setInverse(bool inverse)
+        {
+            return inverse ? $"{ESC}[7m" : "";
+        }
 
         protected AbstractEscapeCodesTheme()
         {
