@@ -141,11 +141,9 @@ namespace PowerDir
 
         // TODO: get-power-dir attributes, datetime, size, etc..
 
-        private IPowerDirTheme _theme = new NoColorTheme();
+        private IPowerDirTheme? _theme;
         private IView? view;
 
-        // TODO: this can be merged in checkColorSupport method
-        //       as if there is no color there won't be no with neither i guess... 
         private void checkWidthSupport()
         {
             try
@@ -167,12 +165,9 @@ namespace PowerDir
                 WriteObject(AbstractEscapeCodesTheme.QueryDevice());
                 
                 while (Host.UI.RawUI.KeyAvailable)
-                //while (Console.KeyAvailable)
                 {
                     var key = Host.UI.RawUI.ReadKey();
-                    //var key = Console.ReadKey();
                     if (expectedResponse[i] != key.Character)
-                    //if (expectedResponse[i] != key.KeyChar)
                         break;
 
                     i++;
@@ -230,16 +225,10 @@ namespace PowerDir
 
         protected override void BeginProcessing()
         {
-            //write("Power", 0xFF0000, 0x00FFFF);
-            //write("Dir", 0x00FF00, 0xFF00FF);
-            //write("terminal color test", 0x0000FF, 0xFFFF00);
-            //writeLine();
-
             WriteDebug($"Host Name = {Host.Name}");
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
-            // TODO check Color support by query Escape codes ?
             checkWidthSupport();
             bool supportEscCode = supportEscapeCodes();
             WriteDebug($"Escape codes support: {(supportEscCode ? "y" : "n")}");
@@ -305,7 +294,7 @@ namespace PowerDir
                         new DirectoryInfo(fileSys) :
                         new FileInfo(fileSys);
 
-                    view?.displayResult(new GetPowerDirInfo(info, basePath), _theme);
+                    view?.displayResult(new GetPowerDirInfo(info, basePath), _theme!);
                     if (_stop)
                         return;
                 }
@@ -315,7 +304,7 @@ namespace PowerDir
                 foreach (string dir in Directory.EnumerateDirectories(basePath, Path, enumerationOptions))
                 {
                     var dirInfo = new DirectoryInfo(dir);
-                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath), _theme);
+                    view?.displayResult(new GetPowerDirInfo(dirInfo, basePath), _theme!);
                     if (_stop)
                         return;
                 }
@@ -323,7 +312,7 @@ namespace PowerDir
                 foreach (string file in Directory.EnumerateFiles(basePath, Path, enumerationOptions))
                 {
                     var fileInfo = new FileInfo(file);
-                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath), _theme);
+                    view?.displayResult(new GetPowerDirInfo(fileInfo, basePath), _theme!);
                     if (_stop)
                         return;
                 }

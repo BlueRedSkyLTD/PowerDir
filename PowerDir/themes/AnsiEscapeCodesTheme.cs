@@ -70,7 +70,9 @@ namespace PowerDir.themes
 
         public override GetPowerDirInfo colorize(GetPowerDirInfo info)
         {
+            
             info.RelativeName = colorizeProperty(info, info.RelativeName);
+            // TODO Size colorized?
             return info;
         }
 

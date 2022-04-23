@@ -13,6 +13,7 @@ namespace PowerDir
     /// </summary>
     sealed public class GetPowerDirInfo : IEquatable<GetPowerDirInfo>
     {
+        // TODO: This should be in a util class static method instead? 
         private const string _fmt_size = "{0,6}{1,1}";
         private readonly string[] _suffixes = { "", "K", "M", "G", "T", "P" };
 

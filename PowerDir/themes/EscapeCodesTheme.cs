@@ -6,19 +6,9 @@ using System.Threading.Tasks;
 
 namespace PowerDir.themes
 {
-    internal class EscapeCodesTheme : IPowerDirTheme
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S927:Parameter names should match base declaration and other partial definitions", Justification = "<Pending>")]
+    internal class EscapeCodesTheme : AbstractEscapeCodesTheme
     {
-        const char ESC = '\x1B';
-        const string RESET = "\x1B[0m";
-
-        private readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD", ".PS1" };
-        private readonly HashSet<string> _extensions;
-
-        public EscapeCodesTheme()
-        {
-            _extensions = new HashSet<string>(_default_extensions.ToList());
-        }
-
         /// <summary>
         /// convert Hex color format to RGB
         /// </summary>
@@ -33,97 +23,56 @@ namespace PowerDir.themes
             );
         }
 
-        private string setColor(int fg_col, int bg_col)
+        public override GetPowerDirInfo colorize(GetPowerDirInfo info)
         {
-            var (fr, fg, fb) = hexToRgb(fg_col);
-            var (br, bg, bb) = hexToRgb(bg_col);
-            return $"{ESC}[38;2{fr};{fg};{fb}m{ESC}[48;2;{br};{bg};{bb}m";
+            // TODO
+            throw new NotImplementedException();
         }
 
-        public GetPowerDirInfo colorize(GetPowerDirInfo info)
+        public override string colorizeProperty(GetPowerDirInfo info, string str)
         {
-            return info;
+            // TODO
+            throw new NotImplementedException();
         }
 
-        public string colorizeProperty(GetPowerDirInfo info, string str)
+        protected override string setColor(int fg_col, int bg_col)
         {
-            int fg_col = 0;
-            int bg_col = 0;
-            if (info.Link)
-            {
-                fg_col = 0xF0F0FF;
-                bg_col = 0;
-            }
-            else if (info.System)
-            {
-                if (info.Directory)
-                {
-                    //colorTheme[KeyColorTheme.SYSTEM_DIR] :
-                    fg_col = 0xFFFFFF;
-                    bg_col = 0x000000;
-                }
-                else
-                {
-                    //colorTheme[KeyColorTheme.SYSTEM_FILE];
-                    fg_col += 0x000000;
-                    bg_col += 0x000000;
-                }
+            // TODO
+            throw new NotImplementedException();
+            
+            //var (fr, fg, fb) = hexToRgb(fg_col);
+            //var (br, bg, bb) = hexToRgb(bg_col);
+            //return $"{ESC}[38;2{fr};{fg};{fb}m{ESC}[48;2;{br};{bg};{bb}m";
+        }
 
-            }
-            else if (info.Hidden)
-            {
-                if (info.Directory)
-                {
-                    //colorTheme[KeyColorTheme.HIDDEN_DIR] :
-                    fg_col += 0x000000;
-                    bg_col += 0x000000;
-                }
-                else
-                {
-                    //colorTheme[KeyColorTheme.HIDDEN_FILE];
-                    fg_col += 0x000000;
-                    bg_col += 0x000000;
-                }
-            }
-            else if (info.ReadOnly)
-            {
-                if (info.Directory)
-                {
-                    //colorTheme[KeyColorTheme.READONLY_DIR] :
-                    fg_col += 0x000000;
-                    bg_col += 0x000000;
-                }
-                else
-                {
-                    //colorTheme[KeyColorTheme.READONLY_FILE];
-                    fg_col += 0x000000;
-                    bg_col += 0x000000;
-                }
-            }
-            else if (info.Directory)
-            {
-                //return colorTheme[KeyColorTheme.DIRECTORY];
-                fg_col += 0x000000;
-                bg_col += 0x000000;
-            }
-            // FILES Only from here
-            else if (
-                _extensions.Any((x) => x == info.Extension.ToUpper())
-                )
-            {
-                //return colorTheme[KeyColorTheme.EXE];
-                fg_col += 0x000000;
-                bg_col += 0x000000;
-            }
-            else
-            {
-                // generic FILE
-                //return colorTheme[KeyColorTheme.FILE];
-                fg_col += 0x000000;
-                bg_col += 0x000000;
-            }
+        protected override string setBold(bool bold)
+        {
+            throw new NotImplementedException();
+        }
 
-            return setColor(fg_col,bg_col) + str + RESET;
+        protected override string setDim(bool dim)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string setItalic(bool italic)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string setUnderline(bool underline)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string setBlink(bool blink)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string setInverse(bool inverse)
+        {
+            throw new NotImplementedException();
         }
     }
 }
