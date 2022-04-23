@@ -22,7 +22,9 @@ namespace PowerDir.themes
         }
       
         abstract public string colorizeProperty(GetPowerDirInfo info, string str);
-        abstract protected string setColor(int fg, int bg);
+
+        abstract protected string getEscapeCodeFg(int fg);
+        abstract protected string getEscapeCodeBg(int bg);
 
         protected string setBold(bool bold)
         {
@@ -71,6 +73,11 @@ namespace PowerDir.themes
         protected string setColor(ColorThemeItem col)
         {
             return setColor(col.Fg, col.Bg);
+        }
+
+        protected string setColor(int fg, int bg)
+        {
+            return getEscapeCodeFg(fg) + getEscapeCodeBg(bg);
         }
 
         protected string colorize(ColorThemeItem col, string str)

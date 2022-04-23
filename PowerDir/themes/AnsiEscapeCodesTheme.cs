@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PowerDir.themes
 {
+    // TODO: this 256 colors not ansi, rename the class
+
+
     using KeyColorTheme = IPowerDirTheme.KeyColorTheme;
     //using ColorThemeItem = ColorThemeItem<Color>;
 
@@ -112,15 +115,15 @@ namespace PowerDir.themes
             }
         }
 
-        protected override string setColor(int fg, int bg)
+        protected override string getEscapeCodeFg(int fg)
         {
-            string s = "";
-            if (fg != -1)
-                s += $"{ESC}[38;5;{fg}m";
-            if (bg != -1)
-                s += $"{ESC}[48;5;{bg}m";
+            return fg == -1 ? "" : $"{ESC}[38;5;{fg}m";
 
-            return s;
+        }
+        protected override string getEscapeCodeBg(int bg)
+        {
+            return bg == -1 ? "" : $"{ESC}[48;5;{bg}m";
+
         }
     }
 }

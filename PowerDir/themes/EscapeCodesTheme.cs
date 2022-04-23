@@ -253,21 +253,20 @@ namespace PowerDir.themes
             return colorize(c, str);
         }
 
-        protected override string setColor(int fg, int bg)
+        protected override string getEscapeCodeFg(int fg)
         {
-            string s = "";
-            if (fg != -1)
-            {
-                var (r, g, b) = hexToRgb(fg);
-                s += $"{ESC}[38;2;{r};{g};{b}m";
-            }
-            if (bg != -1)
-            {
-                var (r, g, b) = hexToRgb(bg);
-                s+= $"{ESC}[48;2;{r};{g};{b}m";
-            }
+            if (fg == -1) return "";
 
-            return s;
+            var (r, g, b) = hexToRgb(fg);
+            return $"{ESC}[38;2;{r};{g};{b}m";
+
+        }
+        protected override string getEscapeCodeBg(int bg)
+        {
+            if (bg == -1) return "";
+
+            var (r, g, b) = hexToRgb(bg);
+            return $"{ESC}[48;2;{r};{g};{b}m";
         }
     }
 }
