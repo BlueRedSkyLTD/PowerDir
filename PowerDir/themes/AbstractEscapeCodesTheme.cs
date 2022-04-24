@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PowerDir.themes
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "<Pending>")]
     internal abstract class AbstractEscapeCodesTheme : IPowerDirTheme
     {
         protected const char ESC = '\x1B';
@@ -14,6 +15,9 @@ namespace PowerDir.themes
         protected readonly string[] _default_extensions = { ".EXE", ".COM", ".BAT", ".CMD", ".PS1" };
         protected readonly HashSet<string> _extensions;
 
+        private readonly StringBuilder _sb = new StringBuilder();
+        //private bool _carry = false;
+        
         public GetPowerDirInfo colorize(GetPowerDirInfo info)
         {
             info.RelativeName = colorizeProperty(info, info.RelativeName);
@@ -26,33 +30,62 @@ namespace PowerDir.themes
         abstract protected string getEscapeCodeFg(int fg);
         abstract protected string getEscapeCodeBg(int bg);
 
-        protected string setBold(bool bold)
+        //private void doCarry()
+        //{
+        //    //if (_carry)
+        //    //{
+        //        _sb.Append(';');
+        //        //_carry = false;
+        //    //}
+        //}
+
+        protected void setBold(bool bold)
         {
-            return bold ? $"{ESC}[1m" : "";
+            if (!bold)
+                return;
+            //doCarry();
+           _sb.Append('1');
+            //_carry = true;
         }
-        protected string setDim(bool dim)
+        protected void setDim(bool dim)
         {
-            return dim ? $"{ESC}[2m" : "";
+            if (!dim)
+                return;
+            //doCarry();
+            _sb.Append(";2");
+            //_carry = true;
         }
 
-        protected string setItalic(bool italic)
+        protected void setItalic(bool italic)
         {
-            return italic ? $"{ESC}[3m" : "";
+            if (!italic)
+                return;
+            //doCarry();
+            _sb.Append(";3");
         }
 
-        protected string setUnderline(bool underline)
+        protected void setUnderline(bool underline)
         {
-            return underline ? $"{ESC}[4m" : "";
+            if (!underline)
+                return;
+            //doCarry();
+            _sb.Append(";4");
         }
 
-        protected string setBlink(bool blink)
+        protected void setBlink(bool blink)
         {
-            return blink ? $"{ESC}[5m" : "";
+            if (!blink)
+                return;
+            //doCarry();
+            _sb.Append(";5");
         }
 
-        protected string setInverse(bool inverse)
+        protected void setInverse(bool inverse)
         {
-            return inverse ? $"{ESC}[7m" : "";
+            if (!inverse)
+                return;
+            //doCarry();
+            _sb.Append(";7");
         }
 
         protected AbstractEscapeCodesTheme()
@@ -70,21 +103,41 @@ namespace PowerDir.themes
             return $"{ESC}[?1;0c";
         }
 
-        protected string setColor(ColorThemeItem col)
+        private void setColor(ColorThemeItem col)
         {
-            return setColor(col.Fg, col.Bg);
+            setColor(col.Fg, col.Bg);
         }
 
-        protected string setColor(int fg, int bg)
+        private void setColor(int fg, int bg)
         {
-            return getEscapeCodeFg(fg) + getEscapeCodeBg(bg);
+            //doCarry();
+            _sb.Append(';')
+                .Append(getEscapeCodeFg(fg))
+                .Append(';')
+                .Append(getEscapeCodeBg(bg));
         }
 
         protected string colorize(ColorThemeItem col, string str)
         {
-            return setBold(col.Bold) + setDim(col.Dim) + setItalic(col.Italic)
-                + setUnderline(col.Underline) + setBlink(col.Blink) + setInverse(col.Inverse)
-                + setColor(col) + str + RESET;
+            //_carry = false;
+            _sb.Clear();
+            _sb.Append($"{ESC}[");
+            setBold(col.Bold);
+            setDim(col.Dim);
+            setItalic(col.Italic);
+            setUnderline(col.Underline);
+            setBlink(col.Blink);
+            setInverse(col.Inverse);
+            setColor(col);
+            _sb.Append('m')
+               .Append(str)
+               .Append(RESET);
+
+            return _sb.ToString();
+
+            //return $"{ESC}[" + setBold(col.Bold) + setDim(col.Dim) + setItalic(col.Italic)
+            //    + setUnderline(col.Underline) + setBlink(col.Blink) + setInverse(col.Inverse)
+            //    + setColor(col) + str + RESET;
         }
     }
 }

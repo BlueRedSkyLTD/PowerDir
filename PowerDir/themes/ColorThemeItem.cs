@@ -14,8 +14,8 @@ namespace PowerDir.themes
         public int Fg { get; }
         public int Bg { get; }
 
-        public bool Bold { get; }  // TODO: Bold is true by default
-        public bool Dim { get; }   // TODO: if not Bold is Dim
+        public bool Bold { get; }  // TODO: Bold is true by default, except 8/16 colors
+        public bool Dim { get; }   // TODO: if not Bold is Dim, except 8/16 colors
         public bool Italic { get; }
         public bool Underline { get; }
         public bool Blink { get; }

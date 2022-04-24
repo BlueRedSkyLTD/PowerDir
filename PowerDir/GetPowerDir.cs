@@ -242,8 +242,9 @@ namespace PowerDir
             if (_noColor)
                 _theme = new NoColorTheme();
             else
-                //_theme = new AnsiEscapeCodesTheme();
-                _theme = new EscapeCodesTheme();
+                //_theme = new EscapeCodesTheme256();
+                //_theme = new EscapeCodesTheme();
+                _theme = new EscapeCodesTheme16();
 
             WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {_recursive}");

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace PowerDir.themes
 {
     using KeyColorTheme = IPowerDirTheme.KeyColorTheme;
+    using Color = ColorRGB;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S927:Parameter names should match base declaration and other partial definitions", Justification = "<Pending>")]
     internal class EscapeCodesTheme : AbstractEscapeCodesTheme
@@ -28,27 +29,6 @@ namespace PowerDir.themes
         private int rgbToHex(byte r, byte g, byte b)
         {
             return (r << 16) + (g << 8) + b;
-        }
-
-        enum Color
-        {
-            Original = -1,
-            Black = 0,
-            DarkRed = 0x800000,
-            DargGreen = 0x008000,
-            DarkYellow = 0x808000,
-            DarkBlue = 0x000080,
-            DarkMagenta = 0x8000f0,
-            DarkCyan = 0x008080,
-            Gray = 0xf0f0f0,
-            DarkGray = 0x808080,
-            Red = 0xff0000,
-            Green = 0x00ff00,
-            Yellow = 0xffff00,
-            Blue = 0x0000ff,
-            Magenta = 0xff00ff,
-            Cyan = 0x00ffff,
-            White = 0xffffff,
         }
 
         static readonly Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme = new()
@@ -258,7 +238,7 @@ namespace PowerDir.themes
             if (fg == -1) return "";
 
             var (r, g, b) = hexToRgb(fg);
-            return $"{ESC}[38;2;{r};{g};{b}m";
+            return $"38;2;{r};{g};{b}";
 
         }
         protected override string getEscapeCodeBg(int bg)
@@ -266,7 +246,7 @@ namespace PowerDir.themes
             if (bg == -1) return "";
 
             var (r, g, b) = hexToRgb(bg);
-            return $"{ESC}[48;2;{r};{g};{b}m";
+            return $"48;2;{r};{g};{b}";
         }
     }
 }

@@ -6,57 +6,12 @@ using System.Threading.Tasks;
 
 namespace PowerDir.themes
 {
-    // TODO: this 256 colors not ansi, rename the class
-
-
     using KeyColorTheme = IPowerDirTheme.KeyColorTheme;
-    //using ColorThemeItem = ColorThemeItem<Color>;
+    using Color = Color256;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "<Pending>")]
-    internal class AnsiEscapeCodesTheme : AbstractEscapeCodesTheme
+    internal class EscapeCodesTheme256 : AbstractEscapeCodesTheme
     {
-        ///  This instead of enum to avoid explicit casting or using Generics
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "<Pending>")]
-        //static class Color
-        //{
-        //    public const int Black = 0;
-        //    public const int DarkRed = 1;
-        //    public const int DargGreen = 2;
-        //    public const int DarkYellow = 3;
-        //    public const int DarkBlue = 4;
-        //    public const int DarkMagenta = 5;
-        //    public const int DarkCyan = 6;
-        //    public const int Gray = 7;
-        //    public const int DarkGray = 8;
-        //    public const int Red = 9;
-        //    public const int Green = 10;
-        //    public const int Yellow = 11;
-        //    public const int Blue = 12;
-        //    public const int Magenta = 13;
-        //    public const int Cyan = 14;
-        //    public const int White = 15;
-        //}
-
-        enum Color {
-            Original = -1,
-            Black = 0,
-            DarkRed = 1,
-            DargGreen = 2,
-            DarkYellow = 3,
-            DarkBlue = 4,
-            DarkMagenta = 5,
-            DarkCyan = 6,
-            Gray = 7,
-            DarkGray = 8,
-            Red = 9,
-            Green = 10,
-            Yellow = 11,
-            Blue = 12,
-            Magenta = 13,
-            Cyan = 14,
-            White = 15,
-        }
-
         static readonly Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme = new()
         {
             { KeyColorTheme.DIRECTORY,     new ColorThemeItem((int) Color.Blue,  (int) Color.Original) },

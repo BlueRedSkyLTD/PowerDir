@@ -64,7 +64,7 @@ namespace PowerDir.Tests
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), input);
             FileInfo finfo = new(filePath);
             GetPowerDirInfo info = new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
-            lv.displayResult(info, new themes.AnsiEscapeCodesTheme());
+            lv.displayResult(info, new themes.EscapeCodesTheme256());
             Assert.IsTrue(sb.Length > 0);
 
             Assert.IsTrue(sb.ToString().Contains(input));
