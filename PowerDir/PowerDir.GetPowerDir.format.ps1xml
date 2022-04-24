@@ -2,7 +2,7 @@
 <Configuration>
   <ViewDefinitions>
     <View>
-      <Name>PowerDir.GetPowerDir</Name>
+      <Name>Table</Name>
       <ViewSelectedBy>
         <TypeName>PowerDir.GetPowerDirInfo</TypeName>
       </ViewSelectedBy>
@@ -57,6 +57,46 @@
           </TableRowEntry>
         </TableRowEntries>
       </TableControl>
+    </View>
+    <View>
+      <Name>List</Name>
+      <ViewSelectedBy>
+        <TypeName>PowerDir.GetPowerDirInfo</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <PropertyName>RelativeName</PropertyName>
+                <Label>Name</Label>
+              </ListItem>
+              <ListItem>
+                <Label>Size</Label>
+                <ScriptBlock>
+                  "{0}" -f ($_.NormalizedSize.Trim())
+                </ScriptBlock>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
+      <Name>Wide</Name>
+      <ViewSelectedBy>
+        <TypeName>PowerDir.GetPowerDirInfo</TypeName>
+      </ViewSelectedBy>
+      <WideControl>
+        <Autosize />
+        <WideEntries>
+          <WideEntry>
+            <WideItem>
+              <PropertyName>RelativeName</PropertyName>
+            </WideItem>
+          </WideEntry>
+        </WideEntries>
+      </WideControl>
     </View>
   </ViewDefinitions>
 </Configuration>
