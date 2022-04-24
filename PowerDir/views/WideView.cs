@@ -35,6 +35,7 @@ namespace PowerDir.views
             {
                 _writeObject(_sb.ToString());
                 current_column = 0;
+                _sb.Clear();
             }
         }
 
@@ -42,6 +43,7 @@ namespace PowerDir.views
         {
             if (current_column != 0)
                 _writeObject(_sb.ToString());
+            _sb.Clear();
         }
     }
 }

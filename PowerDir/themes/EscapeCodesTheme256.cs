@@ -72,12 +72,12 @@ namespace PowerDir.themes
 
         protected override string getEscapeCodeFg(int fg)
         {
-            return fg == -1 ? "" : $"{ESC}[38;5;{fg}m";
+            return fg == -1 ? "" : $"38;5;{fg}";
 
         }
         protected override string getEscapeCodeBg(int bg)
         {
-            return bg == -1 ? "" : $"{ESC}[48;5;{bg}m";
+            return bg == -1 ? "" : $"48;5;{bg}";
 
         }
     }

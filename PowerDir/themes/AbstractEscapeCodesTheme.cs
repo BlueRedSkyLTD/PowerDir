@@ -110,11 +110,18 @@ namespace PowerDir.themes
 
         private void setColor(int fg, int bg)
         {
-            //doCarry();
-            _sb.Append(';')
-                .Append(getEscapeCodeFg(fg))
-                .Append(';')
-                .Append(getEscapeCodeBg(bg));
+            string sf = getEscapeCodeFg(fg);
+            string sb = getEscapeCodeBg(bg);
+            bool sfb = sf.Length > 0;
+            bool sbb = sb.Length > 0;
+
+            if (sfb)
+                _sb.Append(';').Append(sf);
+            if(sbb)
+                _sb.Append(';').Append(sb);
+
+            if(sfb || sbb)
+                _sb.Append('m');
         }
 
         protected string colorize(ColorThemeItem col, string str)
@@ -129,8 +136,7 @@ namespace PowerDir.themes
             setBlink(col.Blink);
             setInverse(col.Inverse);
             setColor(col);
-            _sb.Append('m')
-               .Append(str)
+            _sb.Append(str)
                .Append(RESET);
 
             return _sb.ToString();

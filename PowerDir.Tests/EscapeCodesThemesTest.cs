@@ -37,17 +37,12 @@ namespace PowerDir.Tests
             try
             {
                 finfo.Create().Close();
-                //finfo.Attributes = FileAttributes.ReadOnly;
-                //finfo.Attributes = FileAttributes.Hidden;
-                //finfo.Attributes = FileAttributes.Directory;
-                //finfo.Attributes = FileAttributes.System;
                 finfo.Attributes = fa;
 
                 return new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
             }
             finally
             {
-                //File.Delete(filePath);
                 finfo.Attributes = FileAttributes.Normal;
                 finfo.Delete();
             }
@@ -61,7 +56,7 @@ namespace PowerDir.Tests
         }
 
         [DataTestMethod]
-        [DataRow(FileAttributes.Normal)]
+        [DataRow(FileAttributes.Normal)]  // this should not return any escape code ?
         [DataRow(FileAttributes.Directory)]
         //[DataRow(FileAttributes.EXE)] // to be done EXE
         //[DataRow(FileAttributes.Link)] // to be done Link

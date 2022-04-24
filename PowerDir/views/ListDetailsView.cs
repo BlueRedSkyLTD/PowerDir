@@ -26,7 +26,7 @@ namespace PowerDir.views
         ) : base(name_max_length, writeObject)
         {
             this.eDateTimes = eDateTimes;
-            _sb = new StringBuilder(" -", width);
+            _sb = new StringBuilder(width);
         }
 
 #pragma warning disable S1172 // Unused method parameters should be removed
@@ -48,8 +48,8 @@ namespace PowerDir.views
 
         public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(result.Attr)
+            _sb.Clear();
+            _sb.Append(result.Attr)
                 .Append(" ")
                 .Append(theme.colorizeProperty(result, names(result.RelativeName)))
                 .Append(" ")
@@ -58,7 +58,7 @@ namespace PowerDir.views
                 .Append(dateTimes(result))
             ;
 
-            _writeObject(sb.ToString());
+            _writeObject(_sb.ToString());
         }
     }
 }

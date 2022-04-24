@@ -52,7 +52,7 @@ namespace PowerDir.Tests
         [DataRow("_power_dir_test.dir.very_long_dir_name/_power_dir_test.file")]
         [DataRow("../_power_dir_test.file")]
         [DataRow("../_power_dir_test.file")]
-        public void TestDisplayResultsAnsiColor(string input)
+        public void TestDisplayResultsColor16(string input)
         {
             // TODO check the color too?
             StringBuilder sb = new StringBuilder();
