@@ -10,7 +10,8 @@ namespace PowerDir.themes
     using Color = ColorRGB;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S927:Parameter names should match base declaration and other partial definitions", Justification = "<Pending>")]
-    internal class EscapeCodesTheme : AbstractEscapeCodesTheme
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class EscapeCodesThemeRGB : AbstractEscapeCodesTheme
     {
         /// <summary>
         /// convert Hex color format to RGB

@@ -243,7 +243,7 @@ namespace PowerDir
                 _theme = new NoColorTheme();
             else
                 //_theme = new EscapeCodesTheme256();
-                //_theme = new EscapeCodesTheme();
+                //_theme = new EscapeCodesThemeRGB();
                 _theme = new EscapeCodesTheme16();
 
             WriteDebug($"Width = {_width}");
