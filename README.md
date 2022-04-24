@@ -30,6 +30,13 @@ function dw() { Get-PowerDir -d w  @args }
 function  l() { Get-PowerDir -d l  @args }
 ```
 
+or if you prefer in a Powershell way
+```Powershell
+function dd() { Get-PowerDir @args | ft }
+function dw() { Get-PowerDir @args | fw }
+function  l() { Get-PowerDir @args | fl }
+```
+
 ## Install
 
 Install it from [Powershell Gallery](https://www.powershellgallery.com/packages/PowerDir.GetPowerDir)
@@ -43,13 +50,13 @@ ref: https://docs.microsoft.com/en-us/powershell/utility-modules/platyps/create-
 
 ## Feedback
 
-Open an issue on github or send a message in Powershell gallery
+Open an issue on GitHub or send a message in Powershell gallery
 
 ## Contribution
 
 ## RoadMap / Changelog
 
-- [x] v0.1.0: publishing test, basic functionalities almost complete
-- [x] v0.2.0: basic functionalities
-- [ ] v0.3.0: using escape codes
-- [ ] v0.4.0: globbing search / advanced search patterns
+- [x] v0.1: publishing test, basic functionalities almost complete
+- [x] v0.2: basic functionalities, themes
+- [x] v0.3: using escape codes
+- [ ] v0.4: globbing search / advanced search patterns
