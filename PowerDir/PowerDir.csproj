@@ -12,9 +12,13 @@
   <Description>PowerDir is a Powershell 7 Module as an alternative to Get-ChildItem.</Description>
   <GenerateDocumentationFile>True</GenerateDocumentationFile>
   <PackageReadmeFile>README.md</PackageReadmeFile>
-  <PackageTags>PowerShell, PowerShell7, Get-ChildItem, Color</PackageTags>
+  <PackageTags>PowerShell, PowerShell7, Get-ChildItem, Color, EscpeCodes, Windows-Terminal</PackageTags>
   <AssemblyName>$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\README.md">
@@ -39,20 +43,23 @@
     
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
-      <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1;&#xD;&#xA;                     $(ProjectDir)PowerDir.GetPowerDirInfo.ps1xml;&#xD;&#xA;                     $(ProjectDir)PowerDir.GetPowerDir.format.ps1xml;" />
+      <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1;
+                     $(ProjectDir)PowerDir.GetPowerDirInfo.ps1xml;
+                     $(ProjectDir)PowerDir.GetPowerDir.format.ps1xml;" />
     </ItemGroup>
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" />
   </Target>
 
   <Target Name="PostReleaseBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
     <ItemGroup>
-      <MySourceFiles Include="$(ProjectDir)doc/Get-PowerDir.md;&#xD;&#xA;        $(ProjectDir)PowerDir.GetPowerDir.psd1;&#xD;&#xA;        $(ProjectDir)PowerDir.GetPowerDirInfo.ps1xml;&#xD;&#xA;        $(ProjectDir)PowerDir.GetPowerDir.format.ps1xml;&#xD;&#xA;        $(ProjectDir)PowerDir.dll-help.xml;&#xD;&#xA;        $(OutDir)PowerDir.dll;" />
+      <MySourceFiles Include="$(ProjectDir)doc/Get-PowerDir.md;
+        $(ProjectDir)PowerDir.GetPowerDir.psd1;
+        $(ProjectDir)PowerDir.GetPowerDirInfo.ps1xml;
+        $(ProjectDir)PowerDir.GetPowerDir.format.ps1xml;
+        $(ProjectDir)PowerDir.dll-help.xml;
+        $(OutDir)PowerDir.dll;" />
     </ItemGroup>
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)$(MSBuildProjectName).GetPowerDir" />
   </Target>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="PowerDir.Tests" Condition="'$(Configuration)' == 'Debug'" />
-  </ItemGroup>
 
 </Project>

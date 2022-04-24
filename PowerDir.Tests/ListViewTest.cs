@@ -11,7 +11,6 @@ using PowerDir.themes;
 
 namespace PowerDir.Tests
 {
-#if DEBUG
     [TestClass]
     public class ListViewTest
     {
@@ -72,5 +71,4 @@ namespace PowerDir.Tests
             Assert.IsTrue(sb.ToString().StartsWith("\x1B[")); // a generic ESCape Code
         }
     }
-#endif
 }

@@ -13,7 +13,6 @@ namespace PowerDir.Tests
 {
     // TODO use PrivateObject and remove reflection in msbuild
     
-#if DEBUG
     [TestClass]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "<Pending>")]
     public class AbstractViewTest
@@ -68,5 +67,4 @@ namespace PowerDir.Tests
             Assert.AreEqual(expResult, result.Trim());
         }
     }
-#endif
 }
