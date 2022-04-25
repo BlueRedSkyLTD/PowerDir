@@ -135,8 +135,6 @@ namespace PowerDir.Tests
                 Assert.IsTrue(finfo.Exists);
                 finfo.Attributes = fa;
 
-                var f = File.CreateSymbolicLink(linkTarget, filePath);
-                //Assert.IsTrue(f.Exists);
                 fi.CreateAsSymbolicLink(filePath);
                 Assert.IsTrue(fi.Exists);
 
