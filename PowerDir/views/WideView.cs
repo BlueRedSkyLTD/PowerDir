@@ -26,7 +26,6 @@ namespace PowerDir.views
 
         public override void displayResult(GetPowerDirInfo result, IPowerDirTheme theme)
         {
-            // TODO the names is processing ESCAPE CODES too....
             _sb.Append(theme.colorizeProperty(result, names(result.RelativeName)))
                 .Append(" ");
 

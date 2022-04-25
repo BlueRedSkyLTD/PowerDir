@@ -36,8 +36,8 @@ namespace PowerDir.views
 
         internal string names(string relativeName)
         {
-            if (NameMaxLength == -1)
-                return relativeName;
+            //if (NameMaxLength == -1)
+            //    return relativeName;
             if (relativeName.Length > NameMaxLength)
                 return relativeName.Substring(0, NameMaxLength - 3) + "...";
 

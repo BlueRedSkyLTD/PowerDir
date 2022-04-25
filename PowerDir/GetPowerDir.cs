@@ -1,5 +1,6 @@
 ﻿using System.Management.Automation;
 using System.Management.Automation.Host;
+using System;
 using System.Text;
 using PowerDir.views;
 using PowerDir.themes;
@@ -237,9 +238,9 @@ namespace PowerDir
 
             // no escape codes support, no color support
             if (!supportEscCode)
-                _noColor = true;
+                NoColor = true;
 
-            if (_noColor)
+            if (NoColor)
                 _theme = new NoColorTheme();
             else
                 //_theme = new EscapeCodesTheme256();
@@ -257,6 +258,10 @@ namespace PowerDir
             enumerationOptions.IgnoreInaccessible = true;
             enumerationOptions.MatchCasing = MatchCasing.PlatformDefault;
             enumerationOptions.AttributesToSkip = 0;
+
+            // UNICODE Example:
+            //var rune = new Rune(0x1F4BE);
+            //WriteObject(rune.ToString());
 
             // TODO
             //if (pagination)

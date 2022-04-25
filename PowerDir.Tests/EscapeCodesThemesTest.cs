@@ -29,22 +29,41 @@ namespace PowerDir.Tests
 
         private GetPowerDirInfo getPowerDirInfo(string input, FileAttributes fa)
         {
+            var curDir = Directory.GetCurrentDirectory();
             var filePath = Path.Combine
-                (Directory.GetCurrentDirectory(),
+                (curDir,
                 input.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar)
             );
-            FileInfo finfo = new(filePath);
+
+            FileSystemInfo? finfo = null;
             try
             {
-                finfo.Create().Close();
+                if (fa.HasFlag(FileAttributes.Directory))
+                {
+                    DirectoryInfo di;
+                    di = new(filePath);
+                    di.Create();
+                    finfo = di;
+                }
+                else
+                {
+                    FileInfo fi;
+                    fi = new(filePath);
+                    fi.Create().Close();
+                    finfo = fi;
+                }
+
                 finfo.Attributes = fa;
 
                 return new GetPowerDirInfo(finfo, Directory.GetCurrentDirectory());
             }
             finally
             {
-                finfo.Attributes = FileAttributes.Normal;
-                finfo.Delete();
+                if (finfo != null)
+                {
+                    finfo.Attributes = FileAttributes.Normal;
+                    finfo.Delete();
+                }
             }
         }
 
@@ -71,6 +90,71 @@ namespace PowerDir.Tests
             GetPowerDirInfo info = getPowerDirInfo($"{testDir}/{testFile}", fa);
             EscapeCodesTheme16 esc = new();
             checkGetPowerDirInfo(esc.colorize(info));
+        }
+
+        [DataTestMethod]
+        [DataRow(FileAttributes.Normal)]
+        //[DataRow(FileAttributes.Directory)]
+        //[DataRow(FileAttributes.Hidden)] // File
+        //[DataRow(FileAttributes.Hidden | FileAttributes.Directory)] // Dir
+        //[DataRow(FileAttributes.System)] // File
+        //[DataRow(FileAttributes.System | FileAttributes.Directory)] // Dir
+        //[DataRow(FileAttributes.ReadOnly)] // File
+        //[DataRow(FileAttributes.ReadOnly | FileAttributes.Directory)] // Dir
+        public void TestDisplayResultsColor16FileExe(FileAttributes fa)
+        {
+            GetPowerDirInfo info = getPowerDirInfo($"{testDir}/{testFile}.exe", fa);
+            EscapeCodesTheme16 esc = new();
+            checkGetPowerDirInfo(esc.colorize(info));
+        }
+
+        //[DataTestMethod]
+        //[DataRow(FileAttributes.Normal)]
+        //[DataRow(FileAttributes.Directory)]
+        //[TestMethod]
+
+        // TODO: this won't create the symlink due to windows must be admin policy to create symlink
+        // @link https://security.stackexchange.com/questions/10194/why-do-you-have-to-be-an-admin-to-create-a-symlink-in-windows
+        public void TestDisplayResultsColor16FileLink()
+        {
+            //GetPowerDirInfo info = getPowerDirInfo($"{testDir}/{testFile}", fa);
+            string input = $"{testDir}/{testFile}";
+            FileAttributes fa = FileAttributes.Normal;
+            var curDir = Directory.GetCurrentDirectory();
+            var filePath = Path.Combine
+                (curDir,
+                input.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar)
+            );
+            var linkTarget = filePath + ".link";
+
+            FileInfo finfo = new(filePath);
+            FileInfo fi = new(linkTarget);
+            try
+            {
+                finfo.Create().Close();
+                Assert.IsTrue(finfo.Exists);
+                finfo.Attributes = fa;
+
+                var f = File.CreateSymbolicLink(linkTarget, filePath);
+                //Assert.IsTrue(f.Exists);
+                fi.CreateAsSymbolicLink(filePath);
+                Assert.IsTrue(fi.Exists);
+
+                fi.Attributes = fa;
+                Assert.IsNotNull(finfo.LinkTarget);
+                fi = new(finfo.LinkTarget);
+
+                var info = new GetPowerDirInfo(fi, Directory.GetCurrentDirectory());
+                Assert.IsTrue(info.Link);
+                EscapeCodesTheme16 esc = new();
+                checkGetPowerDirInfo(esc.colorize(info));
+            }
+            finally
+            {
+                finfo.Attributes = FileAttributes.Normal;
+                finfo.Delete();
+                fi?.Delete();
+            }
         }
 
         [DataTestMethod]

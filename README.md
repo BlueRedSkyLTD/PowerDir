@@ -44,6 +44,11 @@ Install it from [Powershell Gallery](https://www.powershellgallery.com/packages/
 C:\ PS> Install-Module -Name PowerDir.GetPowerDir
 ```
 
+### About Signature
+
+At the moment the module is not signed.
+
+
 ## Generate CmdLet help
 
 ref: https://docs.microsoft.com/en-us/powershell/utility-modules/platyps/create-help-using-platyps?view=ps-modules&viewFallbackFrom=powershell-7.2
