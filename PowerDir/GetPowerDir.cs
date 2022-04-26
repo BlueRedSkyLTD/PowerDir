@@ -22,8 +22,14 @@ namespace PowerDir
     {
         const int MAX_NAME_LENGTH = 50;
         private bool _stop = false;
-       
+
         #region Parameters
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Parameter(HelpMessage = "About GetPowerDir information")]
+        public SwitchParameter About {get; set;}
 
         /// <summary>
         /// <para type="description">Globbing path search (default: *).</para>
@@ -44,7 +50,6 @@ namespace PowerDir
         //[Parameter]
         //public SwitchParameter Pagination { get { return pagination; } set { pagination = value; } }
 
-        private bool _recursive = false;
         /// <summary>
         /// <para type="description">Search Recursively (default: No)</para>
         /// </summary>
@@ -53,22 +58,14 @@ namespace PowerDir
             ParameterSetName = "Recursion"
             )]
         [Alias("r")]
-        public SwitchParameter Recursive {
-            get { return _recursive; }
-            set { _recursive = value; }
-        }
+        public SwitchParameter Recursive { get; set; }
 
-        private bool _noColor = false;
         /// <summary>
         /// 
         /// </summary>
         [Parameter(HelpMessage = "Disable colors (default: no)")]
         [Alias("n")]
-        public SwitchParameter NoColor
-        {
-            get { return _noColor; }
-            set { _noColor = value; }
-        }
+        public SwitchParameter NoColor { get; set; }
 
         /// <summary>
         /// <para type="description">Max Recursion Depth (default: int.MaxValue)</para>
@@ -223,11 +220,24 @@ namespace PowerDir
 
             WriteDebug($"[END] Path = {Path} --- basePath = {basePath}");
         }
+
+        private void aboutInfo()
+        {
+            WriteObject("About GetPowerdir ....");
+        }
+
         /// <summary>
         ///
         /// </summary>
         protected override void BeginProcessing()
         {
+            if(About)
+            {
+                aboutInfo();
+                StopProcessing();
+                return;
+            }
+
             WriteDebug($"Host Name = {Host.Name}");
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = {Path}");
@@ -248,12 +258,12 @@ namespace PowerDir
                 _theme = new EscapeCodesTheme16();
 
             WriteDebug($"Width = {_width}");
-            WriteDebug($"Recursive = {_recursive}");
+            WriteDebug($"Recursive = {Recursive}");
             // TODO:
             //WriteDebug($"Extensions = {String.Join(',', _theme._extensions)}");
             processPath();
 
-            enumerationOptions.RecurseSubdirectories = _recursive;
+            enumerationOptions.RecurseSubdirectories = Recursive;
             enumerationOptions.MaxRecursionDepth = Level;
             enumerationOptions.IgnoreInaccessible = true;
             enumerationOptions.MatchCasing = MatchCasing.PlatformDefault;
@@ -292,6 +302,7 @@ namespace PowerDir
         /// </summary>
         protected override void ProcessRecord()
         {
+            if (_stop) return;
             // TODO: not sure if it is nice this branch, but don't know how to visualize the directory first,
             //       unless i am going to implement my recursive method to discover direcories and files with in it.
             //       at the moment this is the quickest way. I don't want yet to implement my own search recursive method.
