@@ -134,7 +134,8 @@ stages:
           displayName: CheckVersions
           arguments: $(Build.SourceBranch)
         name: CheckVersions
-
+      - pwsh: git --no-pager show -s --format=%B $(Build.SourceBranch)
+        name: ReleaseNote
       - download: current
         artifact:  ${{ variables.artifactName }}
 
@@ -172,7 +173,8 @@ stages:
         # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
       # Publishing to Powershell Gallery
       - pwsh: |
-          Publish-Module -Path '$(Build.ArtifactStagingDirectory)' -NuGetApiKey ${env:PWSH_PUBLISH}
+          $RN=git --no-pager show -s --format=%B $(Build.SourceBranch)
+          Publish-Module -Path '$(Build.ArtifactStagingDirectory)' -NuGetApiKey ${env:PWSH_PUBLISH} -ReleaseNote $RN
         name: PublishModule
         env:
          PWSH_PUBLISH: $(pwsh_publish)
