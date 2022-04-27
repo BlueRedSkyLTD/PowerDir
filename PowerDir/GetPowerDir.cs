@@ -223,7 +223,14 @@ namespace PowerDir
 
         private void aboutInfo()
         {
-            WriteObject("About GetPowerdir ....");
+            WriteObject(GetPowerDirAbout.line1);
+            WriteObject(GetPowerDirAbout.line2);
+            WriteObject(GetPowerDirAbout.line3);
+            WriteObject(GetPowerDirAbout.line4);
+            if (NoColor) 
+                WriteObject(GetPowerDirAbout.showTheme(new NoColorTheme()));
+            else
+                WriteObject(GetPowerDirAbout.showTheme(new EscapeCodesTheme16()));
         }
 
         /// <summary>
@@ -231,13 +238,6 @@ namespace PowerDir
         /// </summary>
         protected override void BeginProcessing()
         {
-            if(About)
-            {
-                aboutInfo();
-                StopProcessing();
-                return;
-            }
-
             WriteDebug($"Host Name = {Host.Name}");
             basePath = SessionState.Path.CurrentFileSystemLocation.Path;
             WriteDebug($"basePath = {basePath} --- Path = {Path}");
@@ -259,6 +259,14 @@ namespace PowerDir
 
             WriteDebug($"Width = {_width}");
             WriteDebug($"Recursive = {Recursive}");
+
+            if (About)
+            {
+                aboutInfo();
+                StopProcessing();
+                return;
+            }
+
             // TODO:
             //WriteDebug($"Extensions = {String.Join(',', _theme._extensions)}");
             processPath();
@@ -388,6 +396,5 @@ namespace PowerDir
             _stop = true;
             view?.endDisplay();
         }
-
     }
 }

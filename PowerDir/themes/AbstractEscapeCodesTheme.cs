@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace PowerDir.themes
 {
+    using KeyColorTheme = IPowerDirTheme.KeyColorTheme;
+
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "<Pending>")]
     internal abstract class AbstractEscapeCodesTheme : IPowerDirTheme
     {
@@ -144,6 +146,12 @@ namespace PowerDir.themes
             //return $"{ESC}[" + setBold(col.Bold) + setDim(col.Dim) + setItalic(col.Italic)
             //    + setUnderline(col.Underline) + setBlink(col.Blink) + setInverse(col.Inverse)
             //    + setColor(col) + str + RESET;
+        }
+
+        protected Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme;
+        public string colorizeProperty(KeyColorTheme keyColorTheme, string str)
+        {
+            return colorize(_colorTheme[keyColorTheme], str);
         }
     }
 }

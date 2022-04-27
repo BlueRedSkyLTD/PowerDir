@@ -42,5 +42,13 @@ namespace PowerDir.themes
         /// <param name="str"></param>
         /// <returns></returns>
         public string colorizeProperty(GetPowerDirInfo info, string str);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keyColorTheme"></param>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public string colorizeProperty(KeyColorTheme keyColorTheme, string str);
     }
 }

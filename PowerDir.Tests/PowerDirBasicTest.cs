@@ -157,6 +157,14 @@ namespace PowerDir.Tests
         }
 
         [TestMethod]
+        public void TestAboutParam()
+        {
+            var output = execute(createCmdLet().AddParameter("About", null));
+            checkType(output[0], "System.String");
+            Assert.AreEqual(5 + 1, output.Count,$"actual: {output.Count}");
+        }
+
+        [TestMethod]
         public void TestListInvoke()
         {
             var output = execute(createCmdLet().AddParameter("d", "l"));

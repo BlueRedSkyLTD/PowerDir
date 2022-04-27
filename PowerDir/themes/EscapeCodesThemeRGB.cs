@@ -13,6 +13,22 @@ namespace PowerDir.themes
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class EscapeCodesThemeRGB : AbstractEscapeCodesTheme
     {
+        internal EscapeCodesThemeRGB()
+        {
+            this._colorTheme = new()
+            {
+                { KeyColorTheme.DIRECTORY, new ColorThemeItem((int)Color.Blue, (int)Color.Original) },
+                { KeyColorTheme.FILE, new ColorThemeItem((int)Color.Gray, (int)Color.Original) },
+                { KeyColorTheme.EXE, new ColorThemeItem((int)Color.Green, (int)Color.Original) },
+                { KeyColorTheme.LINK, new ColorThemeItem((int)Color.Cyan, (int)Color.Original) },
+                { KeyColorTheme.HIDDEN_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkMagenta) },
+                { KeyColorTheme.HIDDEN_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkMagenta) },
+                { KeyColorTheme.SYSTEM_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkYellow) },
+                { KeyColorTheme.SYSTEM_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkYellow) },
+                { KeyColorTheme.READONLY_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkRed) },
+                { KeyColorTheme.READONLY_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkRed) },
+            };
+        }
         /// <summary>
         /// convert Hex color format to RGB
         /// </summary>
@@ -31,20 +47,6 @@ namespace PowerDir.themes
         {
             return (r << 16) + (g << 8) + b;
         }
-
-        static readonly Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme = new()
-        {
-            { KeyColorTheme.DIRECTORY, new ColorThemeItem((int)Color.Blue, (int)Color.Original) },
-            { KeyColorTheme.FILE, new ColorThemeItem((int)Color.Gray, (int)Color.Original) },
-            { KeyColorTheme.EXE, new ColorThemeItem((int)Color.Green, (int)Color.Original) },
-            { KeyColorTheme.LINK, new ColorThemeItem((int)Color.Cyan, (int)Color.Original) },
-            { KeyColorTheme.HIDDEN_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkMagenta) },
-            { KeyColorTheme.HIDDEN_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkMagenta) },
-            { KeyColorTheme.SYSTEM_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkYellow) },
-            { KeyColorTheme.SYSTEM_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkYellow) },
-            { KeyColorTheme.READONLY_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkRed) },
-            { KeyColorTheme.READONLY_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkRed) },
-        };
 
         private (float, float, float) RgbToHsv(byte r, byte g ,byte b)
         {

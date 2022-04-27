@@ -17,5 +17,10 @@ namespace PowerDir.themes
         {
             return str;
         }
+
+        public string colorizeProperty(IPowerDirTheme.KeyColorTheme keyColorTheme, string str)
+        {
+            return str;
+        }
     }
 }

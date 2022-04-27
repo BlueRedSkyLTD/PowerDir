@@ -12,19 +12,22 @@ namespace PowerDir.themes
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "<Pending>")]
     internal class EscapeCodesTheme256 : AbstractEscapeCodesTheme
     {
-        static readonly Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme = new()
+        internal EscapeCodesTheme256()
         {
-            { KeyColorTheme.DIRECTORY,     new ColorThemeItem((int) Color.Blue,  (int) Color.Original) },
-            { KeyColorTheme.FILE,          new ColorThemeItem((int) Color.Gray,  (int) Color.Original) },
-            { KeyColorTheme.EXE,           new ColorThemeItem((int) Color.Green, (int) Color.Original, bold:true) },
-            { KeyColorTheme.LINK,          new ColorThemeItem((int) Color.Cyan,  (int) Color.Original) },
-            { KeyColorTheme.HIDDEN_DIR,    new ColorThemeItem((int) Color.White, (int) Color.DarkMagenta) },
-            { KeyColorTheme.HIDDEN_FILE,   new ColorThemeItem((int) Color.Gray,  (int) Color.DarkMagenta) },
-            { KeyColorTheme.SYSTEM_DIR,    new ColorThemeItem((int) Color.White, (int) Color.DarkYellow) },
-            { KeyColorTheme.SYSTEM_FILE,   new ColorThemeItem((int) Color.Gray,  (int) Color.DarkYellow) },
-            { KeyColorTheme.READONLY_DIR,  new ColorThemeItem((int) Color.White, (int) Color.DarkRed) },
-            { KeyColorTheme.READONLY_FILE, new ColorThemeItem((int) Color.Gray,  (int) Color.DarkRed) },
-        };
+            this._colorTheme = new()
+            {
+                { KeyColorTheme.DIRECTORY, new ColorThemeItem((int)Color.Blue, (int)Color.Original) },
+                { KeyColorTheme.FILE, new ColorThemeItem((int)Color.Gray, (int)Color.Original) },
+                { KeyColorTheme.EXE, new ColorThemeItem((int)Color.Green, (int)Color.Original, bold: true) },
+                { KeyColorTheme.LINK, new ColorThemeItem((int)Color.Cyan, (int)Color.Original) },
+                { KeyColorTheme.HIDDEN_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkMagenta) },
+                { KeyColorTheme.HIDDEN_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkMagenta) },
+                { KeyColorTheme.SYSTEM_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkYellow) },
+                { KeyColorTheme.SYSTEM_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkYellow) },
+                { KeyColorTheme.READONLY_DIR, new ColorThemeItem((int)Color.White, (int)Color.DarkRed) },
+                { KeyColorTheme.READONLY_FILE, new ColorThemeItem((int)Color.Gray, (int)Color.DarkRed) },
+            };
+        }
 
         public override string colorizeProperty(GetPowerDirInfo info, string str)
         {
