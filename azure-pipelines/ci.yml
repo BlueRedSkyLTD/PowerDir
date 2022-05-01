@@ -16,6 +16,7 @@ pr:
     #- .gitignore
     - .github/*
     - README.md
+    - LICENSE
 
 
 variables:
