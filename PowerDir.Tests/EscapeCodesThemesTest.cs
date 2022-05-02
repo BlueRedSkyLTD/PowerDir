@@ -67,11 +67,13 @@ namespace PowerDir.Tests
             }
         }
 
-        private void checkGetPowerDirInfo(GetPowerDirInfo info)
+        private void checkGetPowerDirInfo(GetPowerDirInfo info, string? contains = null)
         {
             Assert.IsNotNull(info);
             Assert.IsTrue(info.RelativeName.StartsWith("\x1B["));
             Assert.IsTrue(info.RelativeName.EndsWith("\x1B[0m"));
+            if(contains != null)
+                Assert.IsTrue(info.RelativeName.Contains(contains));
         }
 
         [DataTestMethod]
@@ -171,7 +173,7 @@ namespace PowerDir.Tests
             // TODO check the color too?
             GetPowerDirInfo info = getPowerDirInfo($"{testDir}/{testFile}", fa);
             EscapeCodesTheme256 esc = new();
-            checkGetPowerDirInfo(esc.colorize(info));
+            checkGetPowerDirInfo(esc.colorize(info), "38;5");
         }
 
         [DataTestMethod]
@@ -190,7 +192,7 @@ namespace PowerDir.Tests
             // TODO check the color too?
             GetPowerDirInfo info = getPowerDirInfo($"{testDir}/{testFile}", fa);
             EscapeCodesThemeRGB esc = new();
-            checkGetPowerDirInfo(esc.colorize(info));
+            checkGetPowerDirInfo(esc.colorize(info), "38;2");
         }
     }
 }
