@@ -16,7 +16,7 @@ namespace PowerDir.Tests
     // https://docs.microsoft.com/en-us/powershell/scripting/developer/hosting/windows-powershell-host-quickstart?view=powershell-7.2
 
     /// <summary>
-    /// Note that the Cmdlet will always output QueryStatus Escape Code,
+    /// Note that the Cmdlet will always output QueryStatus Escape Code if NoColor paramter provided,
     /// so for testing purposes apart that test itself, first output line should be discarded.
     /// </summary>
     [TestClass]
@@ -144,7 +144,7 @@ namespace PowerDir.Tests
         public void TestDefaultInvokeNoColorParam()
         {
             var output = execute(createCmdLet().AddParameter("NoColor", null));
-            checkType(output[1], "PowerDir.GetPowerDirInfo");
+            checkType(output[0], "PowerDir.GetPowerDirInfo");
             Assert.IsNotNull(output.First((dynamic o) => o.Name == _filename));
         }
 

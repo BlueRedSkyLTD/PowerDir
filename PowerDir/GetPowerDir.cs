@@ -239,12 +239,15 @@ namespace PowerDir
             WriteDebug($"basePath = {basePath} --- Path = {Path}");
 
             checkWidthSupport();
-            bool supportEscCode = supportEscapeCodes();
-            WriteDebug($"Escape codes support: {(supportEscCode ? "y" : "n")}");
+            if (!NoColor)
+            {
+                bool supportEscCode = supportEscapeCodes();
+                WriteDebug($"Escape codes support: {(supportEscCode ? "y" : "n")}");
 
-            // no escape codes support, no color support
-            if (!supportEscCode)
-                NoColor = true;
+                // no escape codes support, no color support
+                if (!supportEscCode)
+                    NoColor = true;
+            }
 
             if (NoColor)
                 _theme = new NoColorTheme();
