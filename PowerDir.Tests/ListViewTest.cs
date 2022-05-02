@@ -52,6 +52,8 @@ namespace PowerDir.Tests
         [DataRow("_power_dir_test.dir.very_long_dir_name/_power_dir_test.file")]
         [DataRow("../_power_dir_test.file")]
         [DataRow("../_power_dir_test.file")]
+        [Ignore("EscapeCodeThemeTest.cs should cover it")]
+
         public void TestDisplayResultsColor16(string input)
         {
             // TODO check the color too?

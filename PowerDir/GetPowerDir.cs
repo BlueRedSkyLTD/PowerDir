@@ -130,7 +130,6 @@ namespace PowerDir
         #endregion Parameters
 
         int _width = 120;
-        // TODO: consider to use just writeObject generating a string instead as it can support color with ESC[ sequence
 
         private string basePath = "./";
         private readonly EnumerationOptions enumerationOptions = new EnumerationOptions();
@@ -227,10 +226,7 @@ namespace PowerDir
             WriteObject(GetPowerDirAbout.line2);
             WriteObject(GetPowerDirAbout.line3);
             WriteObject(GetPowerDirAbout.line4);
-            if (NoColor) 
-                WriteObject(GetPowerDirAbout.showTheme(new NoColorTheme()));
-            else
-                WriteObject(GetPowerDirAbout.showTheme(new EscapeCodesTheme16()));
+            WriteObject(GetPowerDirAbout.showTheme(_theme!));
         }
 
         /// <summary>

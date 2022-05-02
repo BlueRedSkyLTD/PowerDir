@@ -43,21 +43,14 @@
     
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
-      <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1;
-                     $(ProjectDir)PowerDir.GetPowerDirInfo.ps1xml;
-                     $(ProjectDir)PowerDir.GetPowerDir.format.ps1xml;" />
+      <MySourceFiles Include="$(ProjectDir)PowerDir.GetPowerDir.psd1;&#xD;&#xA;                     $(ProjectDir)PowerDir.GetPowerDirInfo.ps1xml;&#xD;&#xA;                     $(ProjectDir)PowerDir.GetPowerDir.format.ps1xml;" />
     </ItemGroup>
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" />
   </Target>
 
   <Target Name="PostReleaseBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
     <ItemGroup>
-      <MySourceFiles Include="$(ProjectDir)doc/Get-PowerDir.md;
-        $(ProjectDir)PowerDir.GetPowerDir.psd1;
-        $(ProjectDir)PowerDir.GetPowerDirInfo.ps1xml;
-        $(ProjectDir)PowerDir.GetPowerDir.format.ps1xml;
-        $(ProjectDir)PowerDir.dll-help.xml;
-        $(OutDir)PowerDir.dll;" />
+      <MySourceFiles Include="$(ProjectDir)doc/Get-PowerDir.md;&#xD;&#xA;        $(ProjectDir)PowerDir.GetPowerDir.psd1;&#xD;&#xA;        $(ProjectDir)PowerDir.GetPowerDirInfo.ps1xml;&#xD;&#xA;        $(ProjectDir)PowerDir.GetPowerDir.format.ps1xml;&#xD;&#xA;        $(ProjectDir)PowerDir.dll-help.xml;&#xD;&#xA;        $(OutDir)PowerDir.dll;" />
     </ItemGroup>
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)$(MSBuildProjectName).GetPowerDir" />
   </Target>
