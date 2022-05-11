@@ -2,3 +2,4 @@
 **/obj/
 bin/
 coverage.opencover.xml
+PowerDir/PowerDir.csproj.user

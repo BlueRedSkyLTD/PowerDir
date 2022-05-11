@@ -12,7 +12,7 @@
 RootModule = 'PowerDir.dll'
 
 # Version number of this module.
-ModuleVersion = '0.2.6'
+ModuleVersion = '0.3.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -57,13 +57,13 @@ DotNetFrameworkVersion = '6.0'
 # RequiredAssemblies = @()
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-# ScriptsToProcess = @()
+ScriptsToProcess = @()
 
 # Type files (.ps1xml) to be loaded when importing this module
-# TypesToProcess = @()
+TypesToProcess = @("PowerDir.GetPowerDirInfo.ps1xml")
 
 # Format files (.ps1xml) to be loaded when importing this module
-# FormatsToProcess = @()
+FormatsToProcess = @("PowerDir.GetPowerDir.format.ps1xml")
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 # NestedModules = @()
@@ -95,7 +95,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @("PowerShell", "PowerShell7", "Get-ChildItem", "Color")
+        Tags = @("PowerShell", "PowerShell7", "Get-ChildItem", "Color", "EscapeCodes", "ANSI", "WindowsTerminal")
 
         # A URL to the license for this module.
         # LicenseUri = ''

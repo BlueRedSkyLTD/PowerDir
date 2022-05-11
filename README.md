@@ -11,9 +11,10 @@ PowerDir is a PowerShell 7.2 Cmdlet as alternative to `Get-ChildItem`.
 
 At the moment only Windows is fully supported, but still compatible where .NET6.0 can be run.
 
-| Code Coverage |
-|:-------------:|
-| [![codecov](https://codecov.io/gh/BlueRedSkyLTD/PowerDir/branch/main/graph/badge.svg?token=IYQC61BVWR)](https://codecov.io/gh/BlueRedSkyLTD/PowerDir) |
+| Code Coverage | Powershell Gallery |
+|:-----------------:|:-------------:|
+| [![codecov](https://codecov.io/gh/BlueRedSkyLTD/PowerDir/branch/main/graph/badge.svg?token=IYQC61BVWR)](https://codecov.io/gh/BlueRedSkyLTD/PowerDir) |  ![PSGallery Version](https://img.shields.io/powershellgallery/v/PowerDir.GetPowerDir.png?style=plastic&logo=powershell&label=PowerShell%20Gallery) |
+ 
 
 ## Usage
 
@@ -29,6 +30,13 @@ function dw() { Get-PowerDir -d w  @args }
 function  l() { Get-PowerDir -d l  @args }
 ```
 
+or if you prefer in a Powershell way
+```Powershell
+function dd() { Get-PowerDir @args | ft }
+function dw() { Get-PowerDir @args | fw }
+function  l() { Get-PowerDir @args | fl }
+```
+
 ## Install
 
 Install it from [Powershell Gallery](https://www.powershellgallery.com/packages/PowerDir.GetPowerDir)
@@ -36,19 +44,24 @@ Install it from [Powershell Gallery](https://www.powershellgallery.com/packages/
 C:\ PS> Install-Module -Name PowerDir.GetPowerDir
 ```
 
+### About Signature
+
+At the moment the module is not signed.
+
+
 ## Generate CmdLet help
 
 ref: https://docs.microsoft.com/en-us/powershell/utility-modules/platyps/create-help-using-platyps?view=ps-modules&viewFallbackFrom=powershell-7.2
 
 ## Feedback
 
-Open an issue on github or send a message in Powershell gallery
+Open an issue on GitHub or send a message in Powershell gallery
 
 ## Contribution
 
 ## RoadMap / Changelog
 
-- [x] v0.1.0: publishing test, basic functionalities almost complete
-- [x] v0.2.0: basic functionalities
-- [ ] v0.3.0: using escape codes
-- [ ] v0.4.0: globbing search / advanced search patterns
+- [x] v0.1: publishing test, basic functionalities almost complete
+- [x] v0.2: basic functionalities, themes
+- [x] v0.3: using escape codes
+- [ ] v0.4: globbing search / advanced search patterns

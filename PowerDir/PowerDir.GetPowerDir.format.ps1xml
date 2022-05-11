@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+  <ViewDefinitions>
+    <View>
+      <Name>Table</Name>
+      <ViewSelectedBy>
+        <TypeName>PowerDir.GetPowerDirInfo</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Mode</Label>
+            <Width>8</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+            <Width>50</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Size</Label>
+            <Width>15</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Width>15</Width>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Attr</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>RelativeName</PropertyName>
+                <!--
+                <ScriptBlock>
+                  switch($_.Extension)
+                  {
+                    '.exe' { $c = "93"; break }
+                    '.dll' { $c = "35"; break }
+                    default { $c = 0; break }
+                  }
+                  $e = [char]27
+                  "$e[${c}m$($_.RelativeName)${e}[0m"
+                </ScriptBlock>
+                -->
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>NormalizedSize</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>CreationTime</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>List</Name>
+      <ViewSelectedBy>
+        <TypeName>PowerDir.GetPowerDirInfo</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <PropertyName>RelativeName</PropertyName>
+                <Label>Name</Label>
+              </ListItem>
+              <ListItem>
+                <Label>Size</Label>
+                <ScriptBlock>
+                  "{0}" -f ($_.NormalizedSize.Trim())
+                </ScriptBlock>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+    <View>
+      <Name>Wide</Name>
+      <ViewSelectedBy>
+        <TypeName>PowerDir.GetPowerDirInfo</TypeName>
+      </ViewSelectedBy>
+      <WideControl>
+        <Autosize />
+        <WideEntries>
+          <WideEntry>
+            <WideItem>
+              <PropertyName>RelativeName</PropertyName>
+            </WideItem>
+          </WideEntry>
+        </WideEntries>
+      </WideControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>

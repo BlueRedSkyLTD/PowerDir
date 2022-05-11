@@ -1,4 +1,4 @@
-﻿---
+---
 external help file: PowerDir.dll-Help.xml
 Module Name: PowerDir.GetPowerDir
 online version:
@@ -13,7 +13,7 @@ An alternative Get-ChildItem.
 ## SYNTAX
 
 ```
-Get-PowerDir [[-Path] <String>] [-Recursive] [-NoColor] [-Level <Int32>] [-Display <DisplayOptions>]
+Get-PowerDir [-About] [[-Path] <String>] [-Recursive] [-NoColor] [-Level <Int32>] [-Display <DisplayOptions>]
  [<CommonParameters>]
 ```
 
@@ -85,6 +85,21 @@ function  l() { Get-PowerDir -d l  @args }
 Edit your profile and add the following aliases
 
 ## PARAMETERS
+
+### -About
+About GetPowerDir information
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -Display
 Display type (default: Object)

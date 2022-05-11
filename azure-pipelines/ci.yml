@@ -3,8 +3,10 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
-trigger: none
-
+trigger:
+  tags:
+    include:
+    - '*'
 pr:
   branches:
     include:
@@ -14,6 +16,8 @@ pr:
     #- .gitignore
     - .github/*
     - README.md
+    - LICENSE
+
 
 variables:
   - template: variables/globals.yml
@@ -54,46 +58,125 @@ stages:
 
 - stage: CI
   jobs:
-    - template: templates/jobs_ci.yml
-      parameters:
-        jobName: "Windows"
+    - job: Windows
+      condition: eq('${{ variables.ci_windows }}', 'true')
+      pool:
         vmImage: ${{ variables.windows_image }}
-        execution: ${{ variables.ci_windows }}
+      strategy:
+        matrix:
+          Debug:
+            buildConfiguration: 'Debug'
+          Release:
+            buildConfiguration: 'Release'
+      steps:
+        - template: templates/steps_ci.yml
+        # package
+        - task: CopyFiles@2
+          inputs:
+            sourceFolder: '$(System.DefaultWorkingDirectory)/PowerDir/bin/${{ variables.buildConfiguration }}/${{ variables.netVersion }}/PowerDir.GetPowerDir'
+            contents: '*'
+            targetFolder: '$(Build.ArtifactStagingDirectory)'
+          condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/'),eq(variables.buildConfiguration, 'Release'))
+        # publish artifact
+        - publish: '$(Build.ArtifactStagingDirectory)'
+          displayName: 'Publish to Stage Release'
+          artifact: ${{ variables.artifactName }}
+          condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/'),eq(variables.buildConfiguration, 'Release'))
 
-    - template: templates/jobs_ci.yml
-      parameters:
-        jobName: "Linux"
+    - job: Linux
+      condition: eq('${{ variables.ci_linux }}', 'true')
+      pool:
         vmImage: ${{ variables.linux_image }}
-        execution: ${{ variables.ci_linux }}
-      # pre_CI_Steps:
-      #   - script: |
-      #       wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-      #       sudo dpkg -i packages-microsoft-prod.deb
-      #       rm packages-microsoft-prod.deb
-      #       sudo apt-get update; \
-      #       sudo apt-get install -y apt-transport-https && \
-      #       sudo apt-get update && \
-      #       sudo apt-get install -y dotnet-sdk-6.0
-      #     name: Install_NET6_0
-        # - script: |
-        #     sudo apt-get update
-        #     sudo apt-get install -y wget apt-transport-https software-properties-common
-        #     wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-        #     sudo dpkg -i packages-microsoft-prod.deb
-        #     sudo apt-get update
-        #     sudo apt-get install -y powershell
-        #   name: InstallPS7
+      strategy:
+        matrix:
+          Debug:
+            buildConfiguration: 'Debug'
+          Release:
+            buildConfiguration: 'Release'
+      steps:
+        - template: templates/steps_ci.yml
 
-    - template: templates/jobs_ci.yml
-      parameters:
-        jobName: "MacOS"
-        vmImage: ${{ variables.mac_image }}
-        execution: ${{ variables.ci_macos }}
-    #     pre_CI_Steps:
-    #       # - script: |
-    #           # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    #         # name: install_HomeBrew
-    #       - script: |
-    #           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    #           brew install --cask powershell
-    #         name: InstallPS7
+    - job: MacOS
+      condition: eq('${{ variables.ci_macos }}', 'true')
+      pool:
+        vmImage: ${{ variables.macos_image }}
+      strategy:
+        matrix:
+          Debug:
+            buildConfiguration: 'Debug'
+          Release:
+            buildConfiguration: 'Release'
+      steps:
+        - template: templates/steps_ci.yml
+
+- stage: Release
+  condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+  pool:
+    vmImage: ${{ variables.windows_image }}
+  variables:
+    buildConfiguration: Release
+  jobs:
+    - job: WindowsRelease
+      steps:
+      # check if versions are matching: project, manifest, git tag
+      - task: PowerShell@2
+        inputs:
+          filePath: $(Build.SourcesDirectory)/check-versions-tag.ps1
+          targetType: filepath
+          failOnStderr: true
+          displayName: CheckVersions
+          arguments: $(Build.SourceBranch)
+        name: CheckVersionsTag
+      - task: PowerShell@2
+        inputs:
+          filePath: $(Build.SourcesDirectory)/check-versions.ps1
+          targetType: filepath
+          failOnStderr: true
+          displayName: CheckVersions
+          arguments: $(Build.SourceBranch)
+        name: CheckVersions
+      - pwsh: git --no-pager show -s --format=%B $(Build.SourceBranch)
+        name: ReleaseNote
+      - download: current
+        artifact:  ${{ variables.artifactName }}
+
+      - pwsh: |
+          Install-Module platyps -Force
+          Import-Module platyps
+
+          echo "Import PowerDir"
+          Import-Module $(Build.ArtifactStagingDirectory)/PowerDir.GetPowerDir.psd1
+
+          echo "Update Markdown"
+          cd PowerDir && ./update-doc.ps1 && cp doc/* '$(Build.ArtifactStagingDirectory)' -Force
+
+          echo "Module Help"
+          New-ExternalHelp -Path '$(System.DefaultWorkingDirectory)/PowerDir/doc' -OutputPath '$(Build.ArtifactStagingDirectory)' -Force
+          echo "Display package directory"
+          dir '$(Build.ArtifactStagingDirectory)'
+        name: GenerateModuleHelp
+
+      - task: GithubRelease@1
+        displayName: 'Create GitHub Release'
+        inputs:
+          gitHubConnection: github.com_Raffaello
+          repositoryName: '$(Build.Repository.Name)'
+          action: 'edit'
+          target: '$(Build.SourceVersion)'
+          tagSource: manual
+          tag: $(Build.SourceBranchName)
+          title: $(Build.SourceBranchName)
+          isDraft: false
+          assetUploadMode: 'replace'
+          addChangeLog: true
+          compareWith: 'lastFullRelease'
+          assets: '$(Build.ArtifactStagingDirectory)/*'
+        # condition: contains(variables['Build.SourceBranch'], 'refs/tags/')
+      # Publishing to Powershell Gallery
+      - pwsh: |
+          Test-Module -Path '$(Build.ArtifactStagingDirectory)'
+          $RN=git --no-pager show -s --format=%B $(Build.SourceBranch)
+          Publish-Module -Path '$(Build.ArtifactStagingDirectory)' -NuGetApiKey ${env:PWSH_PUBLISH} -ReleaseNote $RN -ProjectUri "https://github.com/BlueRedSkyLTD/PowerDir"
+        name: PublishModule
+        env:
+         PWSH_PUBLISH: $(pwsh_publish)

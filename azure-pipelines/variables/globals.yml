@@ -9,3 +9,4 @@ variables:
   projects: '**/*Tests/*.csproj'
   netVersion: 'net6.0'
   useNetVersion: '6.0.x'
+  artifactName: PowerDirWinRelease

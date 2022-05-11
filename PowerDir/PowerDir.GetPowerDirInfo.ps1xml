@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+  <Type>
+    <Name>PowerDir.GetPowerDirInfo</Name>
+    <Members></Members>
+    <!--
+    <TypeConverter></TypeConverter>
+    <TypeAdapter></TypeAdapter>
+    -->
+  </Type>
+</Types>
