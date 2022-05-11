@@ -43,10 +43,6 @@ namespace PowerDir
         public string Path { get; set; } = "*";
 
         //private bool pagination;
-        /// <summary>
-        /// <para type="description"> blah blah blah</para>
-        /// <para type="inputType">Input description for parameter.</para>
-        /// </summary>
         //[Parameter]
         //public SwitchParameter Pagination { get { return pagination; } set { pagination = value; } }
 

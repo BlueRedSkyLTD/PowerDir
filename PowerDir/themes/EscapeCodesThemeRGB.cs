@@ -16,7 +16,7 @@ namespace PowerDir.themes
     {
         internal EscapeCodesThemeRGB()
         {
-            this._colorTheme = new()
+            _colorTheme = new()
             {
                 { KeyColorTheme.DIRECTORY, new ColorThemeItem((int)Color.Blue, (int)Color.Original) },
                 { KeyColorTheme.FILE, new ColorThemeItem((int)Color.Gray, (int)Color.Original) },

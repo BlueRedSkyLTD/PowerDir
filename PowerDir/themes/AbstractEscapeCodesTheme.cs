@@ -148,7 +148,7 @@ namespace PowerDir.themes
             //    + setColor(col) + str + RESET;
         }
 
-        protected Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme;
+        protected Dictionary<KeyColorTheme, ColorThemeItem> _colorTheme = new();
         public string colorizeProperty(KeyColorTheme keyColorTheme, string str)
         {
             return colorize(_colorTheme[keyColorTheme], str);
