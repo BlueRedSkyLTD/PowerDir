@@ -98,10 +98,10 @@ PrivateData = @{
         Tags = @("PowerShell", "PowerShell7", "Get-ChildItem", "Color", "EscapeCodes", "ANSI", "WindowsTerminal")
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://raw.githubusercontent.com/BlueRedSkyLTD/PowerDir/main/LICENSE?token=GHSAT0AAAAAABUPEH4A3JE2K6AOIQS5EGG6YT5P2EQ'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/BlueRedSkyLTD/PowerDir'
 
         # A URL to an icon representing this module.
         # IconUri = ''

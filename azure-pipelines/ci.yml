@@ -179,7 +179,8 @@ stages:
       # Publishing to Powershell Gallery
       - pwsh: |
           $RN=git --no-pager show -s --format=%B $(Build.SourceBranch)
-          Publish-Module -Path $(Pipeline.Workspace)/$(artifactName) -NuGetApiKey ${env:PWSH_PUBLISH} -ReleaseNote $RN -ProjectUri "https://github.com/BlueRedSkyLTD/PowerDir"
+          Update-ModuleManifest -ReleaseNotes $RN $(Pipeline.Workspace)/$(artifactName)\PowerDir.GetPowerDir.psd1
+          Publish-Module -Path $(Pipeline.Workspace)/$(artifactName) -NuGetApiKey ${env:PWSH_PUBLISH}
         name: PublishModule
         env:
          PWSH_PUBLISH: $(pwsh_publish)
