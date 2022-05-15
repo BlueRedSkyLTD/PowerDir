@@ -30,7 +30,7 @@ CompanyName = 'BlueRedSky LTD'
 Copyright = '(c) BlueRedSky LTD. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'PowerDir is a Powershell 7 Module as an alternative to Get-Item.'
+Description = 'PowerDir is a Powershell 7 Module as an alternative to Get-ChildItem.'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '7.2'
