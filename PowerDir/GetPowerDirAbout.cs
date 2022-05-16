@@ -10,7 +10,7 @@ namespace PowerDir
     static internal class GetPowerDirAbout
     {
         internal static readonly string line1 = "About GetPowerDir";
-        internal static readonly string line2 = "Copyright " + new Rune(0x00A9).ToString() + " BlueRedSky LTD";
+        internal static readonly string line2 = "Copyright " + new Rune(0x00A9).ToString() + " BlueRedSky Ltd.";
         internal static readonly string line3 = "";
         internal static readonly string line4 = "Theme Settings:";
         
