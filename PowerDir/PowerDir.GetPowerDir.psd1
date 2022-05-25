@@ -12,7 +12,7 @@
 RootModule = 'PowerDir.dll'
 
 # Version number of this module.
-ModuleVersion = '0.3.1'
+ModuleVersion = '0.3.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -24,10 +24,10 @@ GUID = '4b95261c-e995-46b3-a1ab-7cd61b1928fd'
 Author = 'Raffaello Bertini'
 
 # Company or vendor of this module
-CompanyName = 'BlueRedSky LTD'
+CompanyName = 'BlueRedSky Ltd.'
 
 # Copyright statement for this module
-Copyright = '(c) BlueRedSky LTD. All rights reserved.'
+Copyright = '(c) BlueRedSky Ltd. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'PowerDir is a Powershell 7 Module as an alternative to Get-ChildItem.'
