@@ -54,6 +54,8 @@ stages:
           displayName: CheckVersions
           arguments: $(Build.SourceVersion)
         name: CheckVersions
+      - pwsh: $PSVersionTable
+        name: PSVersionTable
 
 - stage: CI
   jobs:
