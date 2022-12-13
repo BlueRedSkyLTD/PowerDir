@@ -24,7 +24,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
-    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.2.6" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.2.8" />
     <!-- remove the below when updating powershell sdk pacakge -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <!-- remove the below when updating powershell sdk pacakge -->
