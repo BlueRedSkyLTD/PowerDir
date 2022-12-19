@@ -142,7 +142,9 @@ namespace PowerDir.Tests
 
                 fi.Attributes = fa;
                 Assert.IsNotNull(finfo.LinkTarget);
+#pragma warning disable CS8604 // Possible null reference argument.
                 fi = new(finfo.LinkTarget);
+#pragma warning restore CS8604 // Possible null reference argument.
 
                 var info = new GetPowerDirInfo(fi, Directory.GetCurrentDirectory());
                 Assert.IsTrue(info.Link);
